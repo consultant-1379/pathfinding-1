@@ -1,0 +1,103 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_SECTORCARRIER_V_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "SectorCarrier"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "int", 
+            "name": "DCVECTOR_INDEX"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBranchDeltaSinrDistr5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBranchDeltaSinrDistr3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBranchDeltaSinrDistr6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBranchDeltaSinrDistr2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBranchDeltaSinrDistr4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCompUlToADiffDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBranchDeltaSinrDistr1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBranchDeltaSinrDistr0"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSinrPuschSectorCarrierDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSinrPucchSectorCarrierDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmConnectedNbUeSectorCarrierCe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEmfPwrBackoffDynResThrDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEmfPwrBackoffOnPwrDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEmfPwrBackoffPwrDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEmfPwrBackoffStepPwrDistr"
+        }
+    ]
+}

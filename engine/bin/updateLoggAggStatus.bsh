@@ -1,0 +1,146 @@
+#!/bin/bash
+# ********************************************************************
+# LMI Ericsson                                      SCRIPT
+# ********************************************************************
+#
+#
+# (c) LMI Ericsson  2001 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of LMI Ericsson , Ireland. The programs may be used 
+# and/or copied only with the written permission from LMI Ericsson  
+# or in accordance with the terms and conditions stipulated 
+# in the agreement/contract under which the program(s) have been 
+# supplied.
+#
+# ********************************************************************
+# Name    : updateLOG_Aggregation_Status.bsh
+# written : ENINKAR
+# Date    : 2010
+# Revision: A
+# Purpose : This script is for updating LOG_AggregationStatus table in database  
+#
+# Usage   : LOG_Aggregation_Status table updates for change start day of the week fix 
+#
+# ********************************************************************
+# ********************************************************************
+#
+# 	Execution
+#
+# ********************************************************************
+if [ ${LOGNAME} != "dcuser"  ] ; then
+  echo "This script must be executed as dcuser"
+  exit 1
+fi
+
+#--------------------------------------------------------------------
+#Global variable
+#--------------------------------------------------------------------
+SYBASE_IQ_ISQL_PATH=/eniq/sybase_iq//OCS*/bin/isql
+
+CONF_DIR=/eniq/sw/conf
+
+if [ -s /eniq/admin/lib/common_functions.lib ]; then
+    . /eniq/admin/lib/common_functions.lib
+else
+        echo "Could not find /eniq/admin/lib/common_functions.lib"
+        exit 1
+fi
+
+
+if [ -z "$CONF_DIR" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 2
+fi
+
+. ${CONF_DIR}/niq.rc
+
+if [ -z "${BIN_DIR}" ] ; then
+  echo "ERROR: BIN_DIR is not set"
+  exit 1
+fi
+
+if [ ! -r "${BIN_DIR}/common_variables.lib" ] ; then
+  echo "ERROR: Source file is not readable at ${BIN_DIR}/common_variables.lib"
+  exit 2
+fi
+
+. ${BIN_DIR}/common_variables.lib
+
+JAVA_HOME="/eniq/sw/runtime/java"
+
+DCPASSWORD=`inigetpassword DWH -v DCPassword -f ${CONF_DIR}/niq.ini`
+
+CPATH="${PLATFORM_DIR}"
+
+DIRS=`${LS} ${PLATFORM_DIR}`
+
+for file in ${DIRS}
+do
+  if [ -d ${PLATFORM_DIR}/${file}/dclib ]
+  then
+    JARS=`${LS} ${PLATFORM_DIR}/${file}/dclib/*.jar`
+
+    for jar in ${JARS}
+    do
+      CPATH="${CPATH}:${jar}"
+    done
+  fi
+done
+PARTITITONNUMBER=`${JAVA_HOME}/bin/java -d64 -Dpname="LogAggregationStatusPartitonCount" -Xmx64M -Djava.util.logging.config.file=${CONF_DIR}/engineAdminLogging.properties -Ddc5000.config.directory=${CONF_DIR} -Ddc.conf.dir=${CONF_DIR} -DLOG_DIR=${LOG_DIR} -classpath ${CPATH} com.distocraft.dc5000.etl.engine.common.LogAggregationStatusPartitonCount`
+case ${PARTITITONNUMBER} in
+[1-9]*)
+	COUNT=1
+	TABLE='LOG_AggregationStatus_'
+	while [ ${COUNT} -le ${PARTITITONNUMBER} ]; do
+		if [ ${COUNT} -lt 10 ]; then
+			PARTITION=0${COUNT}
+		else
+			PARTITION=${COUNT}	
+		fi
+		TABLENAME=${TABLE}${PARTITION}
+		${ECHO} ${TABLENAME}
+		${SYBASE_IQ_ISQL_PATH} -Udc -P$DCPASSWORD -Sdwhdb <<-EOISQLA
+			update dc.${TABLENAME} set DATADATE=DATADATE-$1,DATE_ID=DATE_ID-$1 where AGGREGATIONSCOPE='WEEK'
+			go
+		quit
+		EOISQLA
+		let COUNT=COUNT+1
+	done
+	COUNT1=1
+	while [ ${COUNT1} -le ${PARTITITONNUMBER} ]; do
+		if [ ${COUNT1} -lt 10 ]; then
+			PARTITION1=0${COUNT1}
+		else
+			PARTITION1=${COUNT1}	
+		fi
+		TABLENAME1=${TABLE}${PARTITION1}
+		${ECHO} ${TABLENAME1}
+		COUNT2=1
+		while [ ${COUNT2} -le ${PARTITITONNUMBER} ]; do
+			if [ ${COUNT2} -lt 10 ]; then
+				PARTITION2=0${COUNT2}
+			else
+				PARTITION2=${COUNT2}	
+			fi
+			TABLENAME2=${TABLE}${PARTITION2}
+			if [ ${TABLENAME1} != ${TABLENAME2} ]; then
+				${ECHO} ${TABLENAME2}
+				${SYBASE_IQ_ISQL_PATH} -Udc -P$DCPASSWORD -Sdwhdb <<-EOISQLB
+					insert into dc.${TABLENAME1} select * from dc.${TABLENAME2} where DATE_ID in (select DATE_ID from dc.${TABLENAME1}) and AGGREGATIONSCOPE='WEEK'
+					go
+					delete from dc.${TABLENAME2} where AGGREGATIONSCOPE='WEEK' and DATE_ID in (select DATE_ID from dc.${TABLENAME1} where AGGREGATIONSCOPE='WEEK')
+					go
+				quit
+				EOISQLB
+			fi
+			let COUNT2=COUNT2+1
+		done	
+		let COUNT1=COUNT1+1
+	done
+;;
+*)
+${ECHO} "partition number is blank or in wrong format"
+exit 1
+;;
+esac

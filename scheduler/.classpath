@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="stub"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/engine"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_design_plat_common_utilities/build/common_utilities/common.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_design_plat_installer/build/repository/repository.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/dbunit/dbunit/v_2_4_8/prod/dbunit-2.4.8.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/junit/v4_5/prod/junit-4.5.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/sybase/sybase_iq/v16_0/client/prod/jconn4.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/jsch_ssh2/jsch_ssh2/v0_1_54/prod/jsch-0.1.54.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

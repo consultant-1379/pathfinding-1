@@ -1,0 +1,51 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_TERMPOINTTOENB_DAY", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ExternalENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtraNetwork"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "TermPointToENB"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSpifhoMeasuredUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAtt"
+        }
+    ]
+}

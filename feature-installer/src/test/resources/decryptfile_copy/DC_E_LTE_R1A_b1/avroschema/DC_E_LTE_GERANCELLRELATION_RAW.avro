@@ -1,0 +1,83 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_GERANCELLRELATION_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellFDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellTDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "GeranCellRelation"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "GeranFreqGroupRelation"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary94"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeCancel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary95"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepCancelReest"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepCancel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSucc"
+        }
+    ]
+}

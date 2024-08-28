@@ -1,0 +1,204 @@
+pipeline {
+    agent {
+	node("ngENIQ_POC")
+    }
+    stages {
+        stage('Prepare') {
+            steps {
+                sh 'git clean -xdff'
+                sh 'git submodule sync'
+                sh 'git submodule update --init --recursive'
+                // Ensure that Bob has all of its dependencies.
+                sh './bob/bob -v'
+            }
+        }
+        stage('Clean') {
+            steps {
+                sh './bob/bob clean > clean.log'
+            }
+        }
+        stage('Init') {
+            steps {
+                script {
+                    if (env.RELEASE == 'false') {
+                        sh './bob/bob init-review > init-review.log'
+                    } else {
+                        sh './bob/bob init-release > init-release.log'
+                        archiveArtifacts 'artifact.properties'
+                    }
+                }
+            }
+        }
+        stage('Lint') {
+            steps {
+                sh './bob/bob lint > lint.log'
+                archiveArtifacts '.bob/design-rule-check-report.html'
+            }
+        }
+    stage('Hadolint for Dockerfile') {
+            steps {
+                sh "./bob/bob lint-dockerfile"
+                archiveArtifacts 'dockerfilelint.log'
+            }
+            post {
+                failure {
+                    script {
+                        failedStage = env.STAGE_NAME
+                    }
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                sh './bob/bob build > build.log'
+            }
+        }
+	stage('Unit Test') {
+		steps {
+		   			sh './bob/bob unit > unit.log'
+		}
+	}
+	stage('Jacoco Report generation') {
+		steps {
+			script{
+				sh './bob/bob jacoco > jacoco.log'
+				if (env.RELEASE == 'false'){
+					sh './bob/bob sonar_review > sonar_review.log'
+				}
+				else{
+					sh './bob/bob sonar_release > sonar_release.log'
+				}
+			}
+		}
+	}
+	stage('Contract Test') {
+            when {
+                beforeAgent true 
+                expression { (params.RELEASE=="false") } 
+            }
+		steps {
+
+		   			sh './bob/bob contract-tests > contract-tests.log'
+
+		}
+	}
+        stage('Image') {
+            steps {
+                sh './bob/bob image > image.log'
+            }
+        }
+		stage('Trivy') {
+			when {
+				beforeAgent true
+				expression { (params.RELEASE=="true") }
+			}
+			steps {
+				sh './bob/bob trivy-inline-scan > trivy-inline-scan.log'
+				archiveArtifacts 'build/trivy-reports/**.*'
+			}
+		}
+		 
+		stage('Anchore') {
+			when {
+				beforeAgent true
+				expression { (params.RELEASE=="true") }
+			}
+			steps {
+				sh './bob/bob anchore-inline-scan > anchore-inline-scan.log'
+				archiveArtifacts 'anchore-reports/**.*'
+			}
+		}
+		 
+		stage('Cleanup Anchore/Trivy') {
+			when {
+				beforeAgent true
+				expression { (params.RELEASE=="true") }
+			}
+			steps {
+				sh './bob/bob cleanup-anchore-trivy-images > cleanup-anchore-trivy-images.log'
+			}
+		}
+        stage('Package') {
+            steps {
+                sh './bob/bob package > package.log'
+            }
+        }
+        stage('Helm Install') {
+            when {
+                beforeAgent true 
+                expression { (params.RELEASE=="true") } 
+            }
+            steps {
+
+                	sh 'bob/bob delete-namespace > delete-namespace.log'
+                	sh 'bob/bob create-namespace > create-namespace.log'
+                	sh 'bob/bob helm-install > helm-install.log'
+
+			}
+        }
+        stage('Helm test') {
+            when {
+                beforeAgent true 
+                expression { (params.RELEASE=="true") } 
+            }
+            steps {
+
+				sh 'bob/bob helm-test > helm-test.log'
+
+			}
+        }
+       stage('Nmap') {
+            when {
+                beforeAgent true
+                expression { (params.RELEASE=="true") }
+            }
+            steps {
+                sh 'bob/bob k8s-nmap-test > k8s-nmap-test.log'
+            }
+        }
+        stage('Nmap for all ports') {
+            when {
+                beforeAgent true
+                expression { (params.RELEASE=="true") }
+            }
+            steps {
+                sh 'bob/bob nmap-port-scan > nmap-port-scan.log'
+            }
+        }
+        stage('Publish') {
+            when {
+                beforeAgent true 
+                expression { (params.RELEASE=="true") } 
+            }
+            steps {
+                sh './bob/bob publish > publish.log'
+            }
+        }
+    }
+    post {
+        always {
+            junit 'target/surefire-reports/*.xml'
+        }
+    }
+	{ 
+        always { 
+			archiveArtifacts artifacts: '**/*.log'
+            cleanWs()
+        }
+	success {
+            emailext attachLog: true, body: '${JELLY_SCRIPT,template="email-template"}',
+            recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+            subject: 'Build Successful ${JOB_NAME}',
+            to: 'eric-ngeniq-DevOps@wipro.com',
+            mimeType: 'text/html'
+    }
+     failure {
+           
+            emailext attachLog: true, body: '${JELLY_SCRIPT,template="email-template"}',
+            recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+            subject: 'Build Failure ${JOB_NAME}',
+            to: 'eric-ngeniq-DevOps@wipro.com',
+            mimeType: 'text/html'
+    }
+    }
+}

@@ -1,0 +1,243 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_UTRANCELLRELATION_DAY", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "EUtranCellFDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "UtranTDDFreqRelation"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "UtranCellRelation"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellTDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "UtranFreqRelation"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttSrvccExtIat"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepCancelSrvccReest"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeCancelSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepCancelSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttNonMob"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccWcdmaSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccCsfbEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAtoMeasRepUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccNonMob"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttSrvccLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccNonMob"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccCsfb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttNonMob"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccCsfb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttCsfb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttTdScdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccWcdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAtoMeasuredUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccWcdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbQualifiedUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbMeasRepUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccCsfbEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttCsfb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccTdScdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary37"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttSrvccLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttWcdmaSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAtoQualifiedUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttWcdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccSrvccLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttCsfbEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttTdScdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccSrvccLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttCsfbEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttWcdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccTdScdma"
+        }
+    ]
+}

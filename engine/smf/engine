@@ -1,0 +1,218 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Ericsson Network IQ ETLC engine control script for SMF to use
+#
+# Usage: engine start|stop
+#
+# ----------------------------------------------------------------------
+# Copyright (c) 2018 - 2019 AB Ericsson Oy  All rights reserved.
+# ----------------------------------------------------------------------
+
+unalias stop 2> /dev/null
+ulimit -c 32768
+
+. /eniq/home/dcuser/.profile
+
+if [ ${LOGNAME} != "dcuser"  ] ; then
+  echo "This script must be executed as dcuser"
+  exit 32
+fi
+
+if [ -z "${CONF_DIR}" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 1
+fi
+
+. ${CONF_DIR}/niq.rc
+
+_dir_=`/usr/bin/dirname $0`
+SCRIPTHOME=`cd $_dir_ 2>/dev/null && pwd || echo $_dir_`
+
+if [ -s $SCRIPTHOME/../lib/common_functions.lib ]; then
+    . $SCRIPTHOME/../lib/common_functions.lib
+else
+        echo "Could not find $SCRIPTHOME/../lib/common_functions.lib"
+        exit 63
+fi
+
+. ${BIN_DIR}/common_variables.lib
+
+# Set a default if the LOCAL_LOGS variable isnt set in niq.rc
+_local_logs_dir_=${LOCAL_LOGS_DIR:-/eniq/local_logs}
+
+if [ -s ${CONF_DIR}/dwh.ini ]; then
+  ETLC_USER=`iniget ETLC -v UserName -f ${CONF_DIR}/dwh.ini`
+  HEAP_SIZE=`iniget ETLC -v EngineHeap -f ${CONF_DIR}/dwh.ini`
+  START_COUNT=`iniget ETLC -v EngineStartCount -f ${CONF_DIR}/dwh.ini`
+  START_DELAY=`iniget ETLC -v EngineStartDelay -f ${CONF_DIR}/dwh.ini`    
+  STOP_COUNT=`iniget ETLC -v EngineStopCount -f ${CONF_DIR}/dwh.ini`
+  STOP_DELAY=`iniget ETLC -v EngineStopDelay -f ${CONF_DIR}/dwh.ini`
+else
+  ETLC_USER=`iniget ETLC -v UserName -f ${CONF_DIR}/niq.ini`
+  HEAP_SIZE=`iniget ETLC -v EngineHeap -f ${CONF_DIR}/niq.ini`
+  START_COUNT=`iniget ETLC -v EngineStartCount -f ${CONF_DIR}/niq.ini`
+  START_DELAY=`iniget ETLC -v EngineStartDelay -f ${CONF_DIR}/niq.ini`
+  STOP_COUNT=`iniget ETLC -v EngineStopCount -f ${CONF_DIR}/niq.ini`
+  STOP_DELAY=`iniget ETLC -v EngineStopDelay -f ${CONF_DIR}/niq.ini`
+fi
+STATIC_PROPERTIES=${CONF_DIR}/static.properties
+
+if [ ${LOGNAME} != ${ETLC_USER} ] ; then
+  ${ECHO} "ETLC engine must be started as user ${ETLC_USER}"
+  exit 32
+fi
+
+JAVA_HOME="${RT_DIR}/java"
+
+CPATH="${PLATFORM_DIR}"
+
+for _jar_ in `${FIND} ${PLATFORM_DIR}/*/dclib/ -name \*.jar` ; do
+	CPATH="${CPATH}:$_jar_"
+done
+
+start() {
+
+  if [ ! -d ${LOG_DIR}/engine ] ; then
+    mkdir ${LOG_DIR}/engine
+  fi
+
+  LOGFILE=${LOG_DIR}/engine/start_engine_`date '+%y%m%d_%H%M%S'`.log
+  ${ECHO} "Starting ETLC engine..." > ${LOGFILE} 
+
+  xENG=`${PS} -ef | ${GREP} java | ${GREP} "pname=ETLCEngine" | $NAWK '{print $2}'`
+  if [ ! -z "${xENG}" ] ; then
+    ${ECHO} "Killing previous engine instance in PID ${xENG}" >> ${LOGFILE}
+    kill -9 ${xENG} 2>&1 | tee -a ${LOGFILE}
+    ${ECHO} "Previous engine killed" >> ${LOGFILE}
+  fi
+  
+
+  #If SMF dependancies are enabled, Scheduler would have already been taken down
+  #If SMF dependancies are not enabled, scheduler will go into hold and reactivate once engine starts again.
+  ${ECHO} "\${CPATH} is ${CPATH}" >> ${LOGFILE}
+	READ="30"
+  	SERVER_TYPE=`${CAT} ${CONF_DIR}/niq.ini | ${GREP} -i server_type | $NAWK -F"=" '{print $2}'`
+	if [ ${SERVER_TYPE} == stats ]; then
+		READ=`${CAT} ${CONF_DIR}/static.properties | ${GREP} -i statsdefaultQueryTimeOutInMins | cut -d "=" -f2`
+		TIMEOUT_PARAM="-DdefaultQueryTimeOutInMins=${READ}"
+	else
+		TIMEOUT_PARAM="-DdefaultQueryTimeOutInMins=${READ}"
+	fi
+		${JAVA_HOME}/bin/java -d64 -server -Dpname="ETLCEngine" \
+		-mx${HEAP_SIZE} -DHEAP_SIZE=${HEAP_SIZE} \
+		-Djava.util.logging.config.file=${CONF_DIR}/engineLogging.properties \
+		-XX:+ExitOnOutOfMemoryError \
+		-XX:HeapDumpPath=/eniq/log/sw_log/engine_dump.hprof \
+		-XX:CompileCommand=exclude,com/distocraft/dc5000/etl/parser/xmltransformer/PropertyTokenizer.transform \
+		-Dlog4j.configuration=file:${CONF_DIR}/engine.log4j.properties \
+		-Ddc5000.config.directory=${CONF_DIR} \
+		-DCONF_DIR=${CONF_DIR} \
+		-DPMDATA_DIR=${PMDATA_DIR} \
+		-DPMDATA_SIM_DIR=${PMDATA_SIM_DIR} \
+		-DPMDATA_SOEM_DIR=${PMDATA_SOEM_DIR} \
+		-DETLDATA_DIR=${ETLDATA_DIR} \
+		-DEVENTS_ETLDATA_DIR=${EVENTS_ETLDATA_DIR} \
+		-DLOG_DIR=${LOG_DIR} \
+		-DLOCAL_LOGS_DIR=${_local_logs_dir_} \
+		-DREJECTED_DIR=${REJECTED_DIR} \
+		-DREFERENCE_DIR=${REFERENCE_DIR} \
+		-DPLATFORM_DIR=${PLATFORM_DIR} \
+		-DARCHIVE_DIR=${ARCHIVE_DIR} \
+		-DBIN_DIR=${BIN_DIR} \
+		-classpath ${CPATH} \
+		-Djava.rmi.server.codebase="${CODEBASE}" \
+		"${TIMEOUT_PARAM}" \
+		com.distocraft.dc5000.etl.engine.main.TransferEngine >> ${LOGFILE} 2>&1 &
+	
+
+  ${ECHO} "engine forked" >> ${LOGFILE}
+
+  cnt=0
+
+  while [ ${cnt} -lt ${START_COUNT} ] ; do
+    sleep ${START_DELAY}
+
+    ${ECHO} "Checking engine status..." >> ${LOGFILE}
+    ${BIN_DIR}/engine status >> ${LOGFILE} 2>&1
+
+    if [ $? -eq 0 ] ; then
+      ${ECHO} "ETLC engine succesfully started" >> ${LOGFILE}
+      exit 0     
+    else
+      ${ECHO} "engine not started yet" >> ${LOGFILE}
+      let cnt=cnt+1
+    fi
+
+  done
+
+  ${ECHO} "ETLC engine failed to start" >> ${LOGFILE}
+
+  exit 55
+
+}
+
+stop() {
+  
+  LOGFILE=${LOG_DIR}/engine/stop_engine_`date '+%y%m%d_%H%M%S'`.log
+
+  ${ECHO} "Stopping ETLC engine..." > ${LOGFILE}
+  
+  ${JAVA_HOME}/bin/java -d64 -Dpname="EngineAdmin" -mx64M \
+    -Djava.util.logging.config.file=${CONF_DIR}/engineAdminLogging.properties \
+    -Ddc5000.config.directory=${CONF_DIR} -Ddc.conf.dir=${CONF_DIR} -DLOG_DIR=${LOG_DIR} \
+    -classpath ${CPATH} -Djava.rmi.server.codebase="${CODEBASE}" \
+    com.distocraft.dc5000.etl.engine.main.EngineAdmin stop &
+
+  ${ECHO} "ETLC engine shutdown requested" >> ${LOGFILE}
+  
+  cnt=0
+
+  while [ ${cnt} -lt ${STOP_COUNT} ] ; do
+    sleep ${STOP_DELAY}
+
+    ${ECHO} "Checking engine status..." >> ${LOGFILE}
+    ePID=`${PS} -ef | ${GREP} java | ${GREP} ETLCEngine | $NAWK '{print $2}'`
+
+    if [ -z "${ePID}" ] ; then
+      ${ECHO} "ETLC engine shutdown is complete" >> ${LOGFILE}
+      exit 0
+    else
+      ${ECHO} "engine is still running" >> ${LOGFILE}
+      let cnt=cnt+1
+    fi
+
+  done
+
+  ePID=`${PS} -ef | ${GREP} java | ${GREP} ETLCEngine | $NAWK '{print $2}'`
+
+  ${ECHO} "ETLC engine refused to stop trying to kill it." >> ${LOGFILE}
+
+  if [ ! -z "${ePID}" ] ; then
+    kill -9 ${ePID}
+    ${ECHO} "ETLC engine killed." >> ${LOGFILE}
+  else
+    ${ECHO} "ELTC engine was dead before killing" >> ${LOGFILE}
+  fi
+
+  exit 0
+
+}
+
+#getting codebase
+COMMON_JAR=`${LS} ${PLATFORM_DIR}/common*/dclib/common.jar`
+LICENSING_JAR=`${LS} ${PLATFORM_DIR}/licensing*/dclib/licensing.jar`
+#SCHEDULER_JAR=`${LS} ${PLATFORM_DIR}/scheduler*/dclib/scheduler.jar`
+ENGINE_JAR=`${LS} ${PLATFORM_DIR}/engine*/dclib/engine.jar`
+CODEBASE="file://${COMMON_JAR} file://${ENGINE_JAR} file://${LICENSING_JAR}"
+case "$1" in
+start)
+      start
+      ;;
+stop)
+     stop
+     ;;
+*)
+     ${ECHO} "This script shall only be used by SMF!"
+     exit 10
+     ;;
+esac

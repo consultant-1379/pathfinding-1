@@ -1,0 +1,214 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Ericsson Network IQ ETLC engine control script
+#
+# Usage: engine start|stop|restart|status
+#
+# ----------------------------------------------------------------------
+# Copyright (c) 1999 - 2007 AB Ericsson Oy  All rights reserved.
+# ----------------------------------------------------------------------
+
+unalias stop 2> /dev/null
+
+. /eniq/home/dcuser/.profile
+
+if [ ${LOGNAME} != "dcuser"  ] ; then
+  echo "This script must be executed as dcuser"
+  exit 32
+fi
+
+if [ -z "$CONF_DIR" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 1
+fi
+
+if [ ! "${ENIQ_BASE_DIR}" ]; then
+    # Directory on the root filesystem
+    ENIQ_BASE_DIR=/eniq
+fi
+
+# ENIQ Admin Directory
+ENIQ_ADMIN_DIR=${ENIQ_BASE_DIR}/admin
+# Source the common functions
+if [ -s ${ENIQ_ADMIN_DIR}/lib/common_functions.lib ]; then
+    . ${ENIQ_ADMIN_DIR}/lib/common_functions.lib
+else
+    _err_msg_="File ${ENIQ_ADMIN_DIR}/lib/common_functions.lib not found"
+    abort_script "${_err_msg_}"
+fi
+
+. ${CONF_DIR}/niq.rc
+. ${BIN_DIR}/common_variables.lib
+
+JAVA_HOME="${RT_DIR}/java"
+
+CPATH="${PLATFORM_DIR}"
+for _jar_ in `${FIND} ${PLATFORM_DIR}/*/dclib/ -name \*.jar | ${GREP} -v mediator-R*` ; do
+	CPATH=${CPATH}:$_jar_
+done
+
+run_engine_command(){
+SERVICE_COMMAND="${1}"
+
+HNAME=$(${HOSTNAME})
+HOST_IP=$(${GETENT} ahostsv4 ${HNAME} | ${NAWK} '{print $1}' | ${HEAD} -1)
+_ip_address_=$( ${GREP} engine /eniq/sw/conf/service_names | ${NAWK} -F"::" '{print $1}')
+
+	
+# If the IP found in the order file matches my IP,
+# then I better run the command locally - no need to ssh
+if [ "${_ip_address_}" == "${HOST_IP}" ]; then
+	${SERVICE_COMMAND}
+	if [ $? -ne 0 ]; then
+		_err_msg_="Could not start engine locally"
+		abort_script "${_err_msg_}"
+	fi
+else
+
+	run_remote_cmd "${_ip_address_}" " . /eniq/home/dcuser/.profile;${SERVICE_COMMAND}" "$LOGFILE" "dcuser"
+	if [ $? -ne 0 ]; then
+		_err_msg_="Could not start engine service on  ${_serv_hostname_} blade"
+		abort_script "${_err_msg_}"
+	fi
+fi
+
+}
+
+start() 
+{
+  if [ -s ${SMF_BIN_DIR}/eniq_service_start_stop.bsh ]; then
+    run_engine_command "${SMF_BIN_DIR}/eniq_service_start_stop.bsh -s engine -a start"
+  else
+    run_engine_command "${ADMIN_BIN}/eniq_service_start_stop.bsh -s engine -a start"
+  fi
+    
+  if [ -f "/tmp/dwhdb_full" ]; then
+    ${RM} /tmp/dwhdb_full
+  fi
+}
+
+stop() 
+{
+  if [ -f "/tmp/dwhdb_full" ]; then    
+	  thisdate=`${DATE} +%Y_%m_%d`
+  	  message=`${DATE} "+%d.%m %H:%M:%S"`" 0 SEVERE engine.sh : DWHDB is full! Therefore Engine is killed and the service is put to maintenance mode."
+  	
+  	  ${ECHO} ${message} >> ${LOG_DIR}/engine/engine-${thisdate}.log
+  	  ${ECHO} ${message} >> ${LOG_DIR}/engine/error-${thisdate}.log
+    
+      ${RM} /tmp/dwhdb_full
+      ${PS} -ef | ${GREP} java | ${GREP} ETLCEngine | $NAWK '{print $2}' | xargs kill -9
+  else
+      if [ -s ${SMF_BIN_DIR}/eniq_service_start_stop.bsh ]; then
+        run_engine_command "${SMF_BIN_DIR}/eniq_service_start_stop.bsh -s engine -a stop"
+      else
+  	    run_engine_command "${ADMIN_BIN}/eniq_service_start_stop.bsh -s engine -a stop"
+	  fi
+  fi
+
+}
+
+# 0 implies sucessfull, 4 means engine is not initialized properly
+
+status() 
+{
+	${JAVA_HOME}/bin/java -d64 -Dpname="EngineAdmin" -Xmx64M \
+		-Djava.util.logging.config.file=${CONF_DIR}/engineAdminLogging.properties \
+		-Ddc5000.config.directory=${CONF_DIR} -Ddc.conf.dir=${CONF_DIR} -DLOG_DIR=${LOG_DIR} \
+		-classpath ${CPATH} -Djava.rmi.server.codebase="${CODEBASE}" \
+		com.distocraft.dc5000.etl.engine.main.EngineAdmin status
+
+	ECODE=$?
+	if [ -f ${BIN_DIR}/lwphelper ] ; then
+	  ${BIN_DIR}/lwphelper status > /dev/null 2>&1
+	  if [ $? -eq 0 ] ; then
+		  _lwps_="lwp helper is running"
+	  else
+		  _lwps_="lwp helper is not running"
+	  fi
+	fi
+
+	${ECHO} ""
+	if [ ${ECODE} -eq 0 ] ; then
+		${ECHO} "engine is running OK"
+		${ECHO} "$_lwps_"
+	else
+		if [ ${ECODE} != 4 ];then
+			${ECHO} "engine is not running"
+			${ECHO} "$_lwps_"
+		fi
+	fi
+	exit ${ECODE}
+}
+
+eexecute() 
+{
+
+  ${JAVA_HOME}/bin/java -d64 -Dpname="EngineAdmin" -Xmx64M \
+    -Djava.util.logging.config.file=${CONF_DIR}/engineAdminLogging.properties \
+    -Ddc5000.config.directory=${CONF_DIR} -Ddc.conf.dir=${CONF_DIR} -DLOG_DIR=${LOG_DIR} \
+    -DBIN_DIR=${BIN_DIR} -classpath ${CPATH} -Djava.rmi.server.codebase="${CODEBASE}" \
+    com.distocraft.dc5000.etl.engine.main.EngineAdmin ${X1} ${X2} ${X3} ${X4} ${X5} ${X6}
+
+  ECODE=$?
+
+  if [ ${ECODE} -ne 0 ] ; then
+    if [ "${X1}" != "" ] ; then
+    	${ECHO} "Execute failed"
+    fi
+  fi
+
+  exit ${ECODE}
+
+}
+
+abort_script()
+{
+_err_time_=`$DATE '+%Y-%b-%d_%H.%M.%S'`
+
+if [ "$1" ]; then
+    _err_msg_="${_err_time_} - $1"
+else
+    _err_msg_="${_err_time_} - ERROR : Script aborted.......\n"
+fi
+
+if [ "${LOGFILE}" ]; then
+    $ECHO "\nERROR : ${_err_msg_}\n" | $TEE -a ${LOGFILE}
+else
+    $ECHO "\nERROR : ${_err_msg_}\n"
+fi
+}
+
+#getting codebase
+COMMON_JAR=`ls ${PLATFORM_DIR}/common*/dclib/common.jar`
+LICENSING_JAR=`ls ${PLATFORM_DIR}/licensing*/dclib/licensing.jar`
+ENGINE_JAR=`ls ${PLATFORM_DIR}/engine*/dclib/engine.jar`
+CODEBASE="file://${COMMON_JAR} file://${ENGINE_JAR} file://${LICENSING_JAR}"
+case "$1" in
+start)
+      start
+      ;;
+stop)
+     stop
+     ;;
+restart)
+     stop
+     start
+     ;;
+status)
+     status
+     ;;
+-e)
+     X1=$2
+     X2=$3
+     X3=$4
+     X4=$5
+     X5=$6
+     X6=$7
+     eexecute
+     ;;
+*)
+     ${ECHO} "Usage: engine start|stop|restart|status|-e COMMAND"
+     exit 10
+     ;;
+esac

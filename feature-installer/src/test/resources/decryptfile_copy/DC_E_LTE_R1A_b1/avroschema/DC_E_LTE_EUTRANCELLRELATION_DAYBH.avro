@@ -1,0 +1,371 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_EUTRANCELLRELATION_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellRelation"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellTDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellFDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranFreqRelation"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoOscInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoOscIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccLteSpifho"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoTooLateHoInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccLteSpifho"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttLteInterFMbms"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbTpEvalUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbTpAcceptedUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExecAttLteInterFCaRedirect"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExecSuccLteInterFCaRedirect"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbTpUlAcceptedUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoWrongCellIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaRedirectQualifiedUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttLteInterFMbms"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeOutAttLteInterFQci1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttLteInterFRedirectCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccLteInterFUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccLteInterFCaRedirect"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSpifhoReportedUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttLteSpifho"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccNonMob"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccLteInterFLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttLteInterFLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoTooLateHoIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccLteIntraFTuneOut"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeOutSuccLteInterFQci1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaRedirectMeasRepUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoTooEarlyHoInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttLteInterFLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccLteInterFMbms"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoWrongCellInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttLteInterFUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAtoMeasRepUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbMeasRepUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccLteInterFMbms"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttLteIntraFTuneOut"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAtoQualifiedUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccLteInterFRedirectCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoWrongCellReestIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoWrongCellReestInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttNonMob"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttLteInterFRedirectCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttLteSpifho"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttLteInterFCaRedirect"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoTooEarlyHoIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbQualifiedUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccLteInterFRedirectCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttNonMob"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccNonMob"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccLteInterFLb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoOscQci1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoTooEarlyHoQci1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoTooLateHoQci1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoWrongCellQci1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoWrongCellReestQci1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary73"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary74"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary79"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary75"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary76"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary72"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary78"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary77"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepTNotAllowedLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary36"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepTNotAllowedLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccLteInterFUlTraffic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttLteInterFUlTraffic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccLteInterFUlTraffic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttLteInterFUlTraffic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUtilSubscrAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUtilSubscrFailRep"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUtilSubscrSucc"
+        }
+    ]
+}

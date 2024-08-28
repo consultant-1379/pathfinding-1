@@ -1,0 +1,139 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_MBMSSERVICE_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "Mbms"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "PmchMch"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "MbmsService"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "MbsfnArea"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary55"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsVolTrans"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsPktRecSynchCtrl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionEstabSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsPktRecSynchPayload"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionStopMmeNoSession"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsInterestIndicationPCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsPktDiscSynchPayloadMuted"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsPktLostSynchPayload"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsPktDiscSynchPayloadTooMuch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionStopAuditTimer"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionStopMme"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsInterestIndicationNonServ"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionEstabFailUpdate"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionEstabFailNotSupp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionUpdateFailParam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionEnd"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsVolReceived"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionEstabAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsInterestIndicationSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionUpdateSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsPktDiscSynchPayloadTooOld"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionUpdateAtt"
+        }
+    ]
+}

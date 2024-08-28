@@ -1,0 +1,12 @@
+licenses: 
+    operationalStatusInfo: 
+        operationalMode: NORMAL
+        autonomousModeDuration: 10
+    licensesInfo:
+    - license:
+        keyId: U0JKDDL
+        type: CAPACITY_CUMULATIVE
+      licenseStatus: VALID
+      capacityInfo:
+        isLimited: true
+        licensedCapacity: 10

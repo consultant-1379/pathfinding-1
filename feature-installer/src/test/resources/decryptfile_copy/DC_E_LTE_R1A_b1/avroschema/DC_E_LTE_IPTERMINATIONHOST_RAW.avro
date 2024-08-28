@@ -1,0 +1,67 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_IPTERMINATIONHOST_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "IpTerminationHost"
+        }, 
+        {
+            "type": "string", 
+            "name": "IpSystem"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIpIfStatsHCOutTransmits"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIpIfStatsHCInReceives"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIpIfStatsInDiscards"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIpIfStatsInAddrErrors"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIpIfStatsHCOutOctets"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIpIfStatsInHdrErrors"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIpIfStatsHCInOctets"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIpIfStatsOutDiscards"
+        }
+    ]
+}

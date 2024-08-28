@@ -1,0 +1,17 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "eric-oss-eniq-feature-installer.name" . }}-configmap
+  labels:
+    app.kubernetes.io/name: {{ template "eric-oss-eniq-feature-installer.name" . }}
+    helm.sh/chart: {{ template "eric-oss-eniq-feature-installer.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/version: {{ template "eric-oss-eniq-feature-installer.version" . }}
+  annotations:
+{{ include "eric-oss-eniq-feature-installer.product-info" . | indent 4 }}
+spec:
+  minAvailable: {{ template "eric-oss-eniq-feature-installer.pod-disruption-budget" . }}
+  selector:
+    matchLabels:
+      app: {{ include "eric-oss-eniq-feature-installer.name" . }}

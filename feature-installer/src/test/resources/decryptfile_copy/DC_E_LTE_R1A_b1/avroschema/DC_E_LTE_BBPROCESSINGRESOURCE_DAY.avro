@@ -1,0 +1,267 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_BBPROCESSINGRESOURCE_DAY", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "Equipment"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "BbProcessingResource"
+        }, 
+        {
+            "type": "string", 
+            "name": "DeviceGroup"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "Slot"
+        }, 
+        {
+            "type": "string", 
+            "name": "Subrack"
+        }, 
+        {
+            "type": "string", 
+            "name": "PlugInUnit"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "AuxPlugInUnit"
+        }, 
+        {
+            "type": "string", 
+            "name": "FieldReplaceableUnit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlPrbCapActual"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchCqiResCongBbm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchCqiResUtilBbm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlPrbCapActual"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlCapActual"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchSrResCongBbm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchSrResUtilBbm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlCapActual"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscDlEth"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlCapUsedSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlCapUsedSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscUlEthPacing"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscDlNoUeCtxt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlPrbUsedSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlCapUsedSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlPrbUsedMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlPrbUsedSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlPrbUsedMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscDlEthX2Fwd"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRohcCidSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlCapUsedMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlPrbUsedSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlCapUsedSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlCapUsedMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscDlEthBurst"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscDlEthFormat"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscDlNoMbmsCtxt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRohcCidSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlPrbUsedSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicPrbUnit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlCapUsedBrSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlCapUsedBrSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlCapUsedBrSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlCapUsedBrMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlCapUsedBrMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlCapUsedBrSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary154"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary153"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary155"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary156"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary166"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary165"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary164"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary163"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary157"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary162"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary51"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary48"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary47"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary50"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary49"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary52"
+        }
+    ]
+}

@@ -1,0 +1,55 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_RFPORT_DAY", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPimPwrSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPimPwrMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPimPwrVarianceSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPimPwrAttempts"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPimPwrSuccess"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPimPwrMeas"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPimPwrFailResUnavail"
+        }
+    ]
+}

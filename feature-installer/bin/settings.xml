@@ -1,0 +1,63 @@
+<settings>
+  <mirrors>
+    <mirror>
+      <id>eniq</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://arm1s11-eiffel013.eiffel.gic.ericsson.se:8443/nexus/content/groups/eniq</url>
+    </mirror>
+
+    <mirror>
+      <id>eniq-3pp</id>
+      <mirrorOf>eniq-3pp</mirrorOf>
+      <url>https://arm1s11-eiffel013.eiffel.gic.ericsson.se:8443/nexus/content/repositories/eniq-3pp</url>
+    </mirror>
+
+   <mirror>
+      <id>ossrc-public</id>
+      <mirrorOf>external:*,!prototype</mirrorOf>
+      <url>https://eselivm2v214l.lmera.ericsson.se:8081/nexus/content/groups/public</url>
+    </mirror>
+    <mirror>
+      <id>releases</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://arm1s11-eiffel013.eiffel.gic.ericsson.se:8443/nexus/content/repositories/releases</url>
+    </mirror>
+    <mirror>
+      <id>assure-releases</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://arm1s11-eiffel013.eiffel.gic.ericsson.se:8443/nexus/content/repositories/assure-releases/</url>
+    </mirror>
+  </mirrors>
+  <localRepository>/home/lciadm100/.m2/repository</localRepository>
+  <profiles>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>nexus</activeProfile>
+  </activeProfiles>
+  <servers>
+     <server>
+        <id>releases</id>
+        <username>ejenksonom</username>
+        <password>c(9(dIDwm+\4C}{&lt;</password>
+    </server>
+     <server>
+        <id>assure-releases</id>
+        <username>ejenksonom</username>
+        <password>c(9(dIDwm+\4C}{&lt;</password>
+    </server>
+
+     <server>
+        <id>eniqs-public</id>
+        <username>ejenksonom</username>
+        <password>c(9(dIDwm+\4C}{&lt;</password>
+    </server>
+    <server>
+        <id>eniq</id>
+        <username>ejenksonom</username>
+        <password>c(9(dIDwm+\4C}{&lt;</password>
+    </server>
+  </servers>
+  <pluginGroups>
+    <pluginGroup>org.sonatype.plugins</pluginGroup>
+  </pluginGroups>
+</settings>

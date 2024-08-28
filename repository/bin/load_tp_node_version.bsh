@@ -1,0 +1,99 @@
+#!/bin/bash
+# ********************************************************************
+# Ericsson Radio Systems AB                                     SCRIPT
+# ********************************************************************
+#
+# (c) Ericsson Radio Systems AB 2017 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of Ericsson Radio Systems AB, Sweden. The programs may be used
+# and/or copied only with the written permission from Ericsson Radio
+# Systems AB or in accordance with the terms and conditions stipulated
+# in the agreement/contract under which the program(s) have been
+# supplied.
+#
+# ********************************************************************
+# Name    : load_tp_node_version.bsh
+# Date    : 10/08/2017
+# Purpose : Script to load TPNodeVersion table
+# Usage   : ./load_tp_node_version.bsh
+#
+# ********************************************************************
+#
+# Command Section
+#
+# ********************************************************************
+
+
+DATE=/usr/bin/date
+ECHO=/usr/bin/echo
+HEAD=/usr/bin/head
+RM=/usr/bin/rm
+
+
+DBISQL="$(ls /eniq/sybase_iq/IQ-*/bin64/dbisql)"
+CONF_DIR=/eniq/sw/conf
+TPNODEVERSIONFILE=$CONF_DIR/TP_R_NodeVersion.csv
+TMP_DIR=/var/tmp
+
+if [ -s /eniq/admin/lib/common_functions.lib ]; then
+    . /eniq/admin/lib/common_functions.lib
+else
+        echo "Could not find /eniq/admin/lib/common_functions.lib"
+        exit 1
+fi
+
+abort_script()
+{
+if [ "$1" ]; then
+    _err_msg_=$1
+else
+    _err_msg_="Script aborted.......\n"
+fi
+}
+
+DWHREPUSER=`inigetpassword REP -v DWHREPUsername -f ${CONF_DIR}/niq.ini`
+DWHREPPASSWORD=`inigetpassword REP -v DWHREPPassword -f ${CONF_DIR}/niq.ini`
+REP_PORT=`inigetpassword REP -v PortNumber -f ${CONF_DIR}/niq.ini`
+REP_SERVER_NAME=`inigetpassword REP -v ServerName -f ${CONF_DIR}/niq.ini`
+
+
+if [ ! -x "$DBISQL" ]; then
+    _err_msg_="$DBISQL commands not found or not executable."
+    abort_script "$_err_msg_"
+fi
+
+$DBISQL -onerror exit -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "select count(*) from TPNodeVersion;OUTPUT TO $TMP_DIR/count">/dev/null
+
+count_table=`$HEAD -n 1 $TMP_DIR/count`
+
+if [[ $count_table -eq 0 ]]
+then
+   flag=1
+else 
+   flag=0
+fi
+
+if [[ $flag -eq 1 ]] 
+then
+	if [[ -f ${TPNODEVERSIONFILE} ]]
+	then
+		$DBISQL -onerror exit -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "set temporary option CONVERSION_ERROR = OFF;
+		load table TPNodeVersion( TECHPACK_NAME,
+		TECHPACK_VERSION,
+		NODE_TYPE,
+		NODE_VERSION) from '${TPNODEVERSIONFILE}' ESCAPES OFF QUOTES OFF DELIMITED BY ',' SKIP 1">/dev/null
+		if [[ $? -eq 0 ]]; then
+			$ECHO "Successfully loaded the table TPNodeVersion" 
+		else
+			$ECHO "Loading into table TPNodeVersion failed" 
+		fi
+	else
+		$ECHO "File ${TPNODEVERSIONFILE} not found" 
+	fi
+else 
+	$ECHO "Data already exists in the table"
+fi
+
+# Delete the temporary file created so far
+$RM -rf ${TMP_DIR}/count  

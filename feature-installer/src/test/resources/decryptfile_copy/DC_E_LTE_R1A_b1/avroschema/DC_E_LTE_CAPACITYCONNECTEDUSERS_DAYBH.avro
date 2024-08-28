@@ -1,0 +1,75 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_CAPACITYCONNECTEDUSERS_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "CapacityConnectedUsers"
+        }, 
+        {
+            "type": "string", 
+            "name": "CapacityLicenses"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "Licensing"
+        }, 
+        {
+            "type": "string", 
+            "name": "SystemFunctions"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersHardLimit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersActual"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersLevSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary38"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersTimeCong"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersLicense"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersLevSum"
+        }
+    ]
+}

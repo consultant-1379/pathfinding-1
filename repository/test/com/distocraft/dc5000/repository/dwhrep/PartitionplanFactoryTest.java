@@ -1,0 +1,353 @@
+package com.distocraft.dc5000.repository.dwhrep;
+
+import static org.junit.Assert.*;
+import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Vector;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import ssc.rockfactory.RockFactory;
+
+/**
+ * Test class for PartitionplanFactory. Testing handling of all the objects in
+ * Partitionplan table.
+ */
+public class PartitionplanFactoryTest {
+
+  private static PartitionplanFactory objUnderTest;
+
+  private static RockFactory rockFactory;
+
+  private static Partitionplan whereObject;
+
+  private static Connection con = null;
+
+  private static Statement stmt;
+
+  private static Field vec;
+  
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+
+    /* Reflecting the private fields */
+    vec = PartitionplanFactory.class.getDeclaredField("vec");
+    vec.setAccessible(true);
+
+    /* Creating connection for rockfactory */
+    try {
+      Class.forName("org.hsqldb.jdbcDriver").newInstance();
+      con = DriverManager.getConnection("jdbc:hsqldb:mem:testdb", "sa", "");
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    stmt = con.createStatement();
+    stmt.execute("CREATE TABLE Partitionplan ( PARTITIONPLAN VARCHAR(31)  ,DEFAULTSTORAGETIME BIGINT  ,DEFAULTPARTITIONSIZE BIGINT  ,MAXSTORAGETIME BIGINT  ,PARTITIONTYPE SMALLINT)");
+    
+    /* Initializing rockfactory */
+    rockFactory = new RockFactory("jdbc:hsqldb:mem:testdb", "sa", "", "org.hsqldb.jdbcDriver", "con", true);
+
+    /* Creating where object which tells what sort of query is to be done */
+    whereObject = new Partitionplan(rockFactory);
+  }
+
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+
+    /* Cleaning up after test */
+    stmt.execute("DROP TABLE Partitionplan");
+    con = null;
+    objUnderTest = null;
+  }
+  
+  @Before
+  public void setUp() throws Exception {
+
+    /* Adding example data to table */
+	  stmt.executeUpdate("INSERT INTO Partitionplan VALUES( 'testPARTITIONPLAN3'  ,3  ,3  ,3  ,5 )");
+	  stmt.executeUpdate("INSERT INTO Partitionplan VALUES( 'testPARTITIONPLAN2'  ,2  ,2  ,2  ,5 )");
+	  stmt.executeUpdate("INSERT INTO Partitionplan VALUES( 'testPARTITIONPLAN1'  ,1  ,1  ,1  ,5 )");
+
+    /* Initializing tested object before each test */
+    objUnderTest = new PartitionplanFactory(rockFactory, whereObject);
+  }
+  
+  @After
+  public void tearDown() throws Exception {
+
+    /* Cleaning up after each test */
+    stmt.executeUpdate("DELETE FROM Partitionplan");
+    objUnderTest = null;
+  }
+  
+  /**
+   * Testing PartitionplanFactory constructor. All rows found from Partitionplan
+   * table are put into vector.
+   */
+  @Test
+  public void testPartitionplanFactoryConstructorWithWhereObject() throws Exception {
+
+    /* Calling the tested constructor */
+    objUnderTest = new PartitionplanFactory(rockFactory, whereObject);
+
+    /* Asserting all Partitionplans are found and put into vector */
+    try {
+      Vector<Partitionplan> actualVector = (Vector) vec.get(objUnderTest);
+      String actual = actualVector.size() + ", " + actualVector.get(0).getPartitionplan() + ", " +  actualVector.get(1).getPartitionplan() + ", " +  actualVector.get(2).getPartitionplan();
+      String expected = "3, testPARTITIONPLAN3, testPARTITIONPLAN2, testPARTITIONPLAN1";
+      assertEquals(expected, actual);
+    } catch (ArrayIndexOutOfBoundsException aioobe) {
+      fail("Test Failed - One or more Partitionplans was not loaded from the table!\n " + aioobe);
+    }
+  }
+  
+  /**
+   * Testing constructor with negative case where rockfactory object is null.
+   */
+  @Test
+  public void testPartitionplanFactoryConstructorWithWhereObjectNullRockfactory() throws Exception {
+
+    /* Asserting that variables are initialized */
+    try {
+      objUnderTest = new PartitionplanFactory(null, whereObject);
+      fail("Test failed - NullPointerException was expected as rockfactory was initialized as null!");
+    } catch (NullPointerException npe) {
+      // test passed
+    } catch (Exception e) {
+      fail("Test failed - Unexpected exception occurred!\n" + e);
+    }
+  }
+  
+  /**
+   * Testing PartitionplanFactory constructor. All rows found from Partitionplan
+   * table are put into vector and data validation is on.
+   */
+  @Test
+  public void testPartitionplanFactoryConstructorWithValidate() throws Exception {
+
+    /* Calling the tested constructor */
+    objUnderTest = new PartitionplanFactory(rockFactory, whereObject, true);
+
+    /* Asserting all Partitionplans are found and put into vector */
+    try {     
+      Vector<Partitionplan> actualVector = (Vector) vec.get(objUnderTest);
+      String actual = actualVector.size() + ", " + actualVector.get(0).isValidateData() + ", " +  actualVector.get(1).isValidateData() + ", " +  actualVector.get(2).isValidateData();
+      String expected = 3 + ", " + true + ", " + true + ", " + true;
+      assertEquals(expected, actual);
+    } catch (ArrayIndexOutOfBoundsException aioobe) {
+      fail("Test Failed - One or more aggregations was not loaded from the table!\n " + aioobe);
+    }
+  }
+  
+  /**
+   * Testing constructor with negative case where rockfactory object is null.
+   */
+  @Test
+  public void testPartitionplanFactoryConstructorWithValidateNullRockfactory() throws Exception {
+
+    /* Asserting that variables are initialized */
+    try {
+      objUnderTest = new PartitionplanFactory(null, whereObject, true);
+      fail("Test failed - NullPointerException was expected as rockfactory was initialized as null!");
+    } catch (NullPointerException npe) {
+      // test passed
+    } catch (Exception e) {
+      fail("Test failed - Unexpected exception occurred!\n" + e);
+    }
+  }
+  
+  /**
+   * Testing PartitionplanFactory constructor. All rows found from Partitionplan
+   * table are put into vector and data validation is on.
+   */
+  @Test
+  public void testPartitionplanFactoryConstructorWithOrderClause() throws Exception {
+
+    /* Calling the tested constructor */
+    objUnderTest = new PartitionplanFactory(rockFactory, whereObject, "ORDER BY PARTITIONPLAN");
+
+    /* Asserting all Partitionplans are found and put into vector */
+    try {
+      Vector<Partitionplan> actualVector = (Vector) vec.get(objUnderTest);
+      String actual = actualVector.size() + ", " + actualVector.get(0).getPartitionplan() + ", " +  actualVector.get(1).getPartitionplan() + ", " +  actualVector.get(2).getPartitionplan();
+      String expected = "3, testPARTITIONPLAN1, testPARTITIONPLAN2, testPARTITIONPLAN3";
+      assertEquals(expected, actual);
+    } catch (ArrayIndexOutOfBoundsException aioobe) {
+      fail("Test Failed - One or more Partitionplans was not loaded from the table!\n " + aioobe);
+    }
+  }
+  
+  /**
+   * Testing constructor with negative case where rockfactory object is null.
+   */
+  @Test
+  public void testPartitionplanFactoryConstructorWithOrderClauseNullRockfactory() throws Exception {
+
+    /* Asserting that variables are initialized */
+    try {
+      objUnderTest = new PartitionplanFactory(null, whereObject, "ORDER BY PARTITIONPLAN");
+      fail("Test failed - NullPointerException was expected as rockfactory was initialized as null!");
+    } catch (NullPointerException npe) {
+      // test passed
+    } catch (Exception e) {
+      fail("Test failed - Unexpected exception occurred!\n" + e);
+    }
+  }
+  
+  /**
+   * Testing Element retrieving from a vector at certain location.
+   */
+  @Test
+  public void testGetElementAtWithGenericInput() throws Exception {
+
+    assertEquals( "testPARTITIONPLAN2" , objUnderTest.getElementAt(1).getPartitionplan().toString());
+  }
+  
+  /**
+   * Testing Element retrieving from a vector at certain location.
+   */
+  @Test
+  public void testGetElementAtOutOfBounds() throws Exception {
+
+    assertEquals(null, objUnderTest.getElementAt(5));
+  }
+  
+  /**
+   * Testing size retrieving of the vector containing Partitionplan objects.
+   */
+  @Test
+  public void testSize() throws Exception {
+
+    assertEquals(3, objUnderTest.size());
+  }
+  
+  /**
+   * Testing vector retrieving containing Partitionplan objects.
+   */
+  @Test
+  public void testGet() throws Exception {
+
+    try {
+      Vector<Partitionplan> actualVector = objUnderTest.get();
+      String actual = actualVector.size() + ", " + actualVector.get(0).getPartitionplan() + ", " +  actualVector.get(1).getPartitionplan() + ", " +  actualVector.get(2).getPartitionplan();
+      String expected = "3, testPARTITIONPLAN3, testPARTITIONPLAN2, testPARTITIONPLAN1";
+      assertEquals(expected, actual);
+    } catch (ArrayIndexOutOfBoundsException aioobe) {
+      fail("Test Failed - One or more aggregations was not loaded from the table!\n " + aioobe);
+    }
+  }
+  
+  /**
+   * Test comparing two Partitionplan objects. True is returned if the two vectors
+   * containing the objects are the same, otherwise false.
+   */
+  @Test
+  public void testEqualsWithSameObjects() throws Exception {
+
+    /* Creating another vector with the same objects */
+    Vector otherVector = new Vector();
+    for (int i = 3; i > 0; i--) {
+      Partitionplan testObject = new Partitionplan(rockFactory, "testPARTITIONPLAN" + i);
+      otherVector.add(testObject);
+    }
+
+    /* Asserting the two vectors are the same */
+    assertEquals(true, objUnderTest.equals(otherVector));
+  }
+  
+  /**
+   * Test comparing two Partitionplan objects. True is returned if the two vectors
+   * containing the objects are the same, otherwise false.
+   */
+  @Test
+  public void testEqualsWithSameVector() throws Exception {
+
+    /* Creating another vector with the same vector */
+    Vector otherVector = (Vector) vec.get(objUnderTest);
+
+    /* Asserting the two vectors are the same */
+    assertEquals(true, objUnderTest.equals(otherVector));
+  }
+  
+  /**
+   * Test comparing two Partitionplan objects. True is returned if the two vectors
+   * containing the objects are the same, otherwise false.
+   */
+  @Test
+  public void testEqualsWithNullVector() throws Exception {
+
+    Vector otherVector = null;
+    assertEquals(false, objUnderTest.equals(otherVector));
+  }
+  
+  /**
+   * Test comparing two Partitionplan objects. True is returned if the two vectors
+   * containing the objects are the same, otherwise false.
+   */
+  @Test
+  public void testEqualsWithDifferentAmountOfObjects() throws Exception {
+
+    /* Creating another vector with only one object */
+    Vector otherVector = new Vector();
+    Partitionplan testObject = new Partitionplan(rockFactory, "testPARTITIONPLAN1");
+    otherVector.add(testObject);
+    
+    /* Asserting the two vectors are the same */
+    assertEquals(false, objUnderTest.equals(otherVector));
+  }
+  
+  /**
+   * Test comparing two Partitionplan objects. True is returned if the two vectors
+   * containing the objects are the same, otherwise false.
+   */
+  @Test
+  public void testEqualsWithDifferentObjects() throws Exception {
+
+    /* Creating another vector with different objects */
+    Vector otherVector = new Vector();
+    for (int i = 1; i < 4; i++) {
+      Partitionplan testObject = new Partitionplan(rockFactory, "testPARTITIONPLAN" + i);
+      otherVector.add(testObject);
+    }
+    
+    /* Asserting the two vectors are the same */
+    assertEquals(false, objUnderTest.equals(otherVector));
+  }
+  
+  /**
+   * Test deleting objects from the database.
+   */
+  @Test
+  public void testDeleteDB() throws Exception {
+    
+    /* Calling the tested object */
+    String actual = objUnderTest.deleteDB() + ", ";
+    
+    /* Getting row count */
+    int rows = 0;
+    ResultSet res = stmt.executeQuery("SELECT COUNT(*) FROM Partitionplan");
+    while (res.next()) {
+      rows = res.getInt(1);
+    }
+    
+    /* Asserting object is deleted from the database */
+    actual += rows;
+    assertEquals(3 + ", " + 0, actual);
+  }
+  
+  /**
+   * Test object cloning.
+   */
+  @Test
+  public void testClone() throws Exception {
+    
+    /* Asserting if cloning works */
+    Object clonedObject = objUnderTest.clone();
+    assertEquals(PartitionplanFactory.class, clonedObject.getClass());
+  }
+}

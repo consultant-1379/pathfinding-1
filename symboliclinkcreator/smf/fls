@@ -1,0 +1,374 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Ericsson Network IQ FLS control script
+#
+# Usage: /eniq/admin/bin/fls start|stop|status|-e COMMAND
+#
+# ----------------------------------------------------------------------
+# Copyright (c) 1999 - 2007 AB Ericsson By  All rights reserved.
+# ----------------------------------------------------------------------
+
+# ********************************************************************
+#
+#       Configuration Section
+#
+# ********************************************************************
+
+. /eniq/home/dcuser/.profile
+
+if [ ${LOGNAME} != "dcuser"  ] ; then
+  echo "This script must be executed as dcuser"
+  exit 32
+fi
+
+if [ -z "${CONF_DIR}" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 1
+fi
+
+. ${CONF_DIR}/niq.rc
+
+_dir_=`/usr/bin/dirname $0`
+SCRIPTHOME=`cd $_dir_ 2>/dev/null && pwd || echo $_dir_`
+
+if [ -s $SCRIPTHOME/../lib/common_functions.lib ]; then
+    . $SCRIPTHOME/../lib/common_functions.lib
+else
+        echo "Could not find $SCRIPTHOME/../lib/common_functions.lib"
+        exit 63
+fi
+
+. ${BIN_DIR}/common_variables.lib
+
+if [ -s ${CONF_DIR}/dwh.ini ]; then
+  ETLC_USER=`iniget ETLC -v UserName -f ${CONF_DIR}/dwh.ini`
+  START_COUNT=`iniget ETLC -v SchedulerStartCount -f ${CONF_DIR}/dwh.ini`
+  START_DELAY=`iniget ETLC -v SchedulerStartDelay -f ${CONF_DIR}/dwh.ini`
+  STOP_COUNT=`iniget ETLC -v SchedulerStopCount -f ${CONF_DIR}/dwh.ini`
+  STOP_DELAY=`iniget ETLC -v SchedulerStopDelay -f ${CONF_DIR}/dwh.ini`
+else
+  ETLC_USER=`iniget ETLC -v UserName -f ${CONF_DIR}/niq.ini`
+  START_COUNT=`iniget ETLC -v SchedulerStartCount -f ${CONF_DIR}/niq.ini`
+  START_DELAY=`iniget ETLC -v SchedulerStartDelay -f ${CONF_DIR}/niq.ini`
+  STOP_COUNT=`iniget ETLC -v SchedulerStopCount -f ${CONF_DIR}/niq.ini`
+  STOP_DELAY=`iniget ETLC -v SchedulerStopDelay -f ${CONF_DIR}/niq.ini`
+fi
+  #STOP_COUNT=5
+
+JAVA_HOME="${RT_DIR}/java"
+CPATH="${PLATFORM_DIR}:/eniq/sw/installer/lib/installer.jar"
+
+for _jar_ in `${FIND} ${PLATFORM_DIR}/*/dclib/ -name \*.jar` ; do
+	CPATH="${CPATH}:$_jar_"
+done
+
+#*********************************************************************
+#
+# 	functions
+#
+# ********************************************************************
+### Function: start ###
+#
+# Start the FLS service 
+#
+# Arguments:
+#       None
+# Return Values:
+#       None
+#HEAP_SIZE = 256M
+start() {
+
+
+  if [ ! -d ${LOG_DIR}/symboliclinkcreator ] ; then
+    ${MKDIR} ${LOG_DIR}/symboliclinkcreator
+    //${ECHO} "${MKDIR}"
+  fi
+
+  LOGFILE=${LOG_DIR}/symboliclinkcreator/start_fls_`${DATE} '+%y%m%d_%H%M%S'`.log
+  ${ECHO} "Starting fls ..." > ${LOGFILE}
+
+  xFLS=`${PS} -ef | ${GREP} java | ${GREP} "pname=FLSservice" | ${NAWK} '{print $2}'`
+  if [ ! -z "${xFLS}" ] ; then
+    ${ECHO} "Killing previous fls instance in PID ${xFLS}" >> ${LOGFILE}
+    kill -9 ${xFLS} 2>&1 | tee -a ${LOGFILE}
+    ${ECHO} "Previous fls process killed" >> ${LOGFILE}
+  fi
+  
+	if [ -f /eniq/installation/config/fls_conf ] && [ -s /eniq/installation/config/fls_conf ] ; then
+  HEAP_SIZE=128
+  enmCount=`${CAT} /eniq/installation/config/fls_conf |wc -l`
+  if [ $enmCount -gt 1 ] ; then
+  	HEAP_SIZE=192
+  fi
+  ${ECHO} "\${CPATH} is ${CPATH}" >> ${LOGFILE} 2>&1 &
+                exec ${JAVA_HOME}/bin/java -d64 -server -Dpname="FLSservice" \
+				-mx${HEAP_SIZE}M -DHEAP_SIZE=${HEAP_SIZE}M \
+	-XX:+ExitOnOutOfMemoryError \
+                -Djava.util.logging.config.file=${CONF_DIR}/symboliclinkcreatorLogging.properties \
+		  -Dlog4j.configuration=file:${CONF_DIR}/symboliclinkcreator.log4j.properties \
+                -DLOG_DIR=${LOG_DIR} \
+                -DCONF_DIR=${CONF_DIR} \
+                -classpath ${CPATH} \
+                -Djava.rmi.server.codebase="${CODEBASE}" \
+                com.ericsson.eniq.flssymlink.fls.Main >> ${LOGFILE} 2>&1 &
+	
+  ${ECHO} "fls forked" >> ${LOGFILE}
+
+  cnt=0
+
+  while [ ${cnt} -lt ${START_COUNT} ] ; do
+    sleep ${START_DELAY}
+
+    ${ECHO} "Checking fls status..." >> ${LOGFILE}
+	${BIN_DIR}/fls status >> ${LOGFILE} 2>&1
+
+	if [ $? -eq 0 ] ; then
+	      ${ECHO} "FLS service successfully started" >> ${LOGFILE}
+	      exit 0     
+	else
+	      ${ECHO} "FLS service not started yet" >> ${LOGFILE}
+	      let cnt=cnt+1
+	fi
+
+ done
+
+  ${ECHO} "FLS service failed to start" >> ${LOGFILE}
+
+  exit 55
+	else
+	    ${ECHO} "FLS is not enabled" >> ${LOGFILE}
+			exit 0
+	fi
+}
+
+#*********************************************************************
+#
+# 	functions
+#
+# ********************************************************************
+### Function: stop ###
+#
+# Stop the FLS service.
+#
+# Arguments:
+#       None
+# Return Values:
+#       None
+
+stop() {
+  
+  LOGFILE=${LOG_DIR}/symboliclinkcreator/stop_fls_`${DATE} '+%y%m%d_%H%M%S'`.log
+
+  ${ECHO} "Stopping fls ..." > ${LOGFILE}
+
+#	if [ -f /eniq/installation/config/fls_conf ] && [ -s /eniq/installation/config/fls_conf ] ; then
+  ${JAVA_HOME}/bin/java -d64 -Dpname="FLSservice" -mx64M -classpath ${CPATH} com.ericsson.eniq.flssymlink.fls.FlsStopMain &
+
+  ${ECHO} "FLS shutdown requested" >> ${LOGFILE}
+
+  cnt=0
+
+ while [ ${cnt} -lt ${STOP_COUNT} ] ; do
+    sleep ${STOP_DELAY}
+
+    ${ECHO} "Checking fls status..." >> ${LOGFILE}
+
+ ePID=`${PS} -eaf | ${GREP} java | ${GREP} FLSservice | ${NAWK} '{print $2}'`
+
+ if [ -z "${ePID}" ] ; then
+      ${ECHO} "FLS service shutdown is complete" >> ${LOGFILE}
+      exit 0
+    else
+      ${ECHO} "FLS is still running" >> ${LOGFILE}
+      let cnt=cnt+1
+    fi
+ done
+
+ ePID=`${PS} -eaf | ${GREP} java | ${GREP} FLSservice | ${NAWK} '{print $2}'`
+
+ ${ECHO} "FLS service refused to stop. Trying to kill it." >> ${LOGFILE}
+
+ if [ ! -z "${ePID}" ] ; then
+   kill -9 ${ePID}
+   ${ECHO} "FLS killed." >> ${LOGFILE}
+ else
+    ${ECHO} "FLS was dead before killing" >> ${LOGFILE}
+ fi
+
+#	else
+#	    ${ECHO} "FLS is not enabled" >> ${LOGFILE}
+#	fi
+	
+ exit 0
+
+}
+
+#*********************************************************************
+#
+# 	Functions
+#
+# ********************************************************************
+### Function: status ###
+#
+# status of the FLS service.
+#
+# Arguments:
+#       None
+# Return Values:
+#       None
+#
+
+status(){
+
+	if [ -f /eniq/installation/config/fls_conf ] && [ -s /eniq/installation/config/fls_conf ] ; then
+		${JAVA_HOME}/bin/java -d64 -Dpname="FLSAdmin" -mx64M \
+		-Djava.util.logging.config.file=${CONF_DIR}/symboliclinkcreatorLogging.properties \
+		-Ddc5000.config.directory=${CONF_DIR} -Ddc.conf.dir=${CONF_DIR} -DLOG_DIR=${LOG_DIR} \
+		-classpath ${CPATH} -Djava.rmi.server.codebase="${CODEBASE}" \
+		com.ericsson.eniq.flssymlink.fls.FlsProfileHandler status
+		
+		ECODE=$?
+
+		${ECHO} ""
+		if [ ${ECODE} -eq 0 ] ; then
+			${ECHO} "FLS is running"
+		else
+			${ECHO} "FLS is not running"
+		fi
+		exit ${ECODE}
+	else
+	    ${ECHO} "FLS is not enabled"
+	fi
+	exit 0	
+}
+
+
+#*********************************************************************
+#
+# 	Functions
+#
+# ********************************************************************
+### Function: eexecute ###
+#
+# Arguments:
+#       None
+# Return Values:
+#       None
+#
+eexecute() 
+{
+
+	if [ -f /eniq/installation/config/fls_conf ] && [ -s /eniq/installation/config/fls_conf ] ; then
+		if [[ ${X1} == "start" ]]; then
+			${ECHO} "Starting FLS..."
+			start
+		elif [[ ${X1} == "stop" ]]; then
+			${ECHO} "Stopping FLS..."
+			stop
+		else
+		${JAVA_HOME}/bin/java -d64 -Dpname="FLSAdmin" -mx64M \
+		-Djava.util.logging.config.file=${CONF_DIR}/symboliclinkcreatorLogging.properties \
+		-Ddc5000.config.directory=${CONF_DIR} -Ddc.conf.dir=${CONF_DIR} -DLOG_DIR=${LOG_DIR} \
+		-classpath ${CPATH} -Djava.rmi.server.codebase="${CODEBASE}" \
+		com.ericsson.eniq.flssymlink.fls.FlsProfileHandler ${X1} ${X2} ${X3}
+		fi
+
+		ECODE=$?
+
+		if [ ${ECODE} -ne 0 ] ; then
+			if [ "${X1}" != "" ] ; then
+				${ECHO} "Execute failed"
+			fi
+		fi
+
+		exit ${ECODE}
+  
+	else
+	    ${ECHO} "FLS is not enabled"
+	fi
+	exit 0
+
+}
+
+
+# ********************************************************************
+#
+#   Main body of program
+#
+# ********************************************************************
+
+#getting codebase
+
+COMMON_JAR=`${LS} ${PLATFORM_DIR}/common*/dclib/common.jar`
+
+LICENSING_JAR=`${LS} ${PLATFORM_DIR}/licensing*/dclib/licensing.jar`
+
+#SCHEDULER_JAR=`${LS} ${PLATFORM_DIR}/scheduler*/dclib/scheduler.jar`
+
+ENGINE_JAR=`${LS} ${PLATFORM_DIR}/engine*/dclib/engine.jar`
+CODEBASE="file://${COMMON_JAR} file://${ENGINE_JAR} file://${LICENSING_JAR}"
+if [ "$#" -ne 1 ] && [ "$#" -ne 6 ]; then
+	${ECHO} "Usage:"
+	${ECHO} "/eniq/admin/bin/fls start|stop|status"
+    ${ECHO} "/eniq/admin/bin/fls -e changeProfile -o <<valid_enm_host_name_alias>|ALL|all> -p <Normal|OnHold>"
+	${ECHO} ""
+	${ECHO} "  The following commands are not supported and shall not be used unless directed by Ericsson."
+	${ECHO} "     start"
+	${ECHO} "     stop"
+	${ECHO} ""
+    exit 0
+fi
+if [ "$#" -eq 1 ] && ([ "$1" != "start" ] && [ "$1" != "stop" ] && [ "$1" != "status" ]); then
+    ${ECHO} "Usage:"
+	${ECHO} "/eniq/admin/bin/fls start|stop|status"
+    ${ECHO} "/eniq/admin/bin/fls -e changeProfile -o <<valid_enm_host_name_alias>|ALL|all> -p <Normal|OnHold>"
+	${ECHO} ""
+	${ECHO} "  The following commands are not supported and shall not be used unless directed by Ericsson."
+	${ECHO} "     start"
+	${ECHO} "     stop"
+	${ECHO} ""
+    exit 0
+fi
+while [[ $# > 0 ]]
+do
+	i="$1"
+	shift
+    
+    case "$i" in
+	start)
+		  start
+	      ;;
+	stop)
+	     stop
+	     ;;
+	status)
+	     status
+	     ;;
+	-e)
+		 X1=$1
+		 shift
+	     ;;
+	-o)
+		 X2=$1
+		 shift
+		 ;;
+	-p)
+		 X3=$1
+		 shift
+		 eexecute
+		 ;;
+	*)
+	     ${ECHO} "Usage:"
+	     ${ECHO} "/eniq/admin/bin/fls start|stop|status"
+	     ${ECHO} "/eniq/admin/bin/fls -e changeProfile -o <<valid_enm_host_name_alias>|ALL|all> -p <Normal|OnHold>"
+		 ${ECHO} ""
+		 ${ECHO} "  The following commands are not used unless directed by Ericsson."
+		 ${ECHO} "     start"
+		 ${ECHO} "     stop"
+		 ${ECHO} ""
+	     exit 10
+	     ;;
+	esac
+done
+
+

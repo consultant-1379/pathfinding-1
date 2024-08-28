@@ -1,0 +1,97 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Ericsson Network IQ ETLC engine control script for SMF to use
+#
+# Usage: regenerateslots
+#
+# ----------------------------------------------------------------------
+# Copyright (c) 1999 - 2011 AB Ericsson Oy  All rights reserved.
+# ----------------------------------------------------------------------
+
+if [ -z "${CONF_DIR}" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 1
+fi
+
+. ${CONF_DIR}/niq.rc
+
+_dir_=`/usr/bin/dirname $0`
+SCRIPTHOME=`cd $_dir_ 2>/dev/null && pwd || echo $_dir_`
+
+if [ -s $SCRIPTHOME/../lib/common_functions.lib ]; then
+    . $SCRIPTHOME/../lib/common_functions.lib
+else
+        echo "Could not find $SCRIPTHOME/../lib/common_functions.lib"
+        exit 63
+fi
+
+if [ -s ${CONF_DIR}/dwh.ini ]; then
+  ETLC_USER=`iniget ETLC -v UserName -f ${CONF_DIR}/dwh.ini`
+  HEAP_SIZE=`iniget ETLC -v EngineHeap -f ${CONF_DIR}/dwh.ini`
+  START_COUNT=`iniget ETLC -v EngineStartCount -f ${CONF_DIR}/dwh.ini`
+  START_DELAY=`iniget ETLC -v EngineStartDelay -f ${CONF_DIR}/dwh.ini`    
+  STOP_COUNT=`iniget ETLC -v EngineStopCount -f ${CONF_DIR}/dwh.ini`
+  STOP_DELAY=`iniget ETLC -v EngineStopDelay -f ${CONF_DIR}/dwh.ini`
+else
+  ETLC_USER=`iniget ETLC -v UserName -f ${CONF_DIR}/niq.ini`
+  HEAP_SIZE=`iniget ETLC -v EngineHeap -f ${CONF_DIR}/niq.ini`
+  START_COUNT=`iniget ETLC -v EngineStartCount -f ${CONF_DIR}/niq.ini`
+  START_DELAY=`iniget ETLC -v EngineStartDelay -f ${CONF_DIR}/niq.ini`
+  STOP_COUNT=`iniget ETLC -v EngineStopCount -f ${CONF_DIR}/niq.ini`
+  STOP_DELAY=`iniget ETLC -v EngineStopDelay -f ${CONF_DIR}/niq.ini`
+fi
+
+
+if [ ${LOGNAME} != ${ETLC_USER} ] ; then
+  echo "ETLC engine must be started as user ${ETLC_USER}"
+  exit 32
+fi
+
+JAVA_HOME="/eniq/sw/runtime/java"
+
+CPATH="${PLATFORM_DIR}"
+
+DIRS=`ls ${PLATFORM_DIR}`
+
+for file in ${DIRS}
+do
+  if [ -d ${PLATFORM_DIR}/${file}/dclib ]
+  then
+    JARS=`ls ${PLATFORM_DIR}/${file}/dclib/*.jar`
+
+    for jar in ${JARS}
+    do
+      CPATH="${CPATH}:${jar}"
+    done
+  fi
+done
+
+#getting codebase
+COMMON_JAR=`ls ${PLATFORM_DIR}/common*/dclib/common.jar`
+LICENSING_JAR=`ls ${PLATFORM_DIR}/licensing*/dclib/licensing.jar`
+SCHEDULER_JAR=`ls ${PLATFORM_DIR}/scheduler*/dclib/scheduler.jar`
+ENGINE_JAR=`ls ${PLATFORM_DIR}/engine*/dclib/engine.jar`
+CODEBASE="file://${SCHEDULER_JAR} file://${COMMON_JAR} file://${ENGINE_JAR} file://${LICENSING_JAR}"
+
+#run regenerate class
+
+if [ ! -d ${LOG_DIR}/engine ] ; then
+    mkdir ${LOG_DIR}/engine
+fi
+
+LOGFILE=${LOG_DIR}/engine/regenerate_slots_`date '+%y%m%d_%H%M%S'`.log
+
+echo "Starting slot regeneration..." > ${LOGFILE}
+
+${JAVA_HOME}/bin/java -d64 -Dpname="RegenSlots" -mx${HEAP_SIZE} -Djava.util.logging.config.file=${CONF_DIR}/engineLogging.properties -Dlog4j.configuration=file:${CONF_DIR}/engine.log4j.properties -Ddc5000.config.directory=${CONF_DIR} -DCONF_DIR=${CONF_DIR} -DPMDATA_DIR=${PMDATA_DIR} -DPMDATA_SOEM_DIR=${PMDATA_SOEM_DIR} -DPMDATA_SIM_DIR=${PMDATA_SIM_DIR} -DETLDATA_DIR=${ETLDATA_DIR} -DEVENTS_ETLDATA_DIR=${EVENTS_ETLDATA_DIR} -DLOG_DIR=${LOG_DIR} -DREJECTED_DIR=${REJECTED_DIR} -DREFERENCE_DIR=${REFERENCE_DIR} -DPLATFORM_DIR=${PLATFORM_DIR} -DARCHIVE_DIR=${ARCHIVE_DIR} -DHEAP_SIZE=${HEAP_SIZE} -server -classpath ${CPATH} -Djava.rmi.server.codebase="${CODEBASE}" com.distocraft.dc5000.etl.engine.system.RegenerateSlotProfiles >> ${LOGFILE} 2>&1
+
+REGEN_EXIT_CODE=$?
+
+if [ ${REGEN_EXIT_CODE} -eq 0 ] ; then
+  echo "Regeneration of slots successful." >> ${LOGFILE}
+  exit 0     
+else
+  echo "Regeneration of slots failed [${REGEN_EXIT_CODE}]." >> ${LOGFILE}
+  exit 1
+fi
+

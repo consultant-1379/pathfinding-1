@@ -1,0 +1,14 @@
+<project name="EnableCounters" basedir=".">
+	<taskdef resource="net/sf/antcontrib/antlib.xml" /> 
+	<taskdef name="GetDBProperties" classname="com.distocraft.dc5000.install.ant.GetDBProperties" /> 
+
+	<target name="execute_sql">
+		<property name="con_type" value="USER" /> 
+		<GetDBProperties name="dwhrep" configurationDirectory="/eniq/sw/conf" type="${con_type}" /> 
+		<propertycopy name="rs_drv" from="dwhrepDatabaseDriver" /> 
+		<propertycopy name="rs_url" from="dwhrepDatabaseUrl" /> 
+		<propertycopy name="rs_usr" from="dwhrepDatabaseUsername" /> 
+		<propertycopy name="rs_pwd" from="dwhrepDatabasePassword" /> 
+		<sql driver="${rs_drv}" url="${rs_url}" userid="${rs_usr}" password="${rs_pwd}">update dwhrep.DataItem set DATAID=DATANAME where DATAFORMATID like '%DC_E_RAN_UCELL_V_PMRES%' and DATANAME in ('pmRes7','pmRes8','pmRes9','pmRes10','pmRes11','pmRes12')</sql> 
+	</target>
+</project>

@@ -1,0 +1,104 @@
+#!/bin/bash
+# ********************************************************************
+# Ericsson Radio Systems AB                                     SCRIPT
+# ********************************************************************
+#
+# (c) Ericsson Radio Systems AB 2015 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of Ericsson Radio Systems AB, Sweden. The programs may be used
+# and/or copied only with the written permission from Ericsson Radio
+# Systems AB or in accordance with the terms and conditions stipulated
+# in the agreement/contract under which the program(s) have been
+# supplied.
+#
+# ********************************************************************
+# Name    : backupaggregation.bsh
+# Date    : 11/02/2016
+# Purpose : Script to execute the sql commands using dbisql  
+#           
+# Usage   : backupaggregation.bsh
+#
+# ********************************************************************
+#
+# Command Section
+#
+# ********************************************************************
+
+# Commands
+ECHO=/usr/bin/echo
+DBISQL="$(ls /eniq/sybase_iq/IQ-*/bin64/dbisql)"
+ERRLOGFILE=/eniq/log/sw_log/engine/backupaggregation.log
+FLEX_BKUP_DIR=/eniq/flex_data_bkup
+FLEX_DATA_BACKUP_PROPERTIES=$CONF_DIR/flex_data_bkup.properties
+. $FLEX_DATA_BACKUP_PROPERTIES
+
+if [ -s /eniq/admin/lib/common_functions.lib ]; then
+    . /eniq/admin/lib/common_functions.lib
+else
+        $ECHO "Could not find /eniq/admin/lib/common_functions.lib"
+        exit 1
+fi
+
+if [ ! -d ${FLEX_BKUP_DIR}/Log_AggregationStatus/ ]
+then
+$MKDIR -p ${FLEX_BKUP_DIR}/Log_AggregationStatus/
+fi
+
+DWHDBPASSWORD=`inigetpassword DWH -v DCPassword -f ${CONF_DIR}/niq.ini`
+DWHDB_PORT=`inigetpassword DWH -v PortNumber -f ${CONF_DIR}/niq.ini`
+DWH_SERVER_NAME=`inigetpassword DWH -v ServerName -f ${CONF_DIR}/niq.ini`
+DWHREPUSER=`inigetpassword REP -v DWHREPUsername -f ${CONF_DIR}/niq.ini`
+DWHREPPASSWORD=`inigetpassword REP -v DWHREPPassword -f ${CONF_DIR}/niq.ini`
+REP_PORT=`inigetpassword REP -v PortNumber -f ${CONF_DIR}/niq.ini`
+REP_SERVER_NAME=`inigetpassword REP -v ServerName -f ${CONF_DIR}/niq.ini`
+
+fromdate=$AGGREGATION_ACTIVATED_DATE
+todate=`TZ=GMT+24 date +'%Y-%m-%d'`
+days=$BACKUP_RETENTION_PERIOD
+
+#identify correct fromdate
+diffDate=`$DBISQL -onerror exit -nogui -c "eng=${DWH_SERVER_NAME};links=tcpip{host=${DWH_SERVER_NAME};port=${DWHDB_PORT}};uid=dc;pwd=${DWHDBPASSWORD}" "SELECT DATEDIFF(day,'$fromdate','$todate') AS DiffDate" | $SED -e '1,/\-\-/d' -e '/ rows/,$d' | $SED '/^$/d' | tr -d ' '`
+
+diffDate=$((diffDate+1))
+
+if [[ $diffDate > $days ]];then
+
+	fromdate=`$DBISQL -onerror exit -nogui -c "eng=${DWH_SERVER_NAME};links=tcpip{host=${DWH_SERVER_NAME};port=${DWHDB_PORT}};uid=dc;pwd=${DWHDBPASSWORD}" "SELECT CONVERT(VARCHAR(10), (select dateadd(day, -$((days-1)), '$todate')), 121)" | $SED -e '1,/\-\-/d' -e '/ rows/,$d' | $SED '/^$/d' | tr -d ' '`
+	
+fi
+
+#fetch typenames
+$DBISQL -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "select distinct d.TYPENAME from versioning as v, dwhtype as d, BackupConfiguration as b WHERE v.VERSIONID in (select distinct VERSIONID from tpActivation where STATUS='ACTIVE') and v.TECHPACK_NAME = d.TECHPACK_NAME and b.ENABLED_FLAG = 'Y' group by v.LICENSENAME,d.TYPENAME,b.LICENSEID having v.LICENSENAME like '%'+b.LICENSEID+'%'; output to /var/tmp/typenames.txt"
+
+if [[ $? -eq 0 ]]; then
+	$ECHO "DBISQL command to get typenames successfully executed.." >> $ERRLOGFILE 
+else
+	$ECHO "DBISQL command to get typenames failed.." >> $ERRLOGFILE 
+fi
+
+#format typenames 
+typenames=`cat /var/tmp/typenames.txt | tr  '\n' ','`
+typenames=${typenames%?}
+
+#backup query
+$DBISQL -onerror exit -nogui -c "eng=${DWH_SERVER_NAME};links=tcpip{host=${DWH_SERVER_NAME};port=${DWHDB_PORT}};uid=dc;pwd=${DWHDBPASSWORD}" "select * from Log_AggregationStatus where typename in (${typenames}) and AGGREGATIONSCOPE not in ('month','week') and (INITIAL_AGGREGATION between '${fromdate} 00:00:00' and '${todate} 23:59:59' OR LAST_AGGREGATION between '${fromdate} 00:00:00' and '${todate} 23:59:59'); output to $FLEX_BKUP_DIR/Log_AggregationStatus/Log_AggregationStatus_${fromdate}_${todate}.txt FORMAT ASCII DELIMITED BY '\\x09' QUOTE '' WITH COLUMN NAMES"
+
+if [[ $? -eq 0 ]]; then
+	$ECHO "DBISQL command to take backup of data successfully executed.." >> $ERRLOGFILE 
+else
+	$ECHO "DBISQL command to take backup of data failed.." >> $ERRLOGFILE 
+fi
+
+#delete all previous backup files
+$RM $FLEX_BKUP_DIR/Log_AggregationStatus/Log_AggregationStatus_*.txt.gz
+
+#zip the backup file
+gzip $FLEX_BKUP_DIR/Log_AggregationStatus/Log_AggregationStatus_${fromdate}_${todate}.txt
+
+#cleanup
+rm /var/tmp/typenames.txt
+
+if [[ $? -ne 0 ]]; then
+	 $ECHO "could not delete the temporary file /var/tmp/typenames.txt" >> $ERRLOGFILE 
+fi

@@ -1,0 +1,47 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_FASTCOORDINATIONGROUP_V_DAY", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "FastCoordinationGroup"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "int", 
+            "name": "DCVECTOR_INDEX"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranThpVolDlTransDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranThpVolDlRecDistr"
+        }
+    ]
+}

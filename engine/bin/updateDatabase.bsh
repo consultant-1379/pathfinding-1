@@ -1,0 +1,145 @@
+#!/bin/bash
+# ********************************************************************
+# LMI Ericsson                                      SCRIPT
+# ********************************************************************
+#
+#
+# (c) LMI Ericsson  2001 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of LMI Ericsson , Ireland. The programs may be used 
+# and/or copied only with the written permission from LMI Ericsson  
+# or in accordance with the terms and conditions stipulated 
+# in the agreement/contract under which the program(s) have been 
+# supplied.
+#
+# ********************************************************************
+# Name    : updateDatabase.bsh
+# written : ENINKAR
+# Date    : 2010
+# Revision: A
+# Purpose : This script is for updating databases table in databse  
+#
+# Usage   : update  ENIQ database tables for change start day of the week fix 
+#
+# ********************************************************************
+# ********************************************************************
+#
+# 	Execution
+#
+# ********************************************************************
+if [ ${LOGNAME} != "dcuser"  ] ; then
+  echo "This script must be executed as dcuser"
+  exit 1
+fi
+
+#--------------------------------------------------------------------
+#Global variable
+#--------------------------------------------------------------------
+
+# directory path
+CONF_DIREC=/eniq/sw/conf
+BIN_DIREC=/eniq/sw/bin
+SYBASE_IQ_ISQL_PATH=/eniq/sybase_iq//OCS*/bin/isql
+
+
+#Environment Configuration
+#--------------------------------------------------------------------
+if [ -z "${CONF_DIR}" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 1
+fi
+
+if [ ! -r "${CONF_DIR}/niq.rc" ] ; then
+  echo "ERROR: Source file is not readable at ${CONF_DIR}/niq.rc"
+  exit 2
+fi
+
+. ${CONF_DIR}/niq.rc
+
+if [ -z "${BIN_DIR}" ] ; then
+  echo "ERROR: BIN_DIR is not set"
+  exit 1
+fi
+
+if [ ! -r "${BIN_DIR}/common_variables.lib" ] ; then
+  echo "ERROR: Source file is not readable at ${BIN_DIR}/common_variables.lib"
+  exit 2
+fi
+
+. ${BIN_DIR}/common_variables.lib
+
+#--------------------------------------------------------------------
+
+while [ "1" ]; do
+	${ECHO} "Enter start day of the week (Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday):"
+	read FIRSTDAY
+	case ${FIRSTDAY} in
+		Monday)
+		JAVAFIRSTDAY=2;
+		DATABASEFIRSTDAY=1;
+		break;
+		;;
+		Tuesday)
+		JAVAFIRSTDAY=3;
+		DATABASEFIRSTDAY=2;
+		break;		
+		;;
+		Wednesday)
+		JAVAFIRSTDAY=4;
+		DATABASEFIRSTDAY=3;
+		break;		
+		;;
+		Thursday)
+		JAVAFIRSTDAY=5;
+		DATABASEFIRSTDAY=4;
+		break;		
+		;;
+		Friday)
+		JAVAFIRSTDAY=6;
+		DATABASEFIRSTDAY=5;
+		break;		
+		;;
+		Saturday)
+		JAVAFIRSTDAY=7;
+		DATABASEFIRSTDAY=6;
+		break;		
+		;;
+		Sunday)
+		JAVAFIRSTDAY=1;
+		DATABASEFIRSTDAY=7;
+		break;		
+		;;
+		*)
+		${ECHO} "Please enter valid day name(Case sensitive)....Press Enter to continue";
+		read _any_;
+		continue;
+	esac
+done
+SYBASEDAY=${DATABASEFIRSTDAY}
+let LOGAGG=8-${DATABASEFIRSTDAY}
+if [ ${DATABASEFIRSTDAY} -eq 1 ]; then
+	let LOGAGG=0
+fi
+if [ ${SYBASEDAY} -eq 7 ]; then
+	let SYBASEDAY=0
+fi
+
+line=`${GREP} firstDayOfTheWeek $CONF_DIREC/static.properties`
+if [ "${line}X" != "X" ]
+then
+	day=`${ECHO} $line | cut -f2 -d"="`
+	${ECHO} $day
+	if [ "${day}X" != "2X" ]
+	then
+		${ECHO} "Already have customized value $FIRSTDAY"
+		${ECHO} "Terminating"
+		exit 1
+	fi
+fi
+$SED '/firstDayOfTheWeek/d' $CONF_DIREC/static.properties > $CONF_DIREC/static.properties.tmp
+$CP -f $CONF_DIREC/static.properties.tmp $CONF_DIREC/static.properties
+$RM -f $CONF_DIREC/static.properties.tmp
+${ECHO} "firstDayOfTheWeek=${JAVAFIRSTDAY}">>$CONF_DIREC/static.properties
+$BIN_DIREC/updateDIM_WEEKDAY.bsh ${DATABASEFIRSTDAY}
+$BIN_DIREC/updateLoggAggStatus.bsh ${LOGAGG}

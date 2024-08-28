@@ -1,0 +1,51 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_TERMPOINTTOSGW_V_DAY", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "int", 
+            "name": "DCVECTOR_INDEX"
+        }, 
+        {
+            "type": "string", 
+            "name": "TermPointToSGW"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1uPktLostDlQci"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1uPktRecOooQci"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1uPktRecQci"
+        }
+    ]
+}

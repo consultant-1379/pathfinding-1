@@ -1,0 +1,95 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_EXTERNALENODEBFUNCTION_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "EXTERNALENODEBFUNCTION"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUTRANETWORK"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENODEBFUNCTION"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEenbPktRecDlCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary206"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEenbPktTransDlCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEenbPktDiscDlCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEenbPktLostDlCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEenbPktLateDlCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaCrntiUnavail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranCaPartnerBlock"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary223"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary222"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranUlCompServReceiveRsp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranUlCompCoopReceiveReq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranUlCompCoopSendRsp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranUlCompServSendReq"
+        }
+    ]
+}

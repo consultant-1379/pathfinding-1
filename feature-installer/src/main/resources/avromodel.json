@@ -1,0 +1,32 @@
+{ 
+"type": "record", 
+"namespace": "com.ericsson.eniq.data",
+ "name": "DC_E_ERBS_ADMISSIONCONTROL_V_DAY", 
+"fields": [ 
+	{ "name": "ERBS", "type": "string" },
+	{ "name": "MOID", "type": "string" },
+	{ "name": "NESW", "type": "string" },
+	{ "name": "AdmissionControl", "type": "string" },
+	{ "name": "ENodeBFunction", "type": "string" },
+	{ "name": "SN", "type": "string" },
+	{ "name": "OSS_ID", "type": "string" },
+	{ "name": "DCVECTOR_INDEX", "type": "int" },
+	{ "name": "DATE_ID", "type": {
+	"type": "string", "logicalType": "date" }},
+	{ "name": "YEAR_ID", "type": "int" },
+	{ "name": "MONTH_ID", "type": "int" },
+	{ "name": "DAY_ID", "type": "int" },
+	{ "name": "WEEK_ID", "type": "int" },
+	{ "name": "DATACOVERAGE", "type": "int" },
+	{ "name": "AGG_COUNT", "type": "int" },
+	{ "name": "TIMELEVEL", "type": "string" },
+	{ "name": "SESSION_ID", "type": "int" },
+	{ "name": "BATCH_ID", "type": "int" },
+	{ "name": "PERIOD_DURATION", "type": "int" },
+	{ "name": "ROWSTATUS", "type": "string" },
+	{ "name": "DC_RELEASE", "type": "string" },
+	{ "name": "DC_SOURCE", "type": "string" },
+	{ "name": "DC_TIMEZONE", "type": "string" },
+	{ "name": "DC_SUSPECTFLAG", "type": "int" },
+	{ "name": "pmAdmNrRrcUnknownArpRatio", "type": "int" }]
+}

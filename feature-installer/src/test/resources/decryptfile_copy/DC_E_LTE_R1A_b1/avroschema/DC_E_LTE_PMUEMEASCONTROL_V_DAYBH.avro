@@ -1,0 +1,99 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_PMUEMEASCONTROL_V_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "PmUeMeasControl"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "UeMeasControl"
+        }, 
+        {
+            "type": "int", 
+            "name": "DCVECTOR_INDEX"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellFDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellTDD"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasRssiGeran1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasRsrqServIntraFreq1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasRsrqDeltaIntraFreq1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasRsrpDeltaIntraFreq1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasRscpUtran1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasRsrqInterFreq1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary44"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasRsrpDeltaInterFreq1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasEcNoUtran1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasRsrpServIntraFreq1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasRsrqDeltaInterFreq1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasRsrpInterFreq1"
+        }
+    ]
+}

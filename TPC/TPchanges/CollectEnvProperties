@@ -1,0 +1,7 @@
+--Collect Environment
+ModuleName::TPC.PackageEnv
+Servername::atvts4105.athtem.eei.ericsson.se
+Username::dcuser
+Password::dcuser
+OutputPath::H:\Desktop\workspace\TPchanges\EnvDeploy
+Port::2251

@@ -1,0 +1,92 @@
+#!/bin/bash
+
+# Get the log directory from niq.rc
+if [ ${LOGNAME} != "dcuser"  ] ; then
+  echo "This script must be executed as dcuser"
+  exit 32
+fi
+
+if [ -z "$CONF_DIR" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 1
+fi
+
+. ${CONF_DIR}/niq.rc
+
+# removing previous log file.
+if [ -f ${LOG_DIR}/db_update_result ]; then
+        touch ${LOG_DIR}/db_update_result
+fi
+
+# Checking if environment variables are set
+if [ -z "$RT_DIR" ] ; then
+    echo "Environment variable RT_DIR is not set or empty." |  tee -a  ${LOG_DIR}/db_update_result
+fi
+
+if [ -z "$PLATFORM_DIR" ] ; then
+    echo "Environment variable PLATFORM_DIR is not set or empty." |  tee -a  ${LOG_DIR}/db_update_result
+fi
+
+if [ -z "$INSTALLER_DIR" ] ; then
+    echo "Environment variable INSTALLER_DIR is not set or empty." |  tee -a  ${LOG_DIR}/db_update_result
+fi
+
+
+if [ ! -x "/eniq/sw/runtime/ant/bin/ant" ] ; then
+        echo "ANT was not found in ${RT_DIR}/ant/bin/ant." |  tee -a  ${LOG_DIR}/db_update_result
+fi
+
+
+if [ -z "$RT_DIR" -o  -z "$INSTALLER_DIR" -o ! -x "/eniq/sw/runtime/ant/bin/ant" ]; then
+        exit 1
+fi
+
+
+# setting the JAVA_HOME variable
+JAVA_HOME=${RT_DIR}/java
+export JAVA_HOME
+
+# setting location of all the jars
+DIRS=`ls ${PLATFORM_DIR}`
+
+for file in $DIRS
+do
+  if [ -d ${PLATFORM_DIR}/$file/dclib ]
+  then
+    JARS=`ls ${PLATFORM_DIR}/$file/dclib/*.jar`
+
+    for jar in $JARS
+    do
+      CPATH="${CPATH}:${jar}"
+    done
+  fi
+done
+
+# setting location of installer jar
+CPATH="${INSTALLER_DIR}/lib/installer.jar:${CPATH}"
+
+if [ "$CPATH" == "/lib/installer.jar" ]; then
+    echo "Environment variable CPATH is not set or empty. Enabling pmRes Counters is Aborted." |  tee -a  ${LOG_DIR}/db_update_result
+    exit 1
+fi
+
+echo "Updating the DWH Repository Database"
+echo "Enabling pmRes Counters 7 - 12"
+
+# running ant script that will disable the counters
+${RT_DIR}/ant/bin/ant -buildfile enableCounters.xml -lib ${CPATH} -Ddc.installer.dir=${INSTALLER_DIR} execute_sql | tee -a ${LOG_DIR}/db_update_result
+
+# printing out the results
+echo ""
+echo ""
+echo "Results: `date +%Y.%m.%d_%H:%M:%S`"
+# cat ${LOG_DIR}/db_update_result
+
+
+# checking to see if the build is successful or not
+if [ -f ${LOG_DIR}/db_update_result ] ; then
+  SUCCESSFUL=`cat ${LOG_DIR}/db_update_result | grep "BUILD SUCCESSFUL"`
+  if [ -z "${SUCCESSFUL}" ] ; then
+    echo "Error in Updating the DWH Repository Database. Update failed." | tee -a ${LOG_DIR}/db_update_result
+  fi
+fi

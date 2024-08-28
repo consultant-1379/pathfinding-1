@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/apache/comm_httpclient/v4_5_3/prod/httpclient-4.5.3.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/apache/comm_httpclient/v4_5_3/prod/httpcore-4.4.7.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/jersey/javax.annotation-api-1.2.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/jersey/javax.inject-2.4.0-b31.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/jersey/javax.ws.rs-api-2.0.1.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/jersey/jersey-apache-connector-2.21.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/jersey/jersey-client-2.21.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/jersey/jersey-common-2.21.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/jersey/jersey-entity-filtering-2.21.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/jersey/jersey-guava-2.21.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/jersey/jersey-media-moxy-2.21.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/jsch_ssh2/jsch_ssh2/v0_1_54/prod/jsch-0.1.54.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_design_plat_etl_controller/build/engine/engine.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_design_plat_installer/build/repository/repository.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_design_plat_common_utilities/build/common_utilities/common.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

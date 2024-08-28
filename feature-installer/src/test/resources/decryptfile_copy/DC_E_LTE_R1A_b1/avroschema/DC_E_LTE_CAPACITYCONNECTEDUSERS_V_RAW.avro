@@ -1,0 +1,55 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_CAPACITYCONNECTEDUSERS_V_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "Licensing"
+        }, 
+        {
+            "type": "int", 
+            "name": "DCVECTOR_INDEX"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "CapacityConnectedUsers"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "SystemFunctions"
+        }, 
+        {
+            "type": "string", 
+            "name": "CapacityLicenses"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary39"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersDistr"
+        }
+    ]
+}

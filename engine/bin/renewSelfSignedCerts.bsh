@@ -1,0 +1,283 @@
+#!/usr/bin/bash
+# ********************************************************************
+# Ericsson Radio Systems AB                                     SCRIPT
+# ********************************************************************
+#
+# (c) Ericsson Radio Systems AB 2019 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of Ericsson Radio Systems AB, Sweden. The programs may be used
+# and/or copied only with the written permission from Ericsson Radio
+# Systems AB or in accordance with the terms and conditions stipulated
+# in the agreement/contract under which the program(s) have been
+# supplied .
+#
+# ********************************************************************
+# Name    : renewSelfSignedCerts.bsh
+# Purpose : Main script to renew Self Signed Certificate.
+#
+# Usage   : /eniq/admin/bin/renewSelfSignedCerts.bsh
+#
+
+CONF_DIR=/eniq/sw/conf
+
+. ${CONF_DIR}/niq.rc
+
+# ********************************************************************
+#
+#   Commands Section
+#
+# ********************************************************************
+AWK=/usr/bin/awk
+BASH=/usr/bin/bash
+CAT=/usr/bin/cat
+CHMOD=/usr/bin/chmod
+CHOWN=/usr/bin/chown
+CLEAR=/usr/bin/clear
+CP=/usr/bin/cp
+CUT=/usr/bin/cut
+DATE=/usr/bin/date
+ECHO=/usr/bin/echo
+FIND=/usr/bin/find
+GREP=/usr/bin/grep
+GUNZIP=/usr/bin/gunzip
+LN=/usr/bin/ln
+MKDIR=/usr/bin/mkdir
+MV=/usr/bin/mv
+PWD=/usr/bin/pwd
+RM=/usr/bin/rm
+SED=/usr/bin/sed
+TAR=/usr/bin/tar
+TEE=/usr/bin/tee
+TOUCH=/usr/bin/touch
+UNAME=/usr/bin/uname
+UNZIP=/usr/bin/unzip
+WEBSERVER=/eniq/sw/bin/webserver
+ZIP=/usr/bin/zip
+ID=/bin/id
+
+# ********************************************************************
+#
+#   Configure Section
+#
+# ********************************************************************
+
+#Force Flag
+FORCE=0
+#Verbose Flag
+VERBOSE=0
+#Configured Flag
+CONFIGURED=0
+#IP Address Variable
+IP_ADDRESS=""
+#Upgrade Flag
+UPGRADE="false"
+#Current Working Directory
+CURRENT_DIR=`pwd`
+#OS Flag
+OSTYPE=$($UNAME -s)
+#Temporary Directory
+TEMP_DIR=/var/tmp
+dateToUse=`${DATE} '+%Y-%m-%d_%H:%M:%S'`
+LOG_FILE=${LOG_DIR}/engine/SelfSignedCertRenewal_${dateToUse}.log
+ENIQ_INI="niq.ini"
+ENIQ_BASE_DIR="/eniq"
+ENIQ_CONF_DIR="/eniq/sw/conf"
+COMMON_FUNCTIONS=${ENIQ_BASE_DIR}/installation/core_install/lib/common_functions.lib
+HOST=/usr/bin/host
+HOSTNAME=`/usr/bin/hostname`
+FULLNAME=`$ECHO \`$HOST $HOSTNAME\` | $AWK '{print $1;}'`
+PRIVATEKEY=${RT_DIR}/tomcat/ssl/private/$HOSTNAME-private.pem
+PUBLICKEY=${RT_DIR}/tomcat/ssl/${HOSTNAME}_public.key
+CERTFILE=${RT_DIR}/tomcat/ssl/$HOSTNAME.cer
+CSRFILE=${RT_DIR}/tomcat/ssl/$HOSTNAME.csr
+P12KEYSTORE=${RT_DIR}/tomcat/ssl/keystore.pkcs12
+JKEYSTORE=${RT_DIR}/tomcat/ssl/keystore.jks
+OPENSSL=/usr/bin/openssl
+KEYTOOL=${RT_DIR}/java/bin/keytool
+
+# ---------------------------------------------------------------------
+# Sets the validity of certificate
+# ---------------------------------------------------------------------
+setValidity(){
+if [ -z "${validity}" ]
+then
+     validity=825
+else
+     if [ "${validity}" -gt "3650" ]; then
+     _echo "Validity of certificate should not be more than 3650 days.Exiting."
+     exit 0
+     fi
+fi
+}
+
+# ---------------------------------------------------------------------
+# Read IP Address
+# ---------------------------------------------------------------------
+function ip_address(){
+        SERVICE_NAME=/eniq/sw/conf/service_names
+        HOST_FILE=/etc/hosts
+        if [ -f $SERVICE_NAME ]; then
+                _echo "Reading IP from serivce_name file"
+                IP_ADDRESS=`cat /eniq/sw/conf/service_names | $GREP webserver | $AWK -F"::" '{print $1}'`
+                _echo "$IP_ADDRESS"
+        else
+                _echo "Reading IP from Hosts file"
+                IP_ADDRESS=`cat /etc/hosts | $GREP webserver | $AWK -F" " '{print $1}'`
+                _echo "$IP_ADDRESS"
+        fi
+}
+
+# ---------------------------------------------------------------------
+# Creates Log File /eniq/log/sw_log/engine/SelfSignedCertRenewal.log
+# ---------------------------------------------------------------------
+function createLogFileIfNotAlreadyExisting(){
+if [[ ! -e ${LOG_FILE} ]]; then
+    touch ${LOG_FILE}
+fi
+}
+
+# ---------------------------------------------------------------------
+# Wrapper For echo
+# ---------------------------------------------------------------------
+function _echo(){
+        $ECHO ${*} | $TEE -a ${LOG_FILE}
+}
+
+# ---------------------------------------------------------------------
+# Configure Tomcat for SSL
+# ---------------------------------------------------------------------
+function configure_ssl(){
+        _echo "Configuring Tomcat for SSL ..."
+        if [ ! -d ${RT_DIR}/tomcat/ssl ]; then
+                $MKDIR ${RT_DIR}/tomcat/ssl
+        fi
+        if [ ! -d ${RT_DIR}/tomcat/ssl/private ]; then
+                $MKDIR -p ${RT_DIR}/tomcat/ssl/private
+        fi
+        $CHMOD og-rwx ${RT_DIR}/tomcat/ssl/private
+       
+        if [ -f ${COMMON_FUNCTIONS} ] ; then
+                . ${COMMON_FUNCTIONS}
+        else
+                _echo "Cant not find file ${COMMON_FUNCTIONS}"
+                exit 53
+        fi
+
+        KEYSTOREPASSWORD=`inigetpassword KEYSTOREPASS -f ${ENIQ_CONF_DIR}/${ENIQ_INI} -v keyStorePassValue`
+        export OPENSSL_CONF=/etc/pki/tls/openssl.cnf
+        HOSTOUTPUT=`$ECHO \`$HOST $HOSTNAME\` | $GREP "has address"`
+
+        if [ $CONFIGURED = 0 ] ; then
+                if [ ! "${HOSTOUTPUT}" ]; then
+                        _echo "FULL name was not found in DNS lookup,using IP address "
+                        ip_address
+                        FULLNAME=$IP_ADDRESS
+                fi
+
+                _echo "Generating JKS Keystore"
+                $KEYTOOL -genkeypair -keystore $JKEYSTORE -storepass ${KEYSTOREPASSWORD} -alias eniq -keypass ${KEYSTOREPASSWORD} -keysize 2048 -keyalg RSA -sigalg SHA256withRSA -dname "CN=$FULLNAME" -validity ${validity}
+                if [ $? -ne 0 ] ; then
+                        _echo "Failed to generate JKS Keystore. Exiting...."
+                        exit 0
+                else
+                        _echo "Converting the existing JKS keystore to PKCS12 Keystore"
+			            $KEYTOOL -importkeystore -srckeystore $JKEYSTORE -destkeystore $P12KEYSTORE -srcstoretype JKS -deststoretype PKCS12 -srcstorepass ${KEYSTOREPASSWORD} -deststorepass ${KEYSTOREPASSWORD} -srcalias eniq -destalias eniq -srckeypass ${KEYSTOREPASSWORD} -destkeypass ${KEYSTOREPASSWORD}
+                        _echo "Exporting Self_signed Certificate"
+                        $KEYTOOL -exportcert -keystore $JKEYSTORE -storepass ${KEYSTOREPASSWORD} -alias eniq -keypass ${KEYSTOREPASSWORD} -file $CERTFILE
+                        $CHMOD 0400 $CERTFILE
+                        _echo "Generating Certificate Signing Request"
+                        $KEYTOOL -certreq -keystore $JKEYSTORE -storepass ${KEYSTOREPASSWORD} -alias eniq -keypass ${KEYSTOREPASSWORD} -file $CSRFILE
+                        _echo "Generating Private key"
+                        $OPENSSL pkcs12 -in $P12KEYSTORE -out $PRIVATEKEY -passin pass:${KEYSTOREPASSWORD} -passout pass:${KEYSTOREPASSWORD}
+                        $CHMOD 0400 $PRIVATEKEY
+                fi
+                _echo "Tomcat is configured for SSL."
+        else
+                _echo "Tomcat is already configured for SSL"
+        fi
+}
+
+# ---------------------------------------------------------------------
+# Checks Validity Of Certificate In KeyStore
+# ---------------------------------------------------------------------
+function validityChecker() {
+validityEnd=`/eniq/sw/runtime/jdk/bin/keytool -list -v -keystore /eniq/sw/runtime/tomcat/ssl/keystore.jks -storepass ${KEYSTOREPASSWORD} 2> /dev/null | grep -i valid | cut -f 10-15 -d " "`
+}
+
+# ---------------------------------------------------------------------
+# Performs Rollback In Case Of Self Signed Certificate Renewal Failure
+# ---------------------------------------------------------------------
+function performRollBack() {
+cd ${RT_DIR}/tomcat/ssl/
+${MV} ${EVENTS_BACKUP_DIR}/certificateBackUp/certificateBackUp_${dateToUse}.zip .
+${UNZIP} certificateBackUp_${dateToUse}.zip
+}
+
+# ---------------------------------------------------------------------
+# Backs Up Existing Certificates
+# ---------------------------------------------------------------------
+function backUpExistingCertificatesAndCleanUp() {
+if [ ! -d "${EVENTS_BACKUP_DIR}/certificateBackUp" ]; then
+${MKDIR} ${EVENTS_BACKUP_DIR}/certificateBackUp
+fi
+#Take backup
+cd ${RT_DIR}/tomcat/ssl/
+${ZIP} -9r certificateBackUp_${dateToUse}.zip .
+${MV} certificateBackUp_${dateToUse}.zip ${EVENTS_BACKUP_DIR}/certificateBackUp
+#Cleaning up
+${RM} -rf "${RT_DIR}"/tomcat/ssl/*
+}
+
+# ---------------------------------------------------------------------
+# Check To See If Root Is Running This Script.
+# ---------------------------------------------------------------------
+function checkUser() {
+if [ "$(${ID} -u)" == "0" ]; then
+   _echo "This script must be run as dcuser. Exiting"
+   exit 1
+fi
+}
+
+# ---------------------------------------------------------------------
+# Usage Message
+# ---------------------------------------------------------------------
+usage_msg () {
+        _echo "Usage: $0"
+        exit 0
+}
+
+# ---------------------------------------------------------------------
+# Main Program Starts Here
+# ---------------------------------------------------------------------
+while getopts "v:h" Option
+do
+        case $Option in
+                v) validity="$OPTARG"
+                ;;
+                h) usage_msg  #Help - Print usage
+                ;;
+                \?) usage_msg
+                ;;
+        esac
+done
+
+checkUser
+createLogFileIfNotAlreadyExisting
+_echo "Backing up existing certificates" | tee -a ${LOG_FILE}
+backUpExistingCertificatesAndCleanUp >> ${LOG_FILE} &>> ${LOG_FILE}
+setValidity ${LOG_FILE} &>> ${LOG_FILE}
+_echo "Renewing self signed certificates for ${validity} days" | tee -a ${LOG_FILE}
+configure_ssl >> ${LOG_FILE} &>> ${LOG_FILE}
+if [ $? != 0 ]; then
+_echo "Self Signed Certificates could not be renewed. Rolling back " | tee -a ${LOG_FILE}
+performRollBack
+validityChecker
+_echo "Successfully Rolled Back. Validity is till : "${validityEnd} | tee -a ${LOG_FILE}
+_echo "Certificate Renewal could not happen. Contact Ericsson Support with log file: ${LOG_FILE}" | tee -a ${LOG_FILE}
+else
+validityChecker
+_echo "Successfully renewed self signed certificates. Validity is till : "${validityEnd} | tee -a ${LOG_FILE}
+fi
+_echo "Restarting webserver" | tee -a ${LOG_FILE}
+${WEBSERVER} restart >> ${LOG_FILE} &>> ${LOG_FILE}

@@ -1,0 +1,68 @@
+#!/bin/bash
+# ********************************************************************
+# Ericsson Radio Systems AB                                     SCRIPT
+# ********************************************************************
+#
+# (c) Ericsson Radio Systems AB 2015 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of Ericsson Radio Systems AB, Sweden. The programs may be used
+# and/or copied only with the written permission from Ericsson Radio
+# Systems AB or in accordance with the terms and conditions stipulated
+# in the agreement/contract under which the program(s) have been
+# supplied.
+#
+# ********************************************************************
+# Name    : DeleteOldFiles.bsh
+# Date    : 06/02/2017
+# Purpose : Script to check symboliclinks present under pmdata directory
+#		and delete the simlinks which are older than 3 days	     
+# Usage   : DeleteOldFiles.bsh
+#
+# ********************************************************************
+#
+# Command Section
+#
+# ********************************************************************
+
+. /eniq/home/dcuser/.profile
+
+if [ ! -r "/eniq/sw/bin/common_variables.lib" ] ; then
+  echo "ERROR: Source file is not readable at /eniq/sw/bin/common_variables.lib"
+  exit 3
+fi
+
+. /eniq/sw/bin/common_variables.lib
+
+INSTALLER_DIR=/eniq/sw/installer
+export INSTALLER_DIR
+
+SYMLINKLOGFILE=/eniq/log/sw_log/symboliclinkcreator/DeleteSymlinkFile-`$DATE +%Y_%m_%d`.log
+export SYMLINKLOGFILE
+
+fls_conf_file="/eniq/installation/config/fls_conf"
+
+# Deletes symlink older than 3 days under pmdata directories
+delete_files (){
+if [[ $checkDelFlag -eq 0 ]]; then
+    $ECHO "pmdata directory : /eniq/data/pmdata/$1 " >> ${SYMLINKLOGFILE}
+	fileCount=`$FIND /eniq/data/pmdata/$1 \( -name "*.txt" -o -name "*.xml" \) -mtime +3 -print | $WC -l`
+	if [[ $fileCount -gt 0 ]];then
+		$ECHO "`$DATE '+%Y-%m-%d_%H.%M.%S'`: The below symlink files will be deleted." >> ${SYMLINKLOGFILE}
+	fi
+	$ECHO "Total number of files which are older than 3 days =  ${fileCount}" >> ${SYMLINKLOGFILE}
+	$FIND /eniq/data/pmdata/$1 \( -name "*.txt" -o -name "*.xml" \) -mtime +3  -print >> ${SYMLINKLOGFILE}
+	$FIND /eniq/data/pmdata/$1 \( -name "*.txt" -o -name "*.xml" \) -mtime +3  -print | xargs $RM
+fi
+}
+
+if [ -f ${fls_conf_file} ] && [ -s ${fls_conf_file} ]; then
+	checkDelFlag=0
+    while read line
+    do
+        delete_files $line
+    done < $fls_conf_file
+else
+	checkDelFlag=1
+	$ECHO "`$DATE '+%Y-%m-%d_%H.%M.%S'`: FLS is not enabled!" >> ${SYMLINKLOGFILE}
+fi

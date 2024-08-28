@@ -1,0 +1,12 @@
+{
+        "inputList":
+        [
+        {
+             "tpDirectory":"/eniq/installer",
+                "tpName":"DC_E_AFG",
+                "ossId":"eniq_oss_1",
+                "stageFile":"/eniq/installer/installer_stageFile.txt"
+        }
+        ]
+}
+

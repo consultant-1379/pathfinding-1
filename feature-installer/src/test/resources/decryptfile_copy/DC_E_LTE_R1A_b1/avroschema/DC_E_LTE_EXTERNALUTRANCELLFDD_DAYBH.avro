@@ -1,0 +1,83 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_EXTERNALUTRANCELLFDD_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "ExternalUtranCellFDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "UtranFrequency"
+        }, 
+        {
+            "type": "string", 
+            "name": "UtraNetwork"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimAssocAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary100"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimUpdateAckSent"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimReportErr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimAssocAttRetry"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary101"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimAssocRemoved"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimAssocSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimUpdateReceived"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimAssocTO"
+        }
+    ]
+}

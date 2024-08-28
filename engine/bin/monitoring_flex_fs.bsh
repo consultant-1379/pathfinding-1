@@ -1,0 +1,496 @@
+#!/bin/bash
+# ********************************************************************
+# Ericsson Radio Systems AB                                     SCRIPT
+# ********************************************************************
+#
+# (c) Ericsson Radio Systems AB 2015 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of Ericsson Radio Systems AB, Sweden. The programs may be used
+# and/or copied only with the written permission from Ericsson Radio
+# Systems AB or in accordance with the terms and conditions stipulated
+# in the agreement/contract under which the program(s) have been
+# supplied.
+#
+# ********************************************************************
+# Name      : monitor_flex_fs.bsh
+# Date      :
+# Purpose   : This script runs after every 5 min in crontab .
+#             It reads configuration from  flex_data_bkup.properties and deletes old file according that.
+#             It deletes files if backup level configuration is changed .
+#				If the restore flag is enabled it will skip the deletion.
+#				it will also trigger the RestoreLoader if restore flag is enabled
+#				If the file system is filled more than 90% it will delete the files starting from oldest( if restore is disabled)
+#					OR temporarily stop the backup( if restore enabled ) and start it again as soon as file system capacity is less than 90%
+# Developed : xthobob & xsoroyc & xritjai
+#
+# ********************************************************************
+#
+. $HOME/.profile
+
+### Function: setup_env ###
+#
+# Setup up path environment etc
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+
+setup_env()
+{
+ENIQ_LOG_DIR=/eniq/log/sw_log
+ENIQ_ADMIN_BIN_DIR=/eniq/admin/bin
+#if [ ! -d ${ENIQ_LOG_DIR} ]
+#then
+#$MKDIR -p ${ENIQ_LOG_DIR}
+#fi
+
+
+ENGINE_LOG_DIR=$ENIQ_LOG_DIR/engine
+
+if [ ! -d ${ENGINE_LOG_DIR} ]
+	then
+	$MKDIR -p ${ENGINE_LOG_DIR}
+fi
+
+LOGFILE=$ENGINE_LOG_DIR/flex_backup-`$DATE +%Y_%m_%d`.log
+
+#LOGFILE=/eniq/log/sw_log/engine/flex_backup-`date+%Y_%m_%d`.log
+if [[ ! -f "$LOGFILE" ]]; then
+	$TOUCH $LOGFILE
+	# flag=1
+fi
+
+$ECHO "<<---------------------------------: `$DATE '+%Y_%m_%d_%H:%M:%S'` : -------------------------------------->>" >> ${LOGFILE}
+
+
+DBISQL="$(${LS} /eniq/sybase_iq/IQ-*/bin64/dbisql)"
+if [ ! -x "$DBISQL" ]; then
+    $ECHO "$DBISQL command not found or not executable." >> ${LOGFILE}
+    exit 1
+fi
+
+FLEX_DATA_BACKUP_PROPERTIES=$CONF_DIR/flex_data_bkup.properties
+if [ ! -s "$FLEX_DATA_BACKUP_PROPERTIES" ] ; then
+	$ECHO "ERROR: FLEX_DATA_BACKUP_PROPERTIES is not found or it's empty" >> ${LOGFILE}
+	exit 1
+fi
+
+. $FLEX_DATA_BACKUP_PROPERTIES
+
+#reading from the properties file 
+day=$BACKUP_RETENTION_PERIOD
+maxLimit=$FileSystem_MaxLimit
+warningLimit=$FileSystem_WarnLimit
+
+# FLEX_BKUP_DIR=/eniq/flex_data_bkup
+# if [ ! -d "$FLEX_BKUP_DIR" ] ; then
+	# $ECHO "ERROR: FLEX_BKUP_DIR is not found" >> ${LOGFILE}
+	# exit 1
+# fi
+
+DWHREPUSER=`inigetpassword REP -v DWHREPUsername -f ${CONF_DIR}/niq.ini`
+DWHREPPASSWORD=`inigetpassword REP -v DWHREPPassword -f ${CONF_DIR}/niq.ini`
+REP_PORT=`inigetpassword REP -v PortNumber -f ${CONF_DIR}/niq.ini`
+REP_SERVER_NAME=`inigetpassword REP -v ServerName -f ${CONF_DIR}/niq.ini`
+
+}
+
+### Function: fileSystemCheck ###
+#
+# checks if /eniq/flex_data_bkup file system goes beyond 90% capacity
+#
+# Arguments: none
+#       
+# Return Values: none
+#  
+fileSystemCheck()
+{
+	cap=`${DF} -k $FLEX_BKUP_DIR | $SED "1 d" | $NAWK '{print $5}' | ${CUT} -d% -f1`
+	
+	if [[ $cap -ge $maxLimit ]];then
+		
+		$ECHO "FileSystem $FLEX_BKUP_DIR has been filled up to $cap%" >> $LOGFILE
+		if [[ $restoreFlag -eq 1 ]];then
+			
+			$ECHO "Restore is enabled" >> $LOGFILE
+			$ECHO "Disabling backup" >> $LOGFILE
+			bash $ENIQ_ADMIN_BIN_DIR/manage_eniq_backup.bsh -d
+			_errCode_=$?
+			if [[ $_errCode_ -eq 0 ]];then
+				$ECHO "Backup disabled successfully" >> $LOGFILE
+				bkup_flag=0;
+			else
+				$ECHO "Disabling backup failed with error code $_errCode_" >> $LOGFILE
+			fi
+			
+		else
+			$ECHO "Deleting older files to make file system capacity below $maxLimit%" >> $LOGFILE
+			#delete backup files starting from the oldest date
+			delete_oldest_files
+		fi
+	else
+	
+		#is backup disabled
+		if [[ $bkup_flag -eq 0 ]];then
+			#enable backup
+			$ECHO "Enabling backup" >> $LOGFILE
+			bash $ENIQ_ADMIN_BIN_DIR/manage_eniq_backup.bsh -e
+			_errCode_=$?
+			if [[ $_errCode_ -eq 0 ]];then
+				$ECHO "Backup enabled successfully" >> $LOGFILE
+				bkup_flag=1;
+			else
+				$ECHO "Enabling backup failed with error code $_errCode_" >> $LOGFILE
+			fi
+		elif [[ $bkup_flag -lt 0 ]]; then
+			$ECHO "WARNING: No backup is configured hence Please delete the backup FileSystem to save the space" >> $LOGFILE		
+		fi
+	fi
+	
+	if [[ $cap -ge $warningLimit ]] && [[ $cap -lt $maxLimit ]] ; then
+		$ECHO "WARNING : File system $FLEX_BKUP_DIR has been filled up to $cap%" >> $LOGFILE
+	fi
+}
+
+### Function: delete_oldest_files ###
+#
+# delete files starting from the oldest date until file system is below 90%
+#
+# Arguments: none
+#       
+# Return Values: none
+#
+delete_oldest_files()
+{
+	cap=`${DF} -k $FLEX_BKUP_DIR | $SED "1 d" | $NAWK '{print $5}' | ${CUT} -d% -f1`
+	i=$day
+	while [ ${cap}-ge${maxLimit} ];
+	do
+		#delete file 
+		fileCount=$FIND $FLEX_BKUP_DIR/*  -name "*.gz" -mtime +$i | ${WC} -l
+		$ECHO "Deleting all $fileCount files older than $i days" >> ${LOGFILE}
+		$FIND $FLEX_BKUP_DIR/*  -name "*.gz" -mtime +$i | xargs $RM
+		errCode=$?
+		if [[ $errCode -ne 0 ]]; then
+			$ECHO "Could not delete old files from FileSystem with error code $errCode" >> ${LOGFILE}
+		fi
+		#check for next oldest date
+		i=$((i - 1))
+		#check capacity after deleting
+		cap=`${DF} -k $FLEX_BKUP_DIR | $SED "1 d" | $NAWK '{print $5}' | ${CUT} -d% -f1`
+
+	done
+}
+### Function: delete_on_configuration_change ###
+#
+# deletes file if the configuration is changed.calls delete_file()
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+
+delete_on_configuration_change ()
+{
+
+backupLevel=`$DBISQL -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD"   "select distinct BACKUPLEVEL from BackupConfiguration where ENABLED_FLAG='Y';" | $SED -e '1,/\-\-/d' -e '/ rows/,$d' | $SED '/^$/d' | tr -d ' '`
+             
+dbErrCode=$?
+if [[ $dbErrCode -ne 0 ]]; then
+	$ECHO "Could not retrieve data from BackupConfiguration table in REPDB exiting with error code: $dbErrCode ">>$LOGFILE
+	exit $dbErrCode
+else
+
+	if [ $backupLevel == "RAW" ]; then
+		delete_aggregation_files
+	fi
+
+	if [ $backupLevel == "AGGREGATED" ]; then 
+		delete_raw_files
+	fi
+
+fi
+}
+### Function: delete_aggregation_files ###
+#
+# deletes aggregation files if the configuration is changed to RAW.
+#
+#	Arguments: none
+#	Return Values: none
+###
+delete_aggregation_files()
+{
+DAYFILECOUNT=`$FIND $FLEX_BKUP_DIR/*_DAY -name "*.gz" | $WC -l`
+DAYBHFILECOUNT=`$FIND $FLEX_BKUP_DIR/*_DAYBH -name "*.gz" | $WC -l`
+RANKBHFILECOUNT=`$FIND $FLEX_BKUP_DIR/*_RANKBH -name "*.gz" | $WC -l`
+COUNTFILECOUNT=`$FIND $FLEX_BKUP_DIR/*_COUNT -name "*.gz" | $WC -l`
+
+if [[ $DAYFILECOUNT -gt 0 || $DAYBHFILECOUNT -gt 0 || $RANKBHFILECOUNT -gt 0 || $COUNTFILECOUNT -gt 0 ]];then
+
+	$ECHO "Deleting all aggregation files and folder structure from FileSystem because configuration has been changed to RAW." >> ${LOGFILE}
+
+	$RM -rf $FLEX_BKUP_DIR/*_DAY
+	_errCode_1=$?
+	$RM -rf $FLEX_BKUP_DIR/*_DAYBH
+	_errCode_2=$?
+	$RM -rf $FLEX_BKUP_DIR/*_RANKBH
+	_errCode_3=$?
+	$RM -rf $FLEX_BKUP_DIR/*_COUNT
+	_errCode_4=$?
+	
+	if [[ $_errCode_1 -eq 0 && $_errCode_2 -eq 0 && $_errCode_3 -eq 0 && $_errCode_4 -eq 0 ]];then
+		$ECHO "Deletion successful" >> ${LOGFILE}
+	else
+		$ECHO "Deletion failed with below error codes-
+		DAY Tables - $_errCode_1
+		DAYBH Tables - $_errCode_2
+		RANKBH Tables - $_errCode_3
+		COUNT Tables - $_errCode_4" >> $LOGFILE
+	fi
+fi
+}
+
+
+### Function: delete__raw_files ###
+#
+# deletes RAW files if the configuration is changed to AGGREGATION.
+#
+#Arguments:
+#       none
+# Return Values:
+#       none
+
+delete_raw_files()
+{
+RAWFILECOUNT=`$FIND $FLEX_BKUP_DIR/*/raw/ -name "*.gz" | $WC -l`
+
+if [[ $RAWFILECOUNT -gt 0 ]];then
+
+	$ECHO "Deleting all RAW files and folder structure from FileSystem because configuration has been changed to AGGREGATION." >> ${LOGFILE}
+
+	$RM -rf $FLEX_BKUP_DIR/*/raw/
+	_errCode_=$?
+	
+	if [[ $_errCode_ -eq 0 ]];then
+		$ECHO "Deletion successful" >> ${LOGFILE}
+	else
+		$ECHO "Deletion failed with error code $_errCode_" >> $LOGFILE
+	fi
+fi
+}
+### Function: delete_oldfile ###
+#
+# reads flex_data_bkup.properties and deletes old data according to the configuration.
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+
+delete_oldfile()
+{
+	$ECHO " Backup is configured for last $day days">> ${LOGFILE}
+
+	fileCount=`$FIND $FLEX_BKUP_DIR/* -name "*.gz" -mtime +$((day - 1)) -print | $WC -l`
+ 
+	if [[ $fileCount -gt 0 ]];then
+		$ECHO "Deleting $fileCount files older than Backup retention period - $day days." >> ${LOGFILE}
+		$FIND $FLEX_BKUP_DIR/*  -name "*.gz" -mtime +$((day - 1)) | xargs $RM
+		errCode=$?
+		if [[ $errCode -ne 0 ]]; then
+			$ECHO "Could not delete old files from FileSystem with exit code $errCode" >> ${LOGFILE}
+			exit $errCode
+        fi
+	else
+		$ECHO "No files present older than Backup Retention Period" >> $LOGFILE
+	fi
+}
+
+triggerLoader()
+{
+
+filename=$1
+epochtime=$2
+
+CPATH="${INSTALLER_DIR}/lib/installer.jar"
+
+DIRS=`${LS} ${PLATFORM_DIR}`
+
+for file in $DIRS
+do
+  if [ -d ${PLATFORM_DIR}/$file/dclib ]
+  then
+    JARS=`${LS} ${PLATFORM_DIR}/$file/dclib/*.jar`
+
+    for jar in $JARS
+    do
+      CPATH="${CPATH}:${jar}"
+    done
+  fi
+done
+
+JAVA_HOME=${RT_DIR}/java
+export JAVA_HOME
+
+PATH=${RT_DIR}/java/bin:${PATH}
+export PATH
+
+LOG="$ENGINE_LOG_DIR/restore_loader_`$DATE +%Y_%m_%d`.log"
+
+			$ECHO "<<---------------------------------: `$DATE '+%Y_%m_%d_%H:%M:%S'` : -------------------------------------->>" >> ${LOG}
+
+${JAVA_HOME}/bin/java -d64 -Dpname="RestoreLoader" -DCONF_DIR=${CONF_DIR} -mx32M -classpath ${CPATH} com.ericsson.eniq.backuprestore.restore.RestoreLoader $LOG $filename $epochtime
+
+E=${?}
+$ECHO "error calling RestoreLoader error code : $E" >> {LOG}
+#exit ${E}
+
+}
+
+#********************************************************************
+#
+#       Main body of program
+#
+#********************************************************************
+if [ -z "${CONF_DIR}" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 1
+fi
+
+if [ ! -r "${CONF_DIR}/niq.rc" ] ; then
+  echo "ERROR: Source file is not readable at ${CONF_DIR}/niq.rc"
+  exit 2
+fi
+
+. ${CONF_DIR}/niq.rc
+
+if [ -s /eniq/admin/lib/common_functions.lib ]; then
+    . /eniq/admin/lib/common_functions.lib
+else
+        echo "Could not find /eniq/admin/lib/common_functions.lib"
+        exit 1
+fi
+
+if [ -z "${BIN_DIR}" ] ; then
+  echo "ERROR: BIN_DIR is not set"
+  exit 1
+fi
+
+if [ ! -r "${BIN_DIR}/common_variables.lib" ] ; then
+  echo "ERROR: Source file is not readable at ${BIN_DIR}/common_variables.lib"
+  exit 2
+fi
+
+. ${BIN_DIR}/common_variables.lib
+
+#check if FileSystem is available
+FLEX_BKUP_DIR=/eniq/flex_data_bkup
+FileSystem=`${DF} -k $FLEX_BKUP_DIR 2> /dev/null | $SED "1 d"`
+if [[ $FileSystem == "" ]];then
+	exit 0;
+fi
+
+#NMI flag file 
+nmiFlagFile=`${LS} -a /var/tmp/.flex_restore_inprogress`
+if [[ $nmiFlagFile!="" && -e $nmiFlagFile ]];then
+	exit 0;
+fi
+
+#setup environment
+setup_env
+
+
+#flag for deletion of files older then retention period
+flag=0
+#backup flag
+bkup_flag=-1 #backup is not configured
+#restore flag for loader
+loaderFlag=0
+#restore flag for Aggregation
+aggFlag=0
+#restore flag for Topology
+topoFlag=0
+#restoreFlag
+restoreFlag=0
+
+#restore flag file for loader
+loaderFlagfile=`${LS} /var/tmp/flag_loaderrestore_*`
+if [[ $loaderFlagfile!="" && -e $loaderFlagfile ]];then
+	epochtime="${loaderFlagfile##*_}"
+	loaderFlag=1
+fi
+
+#restore flag file for Aggregation
+aggFlagfile=`${LS} /var/tmp/flag_aggregationrestore_*`
+if [[ $aggFlagfile!="" && -e $aggFlagfile ]];then
+	aggFlag=1
+fi
+
+#restore flag file for Topology
+aggFlagfile=`${LS} /var/tmp/flag_topologyrestore_*`
+if [[ $topoFlagfile!="" && -e $topoFlagfile ]];then
+	topoFlag=1
+fi
+
+#restore flag
+if [[ $loaderFlag -eq 1 || $aggFlag -eq 1 || $topoFlag -eq 1 ]];then
+	restoreFlag=1
+fi
+
+	
+rows=`$DBISQL -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD"  "if (select count(*) from BackupConfiguration) > 0 then select count(*) from BackupConfiguration where ENABLED_FLAG='Y' else select count(*)-1 from BackupConfiguration; end if" | $SED -e '1,/\-\-/d' -e '/ rows/,$d' | $SED '/^$/d' | tr -d ' '`
+
+dbErrCode=$?
+if [[ $dbErrCode -ne 0 ]]; then
+	$ECHO "Could not retrieve data from BackupConfiguration table in REPDB exiting with error code: $dbErrCode ">> ${LOGFILE}
+	exit $dbErrCode
+fi
+
+#here it checks whether 2 week backup feature is activated or not 
+if [[ $rows -gt 0 ]]; then   
+	bkup_flag=1 #backup is enabled
+elif [[ $rows -lt 0 ]]; then
+	bkup_flag=-1 #backup is not configured
+else
+	bkup_flag=0 #backup is disabled
+fi
+
+#flag for deletion of files older then retention period
+min=`$DATE +%M`
+if [[ $min -eq 00 ]]; then 
+	flag=1
+fi
+
+#calling fileSystemCheck function
+fileSystemCheck
+
+if [[ $restoreFlag -eq 1 ]]; then
+	engine_status=`engine status | ${GREP} 'Current Profile' | ${CUT} -d: -f2 | ${SED} -e 's/^ *//g;s/ *$//g'`
+	if [[ $engine_status == 'Normal' ]];then
+		if [[ $loaderFlag -eq 1 ]]; then
+
+			$ECHO "Restore is in progress...." >> ${LOGFILE}
+			triggerLoader $loaderFlagfile $epochtime
+		fi	
+		if [[ $aggFlag -eq 1 || $topoFlag -eq 1 ]]; then
+
+			$ECHO "Restore is in progress...." >> ${LOGFILE}
+			#engine -e triggerRestoreOfData
+		fi
+	fi
+
+else
+
+	#here it checks whether this script is running for the 1st time in a day.
+	if [[   $flag -eq 1   ]]; then 
+
+		$ECHO "Checking for files older than backup retention period" >> ${LOGFILE}
+		delete_oldfile
+		$ECHO "Checking if configuration is changed" >> ${LOGFILE}
+		delete_on_configuration_change
+	fi
+fi
+
+exit 0;

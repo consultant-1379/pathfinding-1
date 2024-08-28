@@ -1,0 +1,165 @@
+<project name="install" basedir="." default="all">
+
+	<property name="dcinstall.require.libs" value="> 5-0-0b5" />
+	<property name="dcinstall.require.parser" value="> 5-0-0b212" />
+
+	<target name="install" depends="copyTmpToDeploy">
+		<if>
+			<available file="${dc.runtime.dir}/tomcat/webapps/techpackide/lib/symboliclinkcreator.jar" />
+			<then>
+				<delete file="${dc.runtime.dir}/tomcat/webapps/techpackide/lib/symboliclinkcreator.jar" />
+				<copy todir="${dc.runtime.dir}/tomcat/webapps/techpackide/lib" flatten="true">
+					<fileset dir="${dc.platform.dir}">
+						<include name="**/dclib/symboliclinkcreator.jar" />
+					</fileset>
+				</copy>
+			</then>
+			<else />
+		</if>
+		
+		<mkdir dir="${dc.log.dir}/symboliclinkcreator"/>
+		
+		<if>
+		  <available file="${dc.conf.dir}/symboliclinkcreator.properties"/>
+		  <then>
+			<delete file="${dc.conf.dir}/symboliclinkcreator.properties"/>
+		  </then>
+		</if>
+		<if>
+		  <available file="${dc.conf.dir}/eniqmifconfig.dtd"/>
+		  <then>
+			<delete file="${dc.conf.dir}/eniqmifconfig.dtd"/>
+		  </then>
+		</if>
+		<if>
+		  <available file="${dc.conf.dir}/symboliclinkcreator.log4j.properties"/>
+		  <then>
+			<delete file="${dc.conf.dir}/symboliclinkcreator.log4j.properties"/>
+		  </then>
+		</if>
+		<if>
+		  <available file="${dc.conf.dir}/symboliclinkcreatorLogging.properties"/>
+		  <then>
+			<delete file="${dc.conf.dir}/symboliclinkcreatorLogging.properties"/>
+		  </then>
+		</if>
+		<if>
+		  <available file="${dc.bin.dir}/RetentionOfNodes.sh"/>
+		  <then>
+			<delete file="${dc.bin.dir}/RetentionOfNodes.sh"/>
+		  </then>
+		</if>
+		<if>
+		  <available file="${dc.bin.dir}/ManualNodeAssignment.bsh"/>
+		  <then>
+			<delete file="${dc.bin.dir}/ManualNodeAssignment.bsh"/>
+		  </then>
+		</if>
+		
+		<if>
+		  <available file="${dc.bin.dir}/uncollected_symlink.bsh"/>
+		  <then>
+			<delete file="${dc.bin.dir}/uncollected_symlink.bsh"/>
+		  </then>
+		</if>
+		
+		<if>
+		  <available file="${dc.admin.bin}/DeleteOldFiles.bsh"/>
+		<then>
+          <delete file="${dc.admin.bin}/DeleteOldFiles.bsh"/>
+		</then>
+		</if>
+		
+		<if>
+		  <available file="${dc.admin.bin}/EniqMomSymboliclinkCreator.bsh"/>
+		<then>
+          <delete file="${dc.admin.bin}/EniqMomSymboliclinkCreator.bsh"/>
+		</then>
+		</if>
+		
+		<if>
+		  <available file="${dc.admin.bin}/fls"/>
+		<then>
+          <delete file="${dc.admin.bin}/fls"/>
+		</then>
+		</if>
+		
+		<if>
+			<available file="${dc.bin.dir}/fls"/>
+		<then>
+		    <delete file="${dc.bin.dir}/fls"/>
+		</then>
+		</if>
+		
+		<if>
+		  <available file="${dc.bin.dir}/RoleUnassign.bsh"/>
+		  <then>
+			<delete file="${dc.bin.dir}/RoleUnassign.bsh"/>
+		  </then>
+		</if>
+		
+		<if>
+		  <available file="${dc.bin.dir}/symlinkcreator_rebdb_setup.bsh"/>
+		  <then>
+			<delete file="${dc.bin.dir}/symlinkcreator_rebdb_setup.bsh"/>
+		  </then>
+		</if>
+		
+		<if>
+		  <available file="${dc.bin.dir}/configure_fls_post_migration.bsh"/>
+		  <then>
+			<delete file="${dc.bin.dir}/configure_fls_post_migration.bsh"/>
+		  </then>
+		</if>
+
+    <copy file="${dc.installer.dir}/tmp/smf/fls" toFile="${dc.admin.bin}/fls"/>
+    <chmod perm="740" file="${dc.admin.bin}/fls"/>
+
+	<copy file="${dc.installer.dir}/tmp/bin/fls" toFile="${dc.bin.dir}/fls"/>
+	<chmod perm="740" file="${dc.bin.dir}/fls"/>
+	
+    <copy file="${dc.installer.dir}/tmp/bin/DeleteOldFiles.bsh" toFile="${dc.admin.bin}/DeleteOldFiles.bsh"/>
+    <chmod perm="740" file="${dc.admin.bin}/DeleteOldFiles.bsh"/>
+	
+	<copy file="${dc.installer.dir}/tmp/bin/EniqMomSymboliclinkCreator.bsh" toFile="${dc.admin.bin}/EniqMomSymboliclinkCreator.bsh"/>
+    <chmod perm="740" file="${dc.admin.bin}/EniqMomSymboliclinkCreator.bsh"/>
+	
+	<copy file="${dc.installer.dir}/tmp/bin/ManualNodeAssignment.bsh" toFile="${dc.bin.dir}/ManualNodeAssignment.bsh"/>
+	<chmod perm="740" file="${dc.bin.dir}/ManualNodeAssignment.bsh"/>
+	
+	<copy file="${dc.installer.dir}/tmp/bin/RetentionOfNodes.sh" toFile="${dc.bin.dir}/RetentionOfNodes.sh"/>
+	<chmod perm="740" file="${dc.bin.dir}/RetentionOfNodes.sh"/>
+	
+	<copy file="${dc.installer.dir}/tmp/bin/uncollected_symlink.bsh" toFile="${dc.bin.dir}/uncollected_symlink.bsh"/>
+	<chmod perm="740" file="${dc.bin.dir}/uncollected_symlink.bsh"/>
+	
+	<copy file="${dc.installer.dir}/tmp/conf/symboliclinkcreatorLogging.properties" toFile="${dc.conf.dir}/symboliclinkcreatorLogging.properties"/>
+	
+	<copy file="${dc.installer.dir}/tmp/conf/symboliclinkcreator.log4j.properties" toFile="${dc.conf.dir}/symboliclinkcreator.log4j.properties"/>
+		
+	<copy file="${dc.installer.dir}/tmp/conf/eniqmifconfig.dtd" toFile="${dc.conf.dir}/eniqmifconfig.dtd"/>
+		
+	<copy file="${dc.installer.dir}/tmp/conf/symboliclinkcreator.properties" toFile="${dc.conf.dir}/symboliclinkcreator.properties"/>
+	
+	<copy file="${dc.installer.dir}/tmp/bin/RoleUnassign.bsh" toFile="${dc.bin.dir}/RoleUnassign.bsh"/>
+	<chmod perm="740" file="${dc.bin.dir}/RoleUnassign.bsh"/>
+	
+	<copy file="${dc.installer.dir}/tmp/bin/symlinkcreator_rebdb_setup.bsh" toFile="${dc.bin.dir}/symlinkcreator_rebdb_setup.bsh"/>
+	<chmod perm="740" file="${dc.bin.dir}/symlinkcreator_rebdb_setup.bsh"/>
+	
+	<copy file="${dc.installer.dir}/tmp/bin/configure_fls_post_migration.bsh" toFile="${dc.bin.dir}/configure_fls_post_migration.bsh"/>
+	<chmod perm="740" file="${dc.bin.dir}/configure_fls_post_migration.bsh"/>
+	
+	<if>
+      <available file="${dc.bin.dir}/symlinkcreator_rebdb_setup.bsh"/>
+      <then>
+        <exec dir="${dc.bin.dir}" executable="symlinkcreator_rebdb_setup.bsh">
+        </exec>
+      </then>
+    </if>
+	
+	</target>
+
+	<target name="update" depends="moveToObsolete,install" />
+
+</project>

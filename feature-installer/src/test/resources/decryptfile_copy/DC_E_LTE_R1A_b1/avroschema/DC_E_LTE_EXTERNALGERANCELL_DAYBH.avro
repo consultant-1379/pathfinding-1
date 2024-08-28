@@ -1,0 +1,79 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_EXTERNALGERANCELL_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ExternalGeranCell"
+        }, 
+        {
+            "type": "string", 
+            "name": "GeraNetwork"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimAssocAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimUpdateAckSent"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimAssocAttRetry"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary98"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary99"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimAssocRemoved"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimAssocSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimAssocTO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimUpdateReceived"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimReportErr"
+        }
+    ]
+}

@@ -1,0 +1,55 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_DLBASEBANDCAPACITY_V_DAY", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "SystemFunctions"
+        }, 
+        {
+            "type": "int", 
+            "name": "DCVECTOR_INDEX"
+        }, 
+        {
+            "type": "string", 
+            "name": "DlBasebandCapacity"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "CapacityLicenses"
+        }, 
+        {
+            "type": "string", 
+            "name": "Licensing"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary40"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlCapDistr"
+        }
+    ]
+}

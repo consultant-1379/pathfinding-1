@@ -1,0 +1,47 @@
+<project name="imported_tech_pack_targets" basedir=".">
+				
+	<property name="doBusyhourActivation" value="true"/>
+		
+	<target name="pre_preinstall_check" depends="">
+	</target>
+
+	<target name="post_preinstall_check" depends="preinstall_check">
+	</target>
+
+	<target name="pre_metadata_installation" depends="post_preinstall_check">
+	</target>
+
+	<target name="post_metadata_installation" depends="metadata_installation">
+	</target>
+
+	<target name="pre_ETL_set_installation" depends="post_metadata_installation">
+	</target>
+
+	<target name="post_ETL_set_installation" depends="ETL_set_installation">
+	</target>
+
+	<target name="pre_tech_pack_and_type_activation" depends="post_ETL_set_installation">
+	</target>
+
+	<target name="post_tech_pack_and_type_activation" depends="tech_pack_and_type_activation">
+	</target>
+
+	<target name="pre_ETL_interface_metadata_installation" depends="post_tech_pack_and_type_activation">
+	</target>
+
+	<target name="post_ETL_interface_metadata_installation" depends="ETL_interface_metadata_installation">
+	</target>
+
+	<target name="pre_ETL_interface_set_installation" depends="post_ETL_interface_metadata_installation">
+	</target>
+
+	<target name="post_ETL_interface_set_installation" depends="ETL_interface_set_installation">
+	</target>
+
+	<target name="pre_directory_checker_and_DWHM_install" depends="post_ETL_interface_set_installation">
+	</target>
+
+	<target name="post_directory_checker_and_DWHM_install" depends="directory_checker_and_DWHM_install">
+	</target>
+
+</project>

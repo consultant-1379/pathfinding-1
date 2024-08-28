@@ -1,0 +1,765 @@
+<project name="repository" basedir="." default="all">
+
+	<property name="dcinstall.require.common" value="> 5-0-0b182"/>
+
+	<macrodef name="verify-etlrep-details">
+		<attribute name="pfile"/>
+		<sequential>
+			<echo message="Verifying ETLREP connection details are OK ..."/>
+			<property file="@{pfile}"/>
+			<property name="dot_check" value="/tmp/.checketlrep"/>
+			<if>
+				<available file="${dot_check}"/>
+				<then>
+					<delete file="${dot_check}"/>
+				</then>
+			</if>
+			<sql driver="${ENGINE_DB_DRIVERNAME}" url="${ENGINE_DB_URL}" userid="${ENGINE_DB_USERNAME}" password="${REP.ETLREPPassword}"
+       treatWarningsAsErrors="false" failOnConnectionError="false" onerror="abort" output="${dot_check}" append="false">
+        SELECT getdate()
+      </sql>
+			<if>
+				<available file="${dot_check}"/>
+				<then>
+					<echo message="ETLREP login details OK."/>
+				</then>
+				<else>
+					<!-- the sql exec above will print the error -->
+					<fail message="Could not verify etlrep login details!!"/>
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+
+	<target name="install" depends="copyTmpToDeploy">
+		<!-- Create rep tables by executing sql -->
+
+		<if>
+			<!-- TODO: Once NFD deliver their merged stuff, simplfy this-->
+			<available file="${dc.conf.dir}/dwh.ini"/>
+			<then>
+				<INIGet file="${dc.conf.dir}/dwh.ini" section="REP" parameter="PortNumber"/>
+				<INIGet file="${dc.conf.dir}/dwh.ini" section="DWH" parameter="PortNumber"/>
+				<INIGet file="${dc.conf.dir}/dwh.ini" section="LDAP" parameter="LDAP_BIND_PASSWORD"/>
+			</then>
+			<else>
+				<INIGet file="${dc.conf.dir}/niq.ini" section="REP" parameter="PortNumber"/>
+				<INIGet file="${dc.conf.dir}/niq.ini" section="DWH" parameter="PortNumber"/>
+				<INIGet file="${dc.conf.dir}/niq.ini" section="LDAP" parameter="LDAP_BIND_PASSWORD"/>
+				<INIGet file="${dc.conf.dir}/niq.ini" section="DWH_READER_SETTINGS" parameter="PortNumber"/>
+			</else>
+		</if>
+
+		<trycatch property="msg1">
+			<try>
+				<forcedelete file="${dc.installer.dir}/dbusers"/>
+			</try>
+			<catch/>
+		</trycatch>
+
+
+		<echo message="Copying ${dc.extract.dir}/bin/dbusers to ${dc.installer.dir}"/>
+		<copy file="${dc.extract.dir}/bin/dbusers" toFile="${dc.installer.dir}/dbusers"/>
+		<chmod perm="740" file="${dc.installer.dir}/dbusers"/>
+
+
+		<!-- Get the etlrep password and make sure its OK first -->
+		<get-password dbusers-user="etlrep" dbusers-conn="etlrep" ini-section="REP" ini-parameter="ETLREPPassword"/>
+		<replace file="${dc.extract.dir}/conf/ETLCServer.properties" token="@REPPORT@" value="${REP.PortNumber}"/>
+		<verify-etlrep-details pfile="${dc.extract.dir}/conf/ETLCServer.properties"/>
+		<!-- etlrep password is ok, we wont be encrypting wrong values later on-->
+
+		<!-- Get the passwords from repdb first, if not there check the ini files ... -->
+		<get-password dbusers-user="dwhrep" dbusers-conn="dwhrep" ini-section="REP" ini-parameter="DWHREPPassword"/>
+
+		<get-password dbusers-user="dc" dbusers-conn="dwh" ini-section="DWH" ini-parameter="DCPassword"/>
+		<get-password dbusers-user="dba" dbusers-conn="dwh" ini-section="DB" ini-parameter="DBAPassword"/>
+
+		<get-password dbusers-user="dcbo" dbusers-conn="dcbo" ini-section="DWH" ini-parameter="DCBOPassword"/>
+		<get-password dbusers-user="dcpublic" dbusers-conn="dcpublic" ini-section="DWH" ini-parameter="DCPUBLICPassword"/>
+
+		<!-- Copy dwhdb wrapper to /eniq/sw/bin/-->
+		<if>
+			<available file="${dc.bin.dir}/dwhdb"/>
+			<then>
+				<delete file="${dc.bin.dir}/dwhdb"/>
+			</then>
+		</if>
+		<copy file="${dc.extract.dir}/dbadmin/bin/dwhdb" toFile="${dc.bin.dir}/dwhdb"/>
+		<chmod file="${dc.bin.dir}/dwhdb" perm="740"/>
+
+		<!-- Copy repdb wrapper to /eniq/sw/bin/-->
+		<if>
+			<available file="${dc.bin.dir}/repdb"/>
+			<then>
+				<delete file="${dc.bin.dir}/repdb"/>
+			</then>
+		</if>
+		<copy file="${dc.extract.dir}/dbadmin/bin/repdb" toFile="${dc.bin.dir}/repdb"/>
+		<chmod file="${dc.bin.dir}/repdb" perm="740"/>
+
+		<if>
+			<available file="${dc.conf.dir}/ETLCServer.properties"/>
+			<then>
+
+				<delete file="${dc.conf.dir}/ETLCServer.properties"/>
+			</then>
+		</if>
+
+		<if>
+			<available file="${dc.conf.dir}/niq.rc"/>
+			<then>
+				<property file="${dc.conf.dir}/niq.rc"/>
+				<replace file="${dc.extract.dir}/sql/create_check_dwhdb_db_size.sql" token="@SMF_BIN_DIR@" value="${SMF_BIN_DIR}"/>
+				<replace file="${dc.extract.dir}/sql/create_check_dwhdb_db_size.sql" token="@LOG_DIR@" value="${LOG_DIR}"/>
+			</then>
+			<else>
+				<replace file="${dc.extract.dir}/sql/dc_sybase_sp_monitor_dwhdb_size.sql" token="@ADMIN_BIN@" value="/eniq/admin/bin"/>
+				<replace file="${dc.extract.dir}/sql/dc_sybase_sp_monitor_dwhdb_size.sql" token="@LOG_DIR@" value="/eniq/log/sw_log"/>
+			</else>
+		</if>
+
+
+		<replaceCrypted file="${dc.extract.dir}/conf/ETLCServer.properties" token="@ETLREPPASS@" value="${REP.ETLREPPassword}"/>
+		<copy file="${dc.extract.dir}/conf/ETLCServer.properties" toFile="${dc.conf.dir}/ETLCServer.properties"/>
+
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_1.sql" token="@rep.port@" value="${REP.PortNumber}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_1.sql" token="@etlrep.password@" value="${REP.ETLREPPassword}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_1.sql" token="@dwhrep.password@" value="${REP.DWHREPPassword}"/>
+
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_1.sql" token="@dwh.port@" value="${DWH.PortNumber}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_1.sql" token="@dwh.password@" value="${DWH.DCPassword}"/>
+
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_1.sql" token="@dba.password@" value="${DB.DBAPassword}"/>
+
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_20_events.sql" token="@dwh.port@" value="${DWH.PortNumber}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_20_events.sql" token="@dcbo.password@" value="${DWH.DCBOPassword}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_20_events.sql" token="@dcpublic.password@" value="${DWH.DCPUBLICPassword}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_20_events.sql" token="@ldap.password@" value="${LDAP.LDAP_BIND_PASSWORD}"/>
+
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_23_dwh_coord_entries.sql" token="@dwh.port@" value="${DWH.PortNumber}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_23_dwh_coord_entries.sql" token="@dwh.password@" value="${DWH.DCPassword}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_23_dwh_coord_entries.sql" token="@dba.password@" value="${DB.DBAPassword}"/>
+
+		<!--   <replace file="${dc.extract.dir}/sql/etlrep_sybase_27_update_urls.sql" token="@dwh.port@" value="${DWH.PortNumber}"/>
+
+ -->
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_30_update_urls.sql" token="@rep.port@" value="${REP.PortNumber}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_30_update_urls.sql" token="@dwh.port@" value="${DWH.PortNumber}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_30_update_urls.sql" token="@dwh_reader_1.port@" value="${DWH_READER_SETTINGS.PortNumber}"/>
+
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_31_update_urls.sql" token="@rep.port@" value="${REP.PortNumber}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_31_update_urls.sql" token="@dwh.port@" value="${DWH.PortNumber}"/>
+		<replace file="${dc.extract.dir}/sql/etlrep_sybase_31_update_urls.sql" token="@dwh_reader_1.port@" value="${DWH_READER_SETTINGS.PortNumber}"/>
+
+		<!-- Replace all occurances of @sybase.driver@ to Sybase Driver value -->
+		<replace dir="${dc.extract.dir}/sql/" token="@sybase.driver@" value="${ENGINE_DB_DRIVERNAME}">
+			<include name="**/*.sql"/>
+		</replace>
+
+		<!-- Replace all occurances of @system@ to "" when installing on SQL Anywhere -->
+		<replace dir="${dc.extract.dir}/sql/" token="@system@" value="">
+			<include name="**/*.sql"/>
+		</replace>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_1.sql"/>
+			<param name="swipeFile" value="true"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_2.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_3.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_4.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_5.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_6.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_7.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_8.sql"/>
+		</antcall>
+
+		<!-- events/stats merge-->
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep" />
+			<param name="sqlfile" value="etlrep_sybase_20_events.sql" />
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_23_dwh_coord_entries.sql"/>
+		</antcall>
+
+		<copy file="${dc.extract.dir}/bin/ChangeUserPasswordsInRepdb" toFile="${dc.bin.dir}/ChangeUserPasswordsInRepdb" overwrite="true"/>
+		<chmod perm="740" file="${dc.bin.dir}/ChangeUserPasswordsInRepdb"/>
+
+		<if>
+			<available file="${dc.bin.dir}/ChangeUserPasswordsInRepdb"/>
+			<then>
+				<exec dir="${dc.bin.dir}" executable="ChangeUserPasswordsInRepdb">
+					<arg value="-a"/>
+				</exec>
+			</then>
+		</if>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="typename" value="DBA"/>
+			<param name="sqlfile" value="etlrep_sybase_21_sp_iqconnection.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="typename" value="DBA"/>
+			<param name="sqlfile" value="etlrep_sybase_sp_iqstatus.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_24_dcuser_entry_for_adminUI.sql"/>
+			<param name="swipeFile" value="true"/>
+		</antcall>
+
+		<!--   <antcall target="run_one_sql">
+
+
+
+
+
+    <param name="dbname" value="etlrep"/>    
+	<param name="sqlfile" value="etlrep_sybase_25_MaxHashrow.sql"/>
+  </antcall> -->
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_26_service_node.sql"/>
+		</antcall>
+		<!-- 
+    <antcall target="run_one_sql">
+	<param name="dbname" value="etlrep"/>
+		<param name="sqlfile" value="etlrep_sybase_27_update_urls.sql"/>
+  </antcall>
+
+  <antcall target="run_one_sql">
+	<param name="dbname" value="etlrep"/>
+	<param name="sqlfile" value="etlrep_sybase_28_update_driver.sql"/>
+  </antcall>
+   -->
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_30_update_urls.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_sybase_31_update_urls.sql"/>
+		</antcall>
+
+		<!-- eo: events/stats merge-->
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_1.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_2.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_3.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_4.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_5.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_6.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_7.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_8.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_9.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_10.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_11.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_12.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_13.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_14.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_15.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_16.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_17.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_18.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_19.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_20.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_21.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_22.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_23.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_24.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_25.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_26.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_27.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_28.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_29.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_30.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_31.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_32.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_33.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_34.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_35.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_36.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_37.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_38.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_39.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_40.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_41.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_42.sql"/>
+		</antcall>
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_43.sql"/>
+		</antcall>
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_44.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_45.sql"/>
+		</antcall>
+
+		<!-- events/stats merge -->
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_50_events.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_51_stats.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_52_stats.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_53_events.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_54_events.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_55_events.sql"/>
+		</antcall>
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_56_events.sql"/>
+		</antcall>
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_53_stats.sql"/>
+		</antcall>
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_54_stats.sql"/>
+		</antcall>
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_57_events.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_1_sonagg.sql"/>
+		</antcall>
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_2_sonagg.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_58_update_pplans.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_59_update_time_pplans.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_60_events.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_61_events.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_62_events.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_63_events.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_64_events.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_65_stats.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_66_stats_dv_pplans.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_67_stats.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_68_stats.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_69_stats.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_70_stats.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_sybase_70_stats_cv_pplans.sql"/>
+		</antcall>
+
+		<!-- eo: events/stats merge -->
+
+		<!-- events/stats merge : Specific to dwhdb -->
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwh_coor"/>
+			<param name="typename" value="DBA"/>
+			<param name="sqlfile" value="create_show_dwhdb_usage.sql"/>
+			<param name="wantToExecuteeveryTime" value="true"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwh_coor"/>
+			<param name="typename" value="DBA"/>
+			<param name="sqlfile" value="create_check_dwhdb_db_size.sql"/>
+			<param name="wantToExecuteeveryTime" value="true"/>
+		</antcall>
+
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwh_coor"/>
+			<param name="typename" value="DBA"/>
+			<param name="sqlfile" value="PLM_Merge_Scripts_drop_view_DIM_E_LTE_EUCELL_CELL_dcuser.sql"/>
+			<param name="wantToExecuteeveryTime" value="true"/>
+		</antcall>
+
+		<!-- eo: events/stats merge : Specific to dwhdb -->
+
+		<!-- All Alter FK SQLs must be included here              -->
+		<!-- These sql must only be run during an initial install -->
+
+
+
+		<!-- add all FK constraints to etlrep -->
+		<antcall target="run_one_sql">
+			<param name="dbname" value="etlrep"/>
+			<param name="sqlfile" value="etlrep_alter_sybase_1.sql"/>
+		</antcall>
+
+		<!-- add all FK constraints to dwhrep -->
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_alter_sybase_1.sql"/>
+		</antcall>
+
+		<antcall target="run_one_sql">
+			<param name="dbname" value="dwhrep"/>
+			<param name="sqlfile" value="dwhrep_alter_sybase_2.sql"/>
+			<!-- events/stats merge -->
+		</antcall>
+
+
+
+
+
+		<if>
+			<available file="${dc.runtime.dir}/tomcat/webapps/universeupdateinstaller/WEB-INF/lib"/>
+			<then>
+				<delete>
+					<fileset dir="${dc.runtime.dir}/tomcat/webapps/universeupdateinstaller/WEB-INF/lib" includes="repository.jar"/>
+				</delete>
+				<copy todir="${dc.runtime.dir}/tomcat/webapps/universeupdateinstaller/WEB-INF/lib" flatten="true">
+					<fileset dir="${dc.platform.dir}">
+						<include name="**/dclib/repository.jar"/>
+					</fileset>
+				</copy>
+			</then>
+			<else/>
+		</if>
+
+		<if>
+			<available file="${dc.runtime.dir}/tomcat/webapps/techpackide/lib/repository.jar"/>
+			<then>
+				<delete file="${dc.runtime.dir}/tomcat/webapps/techpackide/lib/repository.jar"/>
+				<copy todir="${dc.runtime.dir}/tomcat/webapps/techpackide/lib" flatten="true">
+					<fileset dir="${dc.platform.dir}">
+						<include name="**/dclib/repository.jar"/>
+					</fileset>
+				</copy>
+			</then>
+			<else/>
+		</if>
+
+		<copy file="${dc.extract.dir}/bin/add_service_users" toFile="${dc.bin.dir}/add_service_users" overwrite="true"/>
+		<chmod perm="740" file="${dc.bin.dir}/add_service_users"/>
+
+		<copy file="${dc.extract.dir}/bin/slidingWindowBH.bsh" toFile="${dc.bin.dir}/slidingWindowBH.bsh" overwrite="true"/>
+		<chmod perm="740" file="${dc.bin.dir}/slidingWindowBH.bsh"/>
+
+		<if>
+			<available file="${dc.bin.dir}/slidingWindowBH.bsh"/>
+			<then>
+				<exec dir="${dc.bin.dir}" executable="slidingWindowBH.bsh">
+				</exec>
+			</then>
+		</if>
+
+		<!-- Re-executing to encrypt passwords if not already encrypted -->
+		<if>
+			<available file="${dc.bin.dir}/ChangeUserPasswordsInRepdb"/>
+			<then>
+				<exec dir="${dc.bin.dir}" executable="ChangeUserPasswordsInRepdb">
+					<arg value="-a"/>
+				</exec>
+			</then>
+		</if>
+		<!--Encrypt the alarm password-->
+		<copy file="${dc.extract.dir}/bin/EncryptAlarmPassword.bsh" toFile="${dc.bin.dir}/EncryptAlarmPassword.bsh" overwrite="true"/>
+		<chmod perm="740" file="${dc.bin.dir}/EncryptAlarmPassword.bsh"/>
+		
+		<if>
+			<available file="${dc.bin.dir}/EncryptAlarmPassword.bsh"/>
+			<then>
+				<exec dir="${dc.bin.dir}" executable="EncryptAlarmPassword.bsh">
+				</exec>
+			</then>
+		</if>
+		<!--<if>
+
+		<available file="${dc.installer.dir}/load_tp_node_version.bsh"/>
+		<then>
+			<exec dir="${dc.installer.dir}" executable="./load_tp_node_version.bsh">
+			</exec>
+		</then>
+    </if>-->
+
+	</target>
+
+	<target name="update" depends="moveToObsolete,install">
+	</target>
+
+</project>

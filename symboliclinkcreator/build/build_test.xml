@@ -1,0 +1,22 @@
+<project name="symboliclinkcreator" default="test_all">
+    <property name="module.name" value="symboliclinkcreator"/>
+    <property file="${user.home}/EniqBuild/BH/build.properties"/>
+    <property name="ant.common" value="${cc.base}/tools/ant_common"/>
+    <property file="${ant.common}/common.properties"/>
+    <property name="module.build" value="${module.symboliclinkcreator.build}"/>
+    <property name="module.base" value="${module.symboliclinkcreator.base}"/>
+    <property name="module.dependants" value="${module.symboliclinkcreator.dependants}"/>
+    <import file="${ant.common}/common.xml"/>
+    <property name="tests.to.run" value="**/*Test.class"/>
+
+    <path id="symboliclinkcreator.lib.classpath">
+        <path refid="plaform.lib.classpath"/>
+        <path location="${module.common_utilities.pkg}"/>
+        <path location="${module.parser.pkg}"/>
+    </path>
+    <path id="symboliclinkcreator.test.classpath">
+        <path refid="platform.test.classpath"/>
+        <path refid="symboliclinkcreator.lib.classpath"/>
+        <path location="${eniq.plat.base}/adapters/dev/symboliclinkcreator/"/>
+    </path>
+</project>

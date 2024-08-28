@@ -1,0 +1,353 @@
+package $packageName;
+
+import static org.junit.Assert.*;
+import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Vector;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import ssc.rockfactory.RockFactory;
+
+/**
+ * Test class for $testedFactoryClassName. Testing handling of all the objects in
+ * $testedClassName table.
+ */
+public class $testFactoryClassName {
+
+  private static $testedFactoryClassName objUnderTest;
+
+  private static RockFactory rockFactory;
+
+  private static $testedClassName whereObject;
+
+  private static Connection con = null;
+
+  private static Statement stmt;
+
+  private static Field vec;
+  
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+
+    /* Reflecting the private fields */
+    vec = ${testedFactoryClassName}.class.getDeclaredField("vec");
+    vec.setAccessible(true);
+
+    /* Creating connection for rockfactory */
+    try {
+      Class.forName("org.hsqldb.jdbcDriver").newInstance();
+      con = DriverManager.getConnection("jdbc:hsqldb:mem:testdb", "sa", "");
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    stmt = con.createStatement();
+    stmt.execute("CREATE TABLE ${testedClassName} (#foreach($col in $columns)#if($velocityCount > 1)#if($col.getClassType() == "Long") ,$col.getName() BIGINT #else#if ($col.getClassType() == "Integer") ,$col.getName() INTEGER #else#if ($col.getClassType() == "Timestamp") ,$col.getName() TIMESTAMP #else ,$col.getName() VARCHAR($col.getColumnSize())#end#end#end#else#if ($col.getClassType() == "Long") $col.getName() BIGINT #else#if ($col.getClassType() == "Integer") $col.getName() INTEGER #else#if ($col.getClassType() == "Timestamp") $col.getName() TIMESTAMP #else $col.getName() VARCHAR($col.getColumnSize()) #end#end#end#end#end)");
+    
+    /* Initializing rockfactory */
+    rockFactory = new RockFactory("jdbc:hsqldb:mem:testdb", "sa", "", "org.hsqldb.jdbcDriver", "con", true);
+
+    /* Creating where object which tells what sort of query is to be done */
+    whereObject = new $testedClassName(rockFactory);
+  }
+
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+
+    /* Cleaning up after test */
+    stmt.execute("DROP TABLE ${testedClassName}");
+    con = null;
+    objUnderTest = null;
+  }
+  
+  @Before
+  public void setUp() throws Exception {
+
+    /* Adding example data to table */
+	  stmt.executeUpdate("INSERT INTO ${testedClassName} VALUES(#foreach($col in $columns)#if($velocityCount > 1)#if($col.getClassType() == "Long") ,3 #else#if ($col.getClassType() == "Integer") ,3 #else#if ($col.getClassType() == "Timestamp") ,'2003-03-03 00:00:00.0' #else ,'#set($data='test'+${col.getName()}+'3')#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end' #end#end#end#else#if ($col.getClassType() == "Long") 3 #else#if ($col.getClassType() == "Integer") 3 #else#if ($col.getClassType() == "Timestamp") '2003-03-03 00:00:00.0' #else '#set($data='test'+${col.getName()}+'3')#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end' #end#end#end#end#end)");
+	  stmt.executeUpdate("INSERT INTO ${testedClassName} VALUES(#foreach($col in $columns)#if($velocityCount > 1)#if($col.getClassType() == "Long") ,2 #else#if ($col.getClassType() == "Integer") ,2 #else#if ($col.getClassType() == "Timestamp") ,'2002-02-02 00:00:00.0' #else ,'#set($data='test'+${col.getName()}+'2')#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end' #end#end#end#else#if ($col.getClassType() == "Long") 2 #else#if ($col.getClassType() == "Integer") 2 #else#if ($col.getClassType() == "Timestamp") '2002-02-02 00:00:00.0' #else '#set($data='test'+${col.getName()}+'2')#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end' #end#end#end#end#end)");
+	  stmt.executeUpdate("INSERT INTO ${testedClassName} VALUES(#foreach($col in $columns)#if($velocityCount > 1)#if($col.getClassType() == "Long") ,1 #else#if ($col.getClassType() == "Integer") ,1 #else#if ($col.getClassType() == "Timestamp") ,'2001-01-01 00:00:00.0' #else ,'#set($data='test'+${col.getName()}+'1')#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end' #end#end#end#else#if ($col.getClassType() == "Long") 1 #else#if ($col.getClassType() == "Integer") 1 #else#if ($col.getClassType() == "Timestamp") '2001-01-01 00:00:00.0' #else '#set($data='test'+${col.getName()}+'1')#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end' #end#end#end#end#end)");
+
+    /* Initializing tested object before each test */
+    objUnderTest = new $testedFactoryClassName(rockFactory, whereObject);
+  }
+  
+  @After
+  public void tearDown() throws Exception {
+
+    /* Cleaning up after each test */
+    stmt.executeUpdate("DELETE FROM ${testedClassName}");
+    objUnderTest = null;
+  }
+  
+  /**
+   * Testing $testedFactoryClassName constructor. All rows found from $testedClassName
+   * table are put into vector.
+   */
+  @Test
+  public void test${testedFactoryClassName}ConstructorWithWhereObject() throws Exception {
+
+    /* Calling the tested constructor */
+    objUnderTest = new ${testedFactoryClassName}(rockFactory, whereObject);
+
+    /* Asserting all ${testedClassName}s are found and put into vector */
+    try {
+      Vector<${testedClassName}> actualVector = (Vector) vec.get(objUnderTest);
+      String actual = actualVector.size() + ", " + #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(0).get${col}()#end#end + ", " +  #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(1).get${col}()#end#end + ", " +  #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(2).get${col}()#end#end;
+      String expected = "3,#foreach($col in $columns)#if($velocityCount == 1)#if($col.getClassType() == "Long") 3, 2, 1#else#if($col.getClassType() == "Integer") 3, 2, 1#else#if($col.getClassType() == "Timestamp") 2003-03-03 00:00:00.0, 2002-02-02 00:00:00.0, 2001-01-01 00:00:00.0#else test${col.getName()}3, test${col.getName()}2, test${col.getName()}1#end#end#end#end#end";
+      assertEquals(expected, actual);
+    } catch (ArrayIndexOutOfBoundsException aioobe) {
+      fail("Test Failed - One or more ${testedClassName}s was not loaded from the table!\n " + aioobe);
+    }
+  }
+  
+  /**
+   * Testing constructor with negative case where rockfactory object is null.
+   */
+  @Test
+  public void test${testedFactoryClassName}ConstructorWithWhereObjectNullRockfactory() throws Exception {
+
+    /* Asserting that variables are initialized */
+    try {
+      objUnderTest = new ${testedFactoryClassName}(null, whereObject);
+      fail("Test failed - NullPointerException was expected as rockfactory was initialized as null!");
+    } catch (NullPointerException npe) {
+      // test passed
+    } catch (Exception e) {
+      fail("Test failed - Unexpected exception occurred!\n" + e);
+    }
+  }
+  
+  /**
+   * Testing ${testedFactoryClassName} constructor. All rows found from $testedClassName
+   * table are put into vector and data validation is on.
+   */
+  @Test
+  public void test${testedFactoryClassName}ConstructorWithValidate() throws Exception {
+
+    /* Calling the tested constructor */
+    objUnderTest = new ${testedFactoryClassName}(rockFactory, whereObject, true);
+
+    /* Asserting all ${testedClassName}s are found and put into vector */
+    try {     
+      Vector<${testedClassName}> actualVector = (Vector) vec.get(objUnderTest);
+      String actual = actualVector.size() + ", " + #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(0).isValidateData()#end#end + ", " +  #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(1).isValidateData()#end#end + ", " +  #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(2).isValidateData()#end#end;
+      String expected = 3 + ", " + true + ", " + true + ", " + true;
+      assertEquals(expected, actual);
+    } catch (ArrayIndexOutOfBoundsException aioobe) {
+      fail("Test Failed - One or more aggregations was not loaded from the table!\n " + aioobe);
+    }
+  }
+  
+  /**
+   * Testing constructor with negative case where rockfactory object is null.
+   */
+  @Test
+  public void test${testedFactoryClassName}ConstructorWithValidateNullRockfactory() throws Exception {
+
+    /* Asserting that variables are initialized */
+    try {
+      objUnderTest = new ${testedFactoryClassName}(null, whereObject, true);
+      fail("Test failed - NullPointerException was expected as rockfactory was initialized as null!");
+    } catch (NullPointerException npe) {
+      // test passed
+    } catch (Exception e) {
+      fail("Test failed - Unexpected exception occurred!\n" + e);
+    }
+  }
+  
+  /**
+   * Testing ${testedFactoryClassName} constructor. All rows found from $testedClassName
+   * table are put into vector and data validation is on.
+   */
+  @Test
+  public void test${testedFactoryClassName}ConstructorWithOrderClause() throws Exception {
+
+    /* Calling the tested constructor */
+    objUnderTest = new ${testedFactoryClassName}(rockFactory, whereObject, "ORDER BY #foreach($col in $columns)#if($velocityCount == 1)${col.getName()}#end#end");
+
+    /* Asserting all ${testedClassName}s are found and put into vector */
+    try {
+      Vector<${testedClassName}> actualVector = (Vector) vec.get(objUnderTest);
+      String actual = actualVector.size() + ", " + #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(0).get${col}()#end#end + ", " +  #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(1).get${col}()#end#end + ", " +  #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(2).get${col}()#end#end;
+      String expected = "3,#foreach($col in $columns)#if($velocityCount == 1)#if($col.getClassType() == "Long") 1, 2, 3#else#if($col.getClassType() == "Integer") 1, 2, 3#else#if($col.getClassType() == "Timestamp") 2001-01-01 00:00:00.0, 2002-02-02 00:00:00.0, 2003-03-03 00:00:00.0#else test${col.getName()}1, test${col.getName()}2, test${col.getName()}3#end#end#end#end#end";
+      assertEquals(expected, actual);
+    } catch (ArrayIndexOutOfBoundsException aioobe) {
+      fail("Test Failed - One or more ${testedClassName}s was not loaded from the table!\n " + aioobe);
+    }
+  }
+  
+  /**
+   * Testing constructor with negative case where rockfactory object is null.
+   */
+  @Test
+  public void test${testedFactoryClassName}ConstructorWithOrderClauseNullRockfactory() throws Exception {
+
+    /* Asserting that variables are initialized */
+    try {
+      objUnderTest = new ${testedFactoryClassName}(null, whereObject, "ORDER BY #foreach($col in $columns)#if($velocityCount == 1)${col.getName()}#end#end");
+      fail("Test failed - NullPointerException was expected as rockfactory was initialized as null!");
+    } catch (NullPointerException npe) {
+      // test passed
+    } catch (Exception e) {
+      fail("Test failed - Unexpected exception occurred!\n" + e);
+    }
+  }
+  
+  /**
+   * Testing Element retrieving from a vector at certain location.
+   */
+  @Test
+  public void testGetElementAtWithGenericInput() throws Exception {
+
+    assertEquals(#foreach($col in $columns)#if($velocityCount == 1)#if($col.getClassType() == "Long")"2"#else#if($col.getClassType() == "Integer")"2"#else#if($col.getClassType() == "Timestamp")"2002-02-02 00:00:00.0"#else "test${col.getName()}2" #end#end#end, objUnderTest.getElementAt(1).get${col}().toString()#end#end);
+  }
+  
+  /**
+   * Testing Element retrieving from a vector at certain location.
+   */
+  @Test
+  public void testGetElementAtOutOfBounds() throws Exception {
+
+    assertEquals(null, objUnderTest.getElementAt(5));
+  }
+  
+  /**
+   * Testing size retrieving of the vector containing $testedClassName objects.
+   */
+  @Test
+  public void testSize() throws Exception {
+
+    assertEquals(3, objUnderTest.size());
+  }
+  
+  /**
+   * Testing vector retrieving containing $testedClassName objects.
+   */
+  @Test
+  public void testGet() throws Exception {
+
+    try {
+      Vector<${testedClassName}> actualVector = objUnderTest.get();
+      String actual = actualVector.size() + ", " + #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(0).get${col}()#end#end + ", " +  #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(1).get${col}()#end#end + ", " +  #foreach($col in $columns)#if($velocityCount == 1)actualVector.get(2).get${col}()#end#end;
+      String expected = "3,#foreach($col in $columns)#if($velocityCount == 1)#if($col.getClassType() == "Long") 3, 2, 1#else#if($col.getClassType() == "Integer") 3, 2, 1#else#if($col.getClassType() == "Timestamp") 2003-03-03 00:00:00.0, 2002-02-02 00:00:00.0, 2001-01-01 00:00:00.0#else test${col.getName()}3, test${col.getName()}2, test${col.getName()}1#end#end#end#end#end";
+      assertEquals(expected, actual);
+    } catch (ArrayIndexOutOfBoundsException aioobe) {
+      fail("Test Failed - One or more aggregations was not loaded from the table!\n " + aioobe);
+    }
+  }
+  
+  /**
+   * Test comparing two $testedClassName objects. True is returned if the two vectors
+   * containing the objects are the same, otherwise false.
+   */
+  @Test
+  public void testEqualsWithSameObjects() throws Exception {
+
+    /* Creating another vector with the same objects */
+    Vector otherVector = new Vector();
+    for (int i = 3; i > 0; i--) {
+      $testedClassName testObject = new $testedClassName(rockFactory#foreach($pkcol in $pkColumns)#if($pkcol.getClassType() == "Long"), Long.parseLong(i + "")#else#if($pkcol.getClassType() == "Integer"), i#else#if ($pkcol.getClassType() == "Timestamp"), "200" + i + "-0" + i + "-0" + i + " 00:00:00.0"#else, "test$pkcol.getName()" + i#end#end#end#end);
+      otherVector.add(testObject);
+    }
+
+    /* Asserting the two vectors are the same */
+    assertEquals(true, objUnderTest.equals(otherVector));
+  }
+  
+  /**
+   * Test comparing two $testedClassName objects. True is returned if the two vectors
+   * containing the objects are the same, otherwise false.
+   */
+  @Test
+  public void testEqualsWithSameVector() throws Exception {
+
+    /* Creating another vector with the same vector */
+    Vector otherVector = (Vector) vec.get(objUnderTest);
+
+    /* Asserting the two vectors are the same */
+    assertEquals(true, objUnderTest.equals(otherVector));
+  }
+  
+  /**
+   * Test comparing two $testedClassName objects. True is returned if the two vectors
+   * containing the objects are the same, otherwise false.
+   */
+  @Test
+  public void testEqualsWithNullVector() throws Exception {
+
+    Vector otherVector = null;
+    assertEquals(false, objUnderTest.equals(otherVector));
+  }
+  
+  /**
+   * Test comparing two $testedClassName objects. True is returned if the two vectors
+   * containing the objects are the same, otherwise false.
+   */
+  @Test
+  public void testEqualsWithDifferentAmountOfObjects() throws Exception {
+
+    /* Creating another vector with only one object */
+    Vector otherVector = new Vector();
+    $testedClassName testObject = new $testedClassName(rockFactory#foreach($pkcol in $pkColumns)#if($pkcol.getClassType() == "Long"), 1L#else#if($pkcol.getClassType() == "Integer"), 1#else#if ($pkcol.getClassType() == "Timestamp"), "2001-01-0100:00:00.0"#else, "test$pkcol.getName()1"#end#end#end#end);
+    otherVector.add(testObject);
+    
+    /* Asserting the two vectors are the same */
+    assertEquals(false, objUnderTest.equals(otherVector));
+  }
+  
+  /**
+   * Test comparing two $testedClassName objects. True is returned if the two vectors
+   * containing the objects are the same, otherwise false.
+   */
+  @Test
+  public void testEqualsWithDifferentObjects() throws Exception {
+
+    /* Creating another vector with different objects */
+    Vector otherVector = new Vector();
+    for (int i = 1; i < 4; i++) {
+      $testedClassName testObject = new $testedClassName(rockFactory#foreach($pkcol in $pkColumns)#if($pkcol.getClassType() == "Long"), Long.parseLong(i + "")#else#if($pkcol.getClassType() == "Integer"), i#else#if ($pkcol.getClassType() == "Timestamp"), "200" + i + "-0" + i + "-0" + i + " 00:00:00.0"#else, "test$pkcol.getName()" + i#end#end#end#end);
+      otherVector.add(testObject);
+    }
+    
+    /* Asserting the two vectors are the same */
+    assertEquals(false, objUnderTest.equals(otherVector));
+  }
+  
+  /**
+   * Test deleting objects from the database.
+   */
+  @Test
+  public void testDeleteDB() throws Exception {
+    
+    /* Calling the tested object */
+    String actual = objUnderTest.deleteDB() + ", ";
+    
+    /* Getting row count */
+    int rows = 0;
+    ResultSet res = stmt.executeQuery("SELECT COUNT(*) FROM ${testedClassName}");
+    while (res.next()) {
+      rows = res.getInt(1);
+    }
+    
+    /* Asserting object is deleted from the database */
+    actual += rows;
+    assertEquals(3 + ", " + 0, actual);
+  }
+  
+  /**
+   * Test object cloning.
+   */
+  @Test
+  public void testClone() throws Exception {
+    
+    /* Asserting if cloning works */
+    Object clonedObject = objUnderTest.clone();
+    assertEquals(${testedFactoryClassName}.class, clonedObject.getClass());
+  }
+}

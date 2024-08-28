@@ -1,0 +1,851 @@
+#!/bin/bash
+# ********************************************************************
+# Ericsson Radio Systems AB                                     SCRIPT
+# ********************************************************************
+#
+# (c) Ericsson Radio Systems AB 2015 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of Ericsson Radio Systems AB, Sweden. The programs may be used
+# and/or copied only with the written permission from Ericsson Radio
+# Systems AB or in accordance with the terms and conditions stipulated
+# in the agreement/contract under which the program(s) have been
+# supplied.
+#
+# ********************************************************************
+# Name      : manage_eniq_backup.bsh
+# Date      :
+# Purpose   : For Configuring backup
+# Developed : xthobob & xsoroyc
+# Usage     : manage_eniq_backup.bsh -c | -v | -d
+#
+# ********************************************************************
+#
+# Command Section
+#
+# ********************************************************************
+
+ECHO=/usr/bin/echo
+SED=/usr/bin/sed
+TR=/usr/bin/tr
+PRINTF=/usr/bin/printf
+SU=/usr/bin/su
+WHOAMI=/usr/bin/whoami
+NAWK=/usr/bin/nawk
+MV=/usr/bin/mv
+
+SYBASE=/eniq/sybase_iq
+export SYBASE
+
+SQLANY=/eniq/sql_anywhere
+export SQLANY
+
+. ${SYBASE}/IQ.sh > /dev/null
+
+USER=$($WHOAMI)
+
+DBISQL="$(ls /eniq/sybase_iq/IQ-*/bin64/dbisql)"
+if [ ! -x "$DBISQL" ]; then
+    $ECHO "$DBISQL command not found or not executable."
+    exit 1
+fi
+SYBASE_IQ_PATH=/eniq/sybase_iq//OCS-15_0/bin/isql
+if [ ! -x "$SYBASE_IQ_PATH" ]; then
+    $ECHO "$SYBASE_IQ_PATH command not found or not executable."
+    exit 1
+fi
+
+CONF_DIR=/eniq/sw/conf
+if [ -z "$CONF_DIR" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 1
+fi
+
+if [ -s /eniq/admin/lib/common_functions.lib ]; then
+    . /eniq/admin/lib/common_functions.lib
+else
+        echo "Could not find /eniq/admin/lib/common_functions.lib"
+        exit 1
+fi
+
+DWHREPUSER=`inigetpassword REP -v DWHREPUsername -f ${CONF_DIR}/niq.ini`
+DWHREPPASSWORD=`inigetpassword REP -v DWHREPPassword -f ${CONF_DIR}/niq.ini`
+REP_PORT=`inigetpassword REP -v PortNumber -f ${CONF_DIR}/niq.ini`
+REP_SERVER_NAME=`inigetpassword REP -v ServerName -f ${CONF_DIR}/niq.ini`
+DWHDBPASSWORD=`inigetpassword DWH -v DCPassword -f ${CONF_DIR}/niq.ini`
+DWHDB_PORT=`inigetpassword DWH -v PortNumber -f ${CONF_DIR}/niq.ini`
+DWH_SERVER_NAME=`inigetpassword DWH -v ServerName -f ${CONF_DIR}/niq.ini`
+
+### Function: usage ###
+#
+#   This is called for displaying the script usage.
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+usage() {
+   $ECHO ""
+   $ECHO "+----------------------------------------------------------+"
+   $ECHO "| This Script is to configure the backup functionality for |"
+   $ECHO "| 2 Weeks Backup & Restore Feature.                        |"
+   $ECHO "+----------------------------------------------------------+"
+   $ECHO "| Usage: manage_eniq_backup -c | -v                        |"
+   $ECHO "|        -v           To view                              |"
+   $ECHO "|        -c           To configure                         |"
+   $ECHO "+----------------------------------------------------------+"
+   $ECHO ""
+}
+
+#Trapping ctrl + c and call ctrl_c method
+trap ctrl_c SIGINT
+
+### Function: ctrl_c ###
+#
+#   This is called when ctrl +c have been encountered while running the script
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+ctrl_c () {
+  $ECHO "We have encountered an interrupt signal!!!"
+  $ECHO "Saving the configuration and Exiting!"
+  cacheReloader
+  exit 1
+}
+
+### Function: cacheReloader ###
+#
+#   This method is called to refresh the backup Cache in engine.
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+cacheReloader () {
+  echo "Initializing the backup cache refresh ..."
+  if [[ "$USER" == "root" ]]; then
+  $SU - dcuser /eniq/sw/bin/engine -e reloadBackupCache
+  elif [[ "$USER" == "dcuser" ]]; then
+  /eniq/sw/bin/engine -e reloadBackupCache
+  else
+  $ECHO "Could not able to activate the backup cache. Please run /eniq/sw/bin/engine -e reloadBackupCache manually from dcuser."
+  fi  
+}
+
+### Function: setProperty ###
+#
+#   This method is called to set property into a file.
+#
+# Arguments:
+#       $key $value $filename
+# Return Values:
+#       none
+setProperty () {
+  $NAWK -v pat="^$1=" -v value="$1=$2" '{ if ($0 ~ pat) print value; else print $0; }' $3 > $3.tmp
+  $MV $3.tmp $3
+  ioErrCode=$?
+  if [[ $ioErrCode -ne 0 ]]; then
+  $ECHO "Failed to update $3."
+  $RM $3.tmp
+  fi
+}
+
+### Function: getProperty ###
+#
+#   This method is called to get property into a file.
+#
+# Arguments:
+#       $key $filename
+# Return Values:
+#       none
+getProperty () {
+  local target=$1
+  local file=$2
+  filter_out=`sed '/^\#/d' ${file} | grep ${target} | sed -e 's/ //g'`
+  for LINE in $filter_out; do
+  local KEY=`echo $LINE | cut -d "=" -f 1`
+  echo target : $target
+  if [[ ${KEY} == ${target} ]]; then
+  property_value=`echo $LINE | cut -d "=" -f 2`
+  break
+  else
+  echo "$target is not present in the $file"
+  break
+  fi
+  done
+}
+
+### Function: backupCache ###
+#
+#   This is called when the cache data should be revalidated for the script.
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+backupCache () {
+  arrayIndex1=0
+  arrayIndex2=0
+  while read line
+  do
+  file_cxc_array[$arrayIndex1]="${line%%::*}"
+  arrayIndex1=$(($arrayIndex1+1))
+  k=${line%::*}
+  file_fname_array[$arrayIndex2]="${k##*::}"
+  arrayIndex2=$(($arrayIndex2+1))
+  done < /eniq/sw/conf/install_features
+  backupLevelTMP=`$DBISQL -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" -onerror exit -nogui "select distinct BACKUPLEVEL from BackupConfiguration where ENABLED_FLAG='Y'" 2>&1`
+  dbErrCode=$?
+  if [[ $dbErrCode -ne 0 ]]; then
+  $ECHO "Could not retrieve data from BackupConfiguration table - exiting with error code: $dbErrCode"
+  exit $dbErrCode
+  else
+  backupLevelTMP=`$ECHO "$backupLevelTMP" | $SED -e '1,/\-\-/d' -e '/ rows/,$d' | $SED '/^$/d' | $TR -d ' '`
+  if [[ ! -z $backupLevelTMP ]]; then
+  existBackupLevel=$backupLevelTMP
+  fi
+  fi
+  table_cxc_array=()
+  db_cxc_entry=`$DBISQL -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" -onerror exit -nogui "select LICENSEID from BackupConfiguration where ENABLED_FLAG='Y'" 2>&1`
+  dbErrCode=$?
+  if [[ $dbErrCode -ne 0 ]]; then
+  $ECHO "Could not retrieve data from BackupConfiguration table - exiting with error code: $dbErrCode"
+  exit $dbErrCode
+  else
+  db_cxc_entry=`$ECHO "$db_cxc_entry" | $SED -e '1,/\-\-/d' -e '/ rows/,$d' | $SED '/^$/d' | $TR -d ' '`
+  for line in $db_cxc_entry; do
+  table_cxc_array+=("$line")
+  done
+  fi
+}
+
+### Function: userInputChecker###
+#
+#   This is called to display the options and get the user input.
+#
+# Arguments:
+#       $1 - Array of options
+# Return Values:
+#       none
+userInputChecker () {
+  local e t
+  option_list=("$@")
+  if [ ${#option_list} -gt 1 ]; then
+  $ECHO "Please enter the number corresponding to the options."
+  $ECHO "Options:"
+  for i in "${!option_list[@]}"; do
+  if [[ -n "${option_list[$i]}" ]]; then
+  $PRINTF "\t(%s) %s\n" "$i" "${option_list[$i]}"
+  fi
+  done
+  if [[ "$acceptSChar" == "true" ]]; then
+  $ECHO "e.g. 1,2,3 | 1-10 | 1,5-6,10"
+  fi
+  if [ "$exitOption"  == "true" ] && [ "$scriptFlow" != "fixed" ]; then
+  $ECHO "For exiting from selection procedure, give \"exit\""
+  fi
+  while(true)
+  do
+  user_input_array=()
+  read -p '->' input
+  if [[ "$input" =~ ^[0-9]+$ && ! -z ${option_list[$input]} ]]; then
+  user_input="${option_list[$input]}"
+  user_input_array+=("${option_list[$input]}")
+  break
+  elif [[ "$input" == *[-,]* ]] && [[ "$acceptSChar" == "true" ]]; then
+  patternExtractor "$input"
+  for j in "${extracted_array[@]}"; do
+  if [[ ! -z ${option_list[$j]} ]]; then
+  user_input_array+=("${option_list[$j]}")
+  fi
+  done
+  if [[ ${#user_input_array[@]} -eq 0 ]]; then
+  $ECHO "Entered options are not available."
+  else
+  break
+  fi
+  elif [ "$input" == "exit" ] && [ "$scriptFlow" != "fixed" ] && [ "$exitOption" == "true" ]; then
+  break
+  else
+  $ECHO "Invalid input! Please enter a valid option."
+  fi
+  done
+  fi
+  acceptSChar="false"
+  exitOption="false"
+}
+
+### Function: patternExtractor ###
+#
+#   This is called to extract the numbers from the patterned String
+#
+# Arguments:
+#       $1 - String with (',','-') patterns.
+# Return Values:
+#       none
+patternExtractor () {
+  str="$1"
+  pattern=" |-"
+  extracted_array=()
+
+  if [[ $str =~ $pattern ]]; then
+    index=0
+    set -f                      # avoid globbing (expansion of *).
+    tmparray=(${str//,/ })
+    for i in "${tmparray[@]}"; do
+    str1="$i"
+    if [[ $str1 =~ $pattern ]]; then
+      var1=`$ECHO "${str1%%-*}"`
+      var2=`$ECHO "${str1##*-}"`
+      while [ $var1 -le $var2 ]; do
+        extracted_array[$index]="$var1"
+        var1=$((var1+1))
+        index=$((index+1))
+      done
+      continue
+    fi
+    extracted_array[$index]="$i"
+    index=$((index+1))
+    done
+  else
+    set -f                      # avoid globbing (expansion of *).
+    extracted_array=(${str//,/ })
+  fi
+}
+
+### Function: dbUpdater ###
+#
+#   This is called to update the BackupConfiguration table
+#
+# Arguments:
+#       $1 - table column name
+#       $2 - string to be updated
+# Return Values:
+#       none
+dbUpdater () {
+  if [ ! -z "$1" ] && [ ! -z "$2" ]; then
+  $DBISQL -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" -onerror exit -nogui "update BackupConfiguration set $1 = '$2'"> /dev/null 2>&1
+  dbErrCode=$?
+  if [[ $dbErrCode -ne 0 ]]; then
+  $ECHO "Could not update the configuration in BackupConfiguration table - exiting with error code: $dbErrCode"
+  exit $dbErrCode
+  else
+  $ECHO "The configuration has been updated successfully!"
+  fi
+  fi
+}
+
+### Function: dbInserter ###
+#
+#   This is called to insert into BackupConfiguration table
+#
+# Arguments:
+#       $1 - Array of cxc numbers.
+# Return Values:
+#       none
+dbInserter () {
+  cxc_array=("$@")
+  if [ ${#cxc_array[@]} -gt 0 ]; then
+  arrayIndex4=0
+  sqlClause=""
+  for i in "${cxc_array[@]}"; do
+    if [[ $arrayIndex4 -eq 0 ]]; then
+      sqlClause="$sqlClause SELECT '$i','$existBackupLevel','Feature','Y'"
+    else
+      sqlClause="$sqlClause UNION ALL SELECT '$i','$existBackupLevel','Feature','Y'"
+    fi
+    arrayIndex4=$(($arrayIndex4+1))
+  done
+$SYBASE_IQ_PATH -U$DWHREPUSER -P$DWHREPPASSWORD -S$REP_SERVER_NAME --retserverror<<EOF > /dev/null 2>&1
+INSERT INTO BACKUPCONFIGURATION (LICENSEID,BACKUPLEVEL,DESCRIPTION,ENABLED_FLAG) $sqlClause
+go
+quit
+EOF
+errCode=$?
+if [[ $errCode -ne 0 ]]; then
+$ECHO "could not insert the configuration into the BackupConfiguration exiting with exit code $errCode"
+exit $errCode
+fi
+fi
+}
+
+### Function: dbremover ###
+#
+#   This is called to take up the Backup level configuration
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+dbremover () {
+rm_array=("$@")
+if [ ${#rm_array} -gt 0 ]; then
+arrayIndex8=0
+removesqlClause=""
+for i in "${rm_array[@]}"; do
+if [[ $arrayIndex8 -eq 0 ]]; then
+  removesqlClause="$removesqlClause '$i'"
+  else
+  removesqlClause="$removesqlClause , '$i'"
+  fi
+  arrayIndex8=$(($arrayIndex8+1))
+done
+$SYBASE_IQ_PATH -U$DWHREPUSER -P$DWHREPPASSWORD -S$REP_SERVER_NAME --retserverror<<EOF > /dev/null 2>&1
+delete from BackupConfiguration where LICENSEID IN ($removesqlClause)
+go
+quit
+EOF
+errCode=$?
+if [[ $errCode -ne 0 ]]; then
+$ECHO "could not remove the configuration from BackupConfiguration with exit code $errCode"
+exit $errCode
+fi
+fi
+}
+
+### Function: enableFeature ###
+#
+#   This is called to update the BackupConfiguration table
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+enableFeature () {
+  file_table_diffArray=()
+  arrayIndex3=0
+  for i in "${file_cxc_array[@]}"; do
+    skip=
+    for j in "${table_cxc_array[@]}"; do
+      [[ $i == $j ]] && { skip=1; break; }
+    done
+    [[ -n $skip ]] || file_table_diffArray+=("${file_fname_array[$arrayIndex3]}")
+    arrayIndex3=$((arrayIndex3+1))
+  done
+  acceptSChar="true"
+  exitOption="true"
+  if [[ ${#file_table_diffArray[@]} -gt 1 ]]; then
+  userInputChecker "${file_table_diffArray[@]}"
+  if [ ${#user_input_array[@]} -gt 0 ] && [ "$input" != "exit" ]; then
+  arrayIndex5=0
+  insert_cxc_array=()
+  for i in "${file_fname_array[@]}"; do
+    skip=
+    for j in "${user_input_array[@]}"; do
+      [[ $i == $j ]] && { skip=1; break; }
+    done
+    [[ ! -n $skip ]] || insert_cxc_array+=("${file_cxc_array[arrayIndex5]}")
+    arrayIndex5=$((arrayIndex5+1))
+  done
+  dbInserter "${insert_cxc_array[@]}"
+  $ECHO "Backup for selected features are enabling..."
+  $ECHO ""
+  backupCache
+  fi
+  else
+  $ECHO "There are no features to be enabled."
+  fi
+  acceptSChar="false"
+}
+
+### Function: disableFeature ###
+#
+#   This is called to update the BackupConfiguration table
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+disableFeature () {
+  feature_array=()
+  arrayIndex6=0
+
+  for m in "${file_cxc_array[@]}"; do
+  skip=
+  for n in "${table_cxc_array[@]}"; do
+  [[ $m == $n ]] && { skip=1; break; }
+  done
+  [[ ! -n $skip ]] || feature_array+=("${file_fname_array[$arrayIndex6]}")
+  arrayIndex6=$((arrayIndex6+1))
+  done
+  acceptSChar="true"
+  exitOption="true"
+  if [[ ${#feature_array[@]} -gt 1 ]]; then
+  userInputChecker "${feature_array[@]}"
+  if [ ${#user_input_array[@]} -gt 0 ] && [ "$input" != "exit" ]; then
+  arrayIndex7=0
+  remove_cxc_array=()
+  for o in "${file_fname_array[@]}"; do
+  skip=
+  for p in "${user_input_array[@]}"; do
+  [[ $o == $p ]] && { skip=1; break; }
+  done
+  [[ ! -n $skip ]] || remove_cxc_array+=("${file_cxc_array[arrayIndex7]}")
+  arrayIndex7=$((arrayIndex7+1))
+  done
+  dbremover "${remove_cxc_array[@]}"
+  $ECHO "Backup for selected features are disabling..."
+  $ECHO ""
+  backupCache
+  fi
+  else
+  $ECHO "There are no features to be disable."
+  fi
+  acceptSChar="false"
+  
+}
+
+
+### Function: configBackupLevel ###
+#
+#   This is called to take up the Backup level configuration
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+configBackupLevel () {
+  $ECHO "Please enter a backup level:"
+  backup_level_options=("RAW" "AGGREGATED" "BOTH")
+  for (( i=0; i<${#backup_level_options[@]}; i++ )); do 
+  if [[ ${backup_level_options[i]} == $existBackupLevel ]]; then
+  backup_level_options=( "${backup_level_options[@]:0:$i}" "${backup_level_options[@]:$((i + 1))}" )
+  fi
+  done
+  exitOption="true"
+  userInputChecker "${backup_level_options[@]}"
+  if [[ ! -z "$user_input" ]] && [[ "$input" != "exit" ]]; then
+  backupLevelTEMP=$($ECHO $user_input | $TR '[:lower:]' '[:upper:]')
+  if [[ "$existBackupLevel" != "none" ]]; then
+  dbUpdater "BACKUPLEVEL" "$backupLevelTEMP"
+  fi
+  temp_existBackupLevel=$existBackupLevel
+  existBackupLevel=$backupLevelTEMP
+  fi
+}
+
+### Function: fixed_execution ###
+#
+#   This is called to go in hierarchical flow
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+fixed_execution () {
+  configBackupLevel
+  enableFeature
+  data_retention_calculation
+}
+
+### Function: dynamic_execution ###
+#
+#   This is called to go in hierarchical flow
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+dynamic_execution () {
+  ## it will be displaying the current configuration as well.
+  menu_option=("Backup Level" "Enable Feature" "Disable Feature" "View Existing Configuration" "Exit")
+  while(true)
+  do
+  $PRINTF "\033c"
+  userInputChecker "${menu_option[@]}"
+  $ECHO "Menu Selected is $user_input"
+  case ${user_input} in
+        "Backup Level")
+                        configBackupLevel
+                        ;;
+        "Enable Feature")
+                        enableFeature
+                        ;;
+        "Disable Feature")
+                        disableFeature
+                        ;;
+		"View Existing Configuration")
+						view
+						;;
+		"Exit") 
+						break
+						;;
+  esac
+  exitOption="false"
+  done
+}
+
+### Function: view ###
+#
+#   This is called to view the existing backup configuration
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+view () {
+  if [[ "$existBackupLevel" != "none" ]]; then
+  $ECHO "List of Backup Enabled Features :"
+  view_feature_array=()
+  arrayIndex7=0
+
+  for m in "${file_cxc_array[@]}"; do
+  skip=
+  for n in "${table_cxc_array[@]}"; do
+  [[ $m == $n ]] && { skip=1; break; }
+  done
+  [[ ! -n $skip ]] || view_feature_array+=("${file_fname_array[$arrayIndex7]}")
+  arrayIndex7=$((arrayIndex7+1))
+  done
+
+  for i in "${view_feature_array[@]}"; do
+  $PRINTF "\t%s\n" "$i"
+  done
+  $ECHO "Backup level : $existBackupLevel"
+  getProperty BACKUP_RETENTION_PERIOD /eniq/sw/conf/flex_data_bkup.properties
+  $ECHO "Current retention period available in the server is $property_value."
+  else
+  $ECHO "2 Weeks Backup & Restore Feature is disabled!!"
+  fi
+  $ECHO ""
+  read -n 1 -s -p "Press any key to continue..."
+  $ECHO ""
+
+}
+
+### Function: data_retention_calculation ###
+#
+#   This is called to calculate and store the retention period of backup data.
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+data_retention_configuration () {
+  #$ECHO "Note: reconfiguration of the backup data retention period is not authorized unless it is recommended."
+  getProperty BACKUP_RETENTION_PERIOD /eniq/sw/conf/flex_data_bkup.properties
+  $ECHO "Current retention period available in the server is $property_value."
+  $ECHO "Do you want to do reconfigure the backup retention period? Yy|Nn"
+  confirm_handler
+  if [[ "$outputResponse" = "Y" ]]; then
+  while(true); do
+  $ECHO "Please enter the new retention period (In Days):"
+  read -p '->' retention_period
+  if [[ "$retention_period" =~ ^[0-9]+$ ]]; then
+  setProperty "BACKUP_RETENTION_PERIOD" "$retention_period" "/eniq/sw/conf/flex_data_bkup.properties"
+  break
+  else
+  $ECHO "Invalid Character entered!"
+  fi
+  done
+  fi
+}
+
+### Function: counter_volume_calculation ###
+#
+#   This is called to calculate and store the retention period of backup data.
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+counter_volume_calculation () {
+  counter_volume=`$DBISQL -c "eng=$DWH_SERVER_NAME;links=tcpip{host=$DWH_SERVER_NAME;port=$DWHDB_PORT};uid=dc;pwd=$DWHDBPASSWORD" -onerror exit -nogui /eniq/sw/bin/counter_volume_calculator.sql 2>&1`
+  dbErrCode=$?
+  if [[ $dbErrCode -ne 0 ]]; then
+  $ECHO "Error while calculating system counter volume - exiting with error code: $dbErrCode"
+  else
+  counter_volume=`$ECHO "$counter_volume" | $SED -e '1,/\-\-/d' -e '/ rows/,$d' | $SED '/^$/d' | $TR -d ' '`
+  fi
+}
+
+
+### Function: data_retention_calculation ###
+#
+#   This is called to calculate and store the retention period of backup data.
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+data_retention_calculation () {
+  $ECHO "Calculating the date retention period for the Flexible Data Backup..."
+  counter_volume=""
+  counter_volume_calculation
+  counter_volume=${counter_volume%.*}
+  server_deployment=""
+  retention_days=14
+  if [[ "$counter_volume" =~ ^[0-9]+$ ]];then
+  if [[ $counter_volume -gt 320 ]]; then
+  $retention_days=6
+  elif [[ $counter_volume -gt  160 ]]; then
+  $retention_days=9
+  fi
+  fi
+  setProperty "BACKUP_RETENTION_PERIOD" "$retention_days" "/eniq/sw/conf/flex_data_bkup.properties"
+  if [[ $ioErrCode -ne 0 ]]; then
+  $ECHO "Configuration of retention period should be done successfully. Please run the command:- bash /eniq/admin/bin/manage_eniq_backup.bsh -r"
+  else
+  $ECHO "Data Retention period has been set to $retention_days days."
+  fi
+}
+
+### Function: set_aggregation_backup_properties ###
+#
+#   This is called to go in hierarchical flow
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+set_aggregation_backup_properties () {
+  if [[ "$temp_existBackupLevel" == "RAW" ]] && [[ "$backupLevelTEMP" == "BOTH" || "$backupLevelTEMP" == "AGGREGATED" ]]; then
+  now=`date +%Y-%m-%d`
+  echo $now
+  setProperty "AGGREGATION_ACTIVATED_DATE" "$now" "/eniq/sw/conf/flex_data_bkup.properties"
+  elif [[ "$backupLevelTEMP" == "RAW" ]]; then
+  setProperty "AGGREGATION_ACTIVATED_DATE" "nil" "/eniq/sw/conf/flex_data_bkup.properties"
+  fi
+}
+
+### Function: confirm_handler ###
+#
+#   This is called to do the confirmation on the user input
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+confirm_handler () {
+  while(true); do
+  read -p '->' response
+  userInputed=$($ECHO $response | $TR '[:lower:]' '[:upper:]')
+  if [ "$userInputed" = "Y" ] || [ "$userInputed" = "N" ]; then
+  outputResponse=$userInputed
+  break
+  else
+  $ECHO "wrong entry . please enter. Yy|Nn "
+  fi
+  done
+}
+
+### Function: configuration ###
+#
+#   This is called to configure the backup
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+configuration()
+{
+  scriptFlow="none"
+  rows=`$DBISQL -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" -onerror exit -nogui "select count(*) from BackupConfiguration where ENABLED_FLAG='N'"  2>&1`
+  dbErrCode=$?
+  if [[ $dbErrCode -ne 0 ]]; then
+	$ECHO "Could not retrieve data from BackupConfiguration table - exiting with error code: $dbErrCode"
+	exit $dbErrCode
+  else
+	rows=`$ECHO "$rows" | $SED -e '1,/\-\-/d' -e '/ rows/,$d' | $SED '/^$/d' | $TR -d ' '`
+	if [[ $rows -gt 0 ]]; then
+	$ECHO "Do you want to load previous Techpack Feature Configuration ?  Yy|Nn"
+	confirm_handler
+		if [[ "$outputResponse" = "Y" ]]; then
+		dbUpdater "ENABLED_FLAG" "Y"
+		backupCache
+		$ECHO "Do you to configure anything more in the existing Techpack Feature Configuration? Yy|Nn"
+		confirm_handler
+		if [[ "$outputResponse" = "N" ]]; then
+		exit 0
+		fi
+		else
+		$DBISQL -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" -onerror exit -nogui "Truncate table BackupConfiguration"> /dev/null 2>&1
+		dbErrCode=$?
+			if [[ $dbErrCode -ne 0 ]]; then
+			$ECHO "Could not remove configuration from BackupConfiguration table - exiting with error code: $dbErrCode"
+			exit $dbErrCode
+			else
+			$ECHO "Erasing the Techpack Feature configurations permanently!"
+			fi
+		fi
+    fi
+  fi
+  if [[ "$existBackupLevel" == "none" ]]; then
+  scriptFlow="fixed"
+  fixed_execution
+  else
+  scriptFlow="dynamic"
+  dynamic_execution
+  fi
+  set_aggregation_backup_properties
+}
+
+### Function: enableALL_features ###
+#
+#  This is called to enable All the features which are disabled.
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+enableAll_features() {
+  dbUpdater "ENABLED_FLAG" "Y"
+}
+
+### Function: disableAll_features ###
+#
+#  This is called to disable All the features which are enabled.
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+disableAll_features () {
+  dbUpdater "ENABLED_FLAG" "N"
+}
+
+### The execution starts here ######
+##  Main  ##
+existBackupLevel="none"
+acceptSChar="false"
+exitOption="false"
+if [[ $# -eq 1 ]]; then
+	if [[ "$1" == "-v" ]]; then
+	backupCache
+	$PRINTF "\033c"
+	view
+	elif [[ "$1" == "-c" ]]; then
+	backupCache
+	$PRINTF "\033c"
+	configuration
+	cacheReloader
+	elif [[ "$1" == "-d" ]]; then
+	disableAll_features
+	cacheReloader
+	elif [[ "$1" == "-e" ]]; then
+	enableAll_features
+	cacheReloader
+	else
+	$ECHO "Wrong arguments passed. Please see the usage."
+	usage
+	fi
+elif [[ $# -eq 2 ]]; then
+	if [[ "$1" == "-c" ]] && [[ "`echo "$2" | tr '[:upper:]' '[:lower:]'`" == "holdcachereload" ]]; then
+	backupCache
+	$PRINTF "\033c"
+	configuration
+	elif [[ "$1" == "-c" ]] && [[ "`echo "$2" | tr '[:upper:]' '[:lower:]'`" == "reloadcache" ]]; then
+	cacheReloader
+	elif [[ "$1" == "-c" ]] && [[ "`echo "$2" | tr '[:upper:]' '[:lower:]'`" == "retentionperiod" ]]; then
+	$PRINTF "\033c"
+	data_retention_configuration
+	else
+	$ECHO "Wrong arguments passed. Please see the usage."
+	usage
+	fi
+else
+	$ECHO "Wrong arguments passed. Please see the usage."
+	usage
+fi

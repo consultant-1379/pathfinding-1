@@ -1,0 +1,5719 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_EUTRANCELLTDD_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellTDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailLicActiveUsers"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttAddedHoOngoing"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcSetupUeAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcSetupScgUeAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpUeThpTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeAdmCtrlPreventivePe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcSetupFailUeCap"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlSucc16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRlcArqUlNack"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscDlPelrUu"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaFailCfraMsg1DiscSched"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabResumeArpLow"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsWithDetectedPusch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaContResAndRrcRsp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdleModeRelDistrMediumLoad"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMeasRepDlComp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaAccHarqFailWithinContRes"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchSrCqiResCongSr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchSrResShortUtilCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteIntraFAfterResync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlReTrans"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInLicMob"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttAdded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMeasRepGoodCovElc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmInvalidPftMsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCGsmA2Rsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbTuneOut"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchCqiResMediumUtilCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedActivityCellUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcchResyncAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmVoipQualityUeUlLowSampl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchCqiResShortUtilCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMeasRepBadCovElc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailCellIntensStat"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1RerouteNasRequestReceived"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeDlMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInCellLatency"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeUlCe1Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbAvailUlPuschLowRegion"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlPuschCenterRegionSrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlPuschLowRegionSrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabBrMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranCompUlNack"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmTtiNs05FullBandSch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRetransPostponedNs05FullBandSch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcchMaxCceAvailUlSf"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdcSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAcBarringEmSpecialAc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdcCapableMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdcUlCaMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeExclThpDlVolte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUePeAttSrResPa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbPeSrResPa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccInMfbiPrimary"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInBb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband3Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmGoodCovSearchEvalReportRsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepAttLteIntraFHybridCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovSearchEvalReportRsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacUeThpTimeUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailDynUeAdmCtrl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDrxSleepTimePft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRachNumContentionReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDrxCommandPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInBearerAdmissionRej"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepSuccLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInMpOverload"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCriticalBorderEvalReportRsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2SubbandSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabFailGbrUlEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithUnknownReceptionVolte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband7Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabLowCovUeAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteIntraFCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelMmeActHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlAckComp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRlcArqDlAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaUnassignedCfraSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbHoPrepFail1xRttEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmA3InterFBestCellEvalReportRsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmA5BestCellEvalReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelNormalEnbAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelNormalEnbUserInactivity"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabModFailLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeThpVolUlCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteInterFMbms"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsTransPCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnLevSumUlOutOfSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransVolte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaAccHarqFailAfterContRes"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaConfiguredNoMeasSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchSrMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActCdt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDtdReqPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband10Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteInterFUeMeas"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelNormalEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpBitrateUlDrbMin"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpLatTimeDlDrxSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithDetectedHarqAckPCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttAddedPa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaSuccSrInSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmVoipQualityRbUlNok"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCGsmA2Rsrq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscDlHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNasTransferFailPnrDlSrb2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbTdScdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActTnFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailDuIntens"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabSuccHpa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsWithDetectedPuschVolte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaConfiguredMeasSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabLevSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailDuSwC"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpBitrateUlDrbMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabSuccGummeiNative"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacUeThpTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabFailInitLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlCatmMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcchCceUsedUlPresched"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnNs05RepeaterZoneSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbCritCov"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalMmeCritCov"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAcBarringEmSpecAcPlmn3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMcPttQualityRbUlLowSampl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAcBarringEmSpecAcPlmn1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAcBarringEmSpecAcPlmn2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCpriExtDelayChange"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmB1BestCellEvalReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMeasConfigB1Endc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransNonMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransMcPttNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolDl2ccPCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcHoQualifiedUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcHoA5MeasRepUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailHighLoad"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMpdcchMaxPrbAvail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMpdcchPrbUsed"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary139"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInOffloadAdmission"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbUeLostOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovSearchEvalReportUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPreventedProblematicCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccX2HoExe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmContDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaAttCbra"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb68"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcchResyncSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttHpa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSrvccMeasTO1xRtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabSuccDta"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbUlHoPrepTxTO1xRttEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb86"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary123"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCUtranA2Rsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsWithDetectedPuschPCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaSuccSrOutOfSyncPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacLatTimeQciDlDrxSyncSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary200"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlFailQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepAttLteInterFMbms"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary150"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAnrCandNrelCgiAdd"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbMeasTO1xRttEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb41"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscDlAqm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActHprOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlDtx64Qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcchTxConservative"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacLatTimeQciDlSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioTbsPwrUnrestricted"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolUlSrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb31"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSessionTimeUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedRestrictUeCatDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCovGoodZoneSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb67"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtEstabSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbAvailDlMbms"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcchMaxCceAvail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabLevSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaUnassignedCfraFalse"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmWifiAccessAllowed"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestFailDynUeAdmCtrl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb99"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb92"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbPe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAccessClassBarringEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrSfSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb17"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaSuccSrOutOfSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAdjustAccessMpLoadCtrl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbTrans"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmElcPdcchBlankedTti"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepSuccLteInterFCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary30"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepSuccLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccNoNeighRel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCEutraUlSinr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb100"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmContDlHw"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb55"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb56"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteInterFUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbCdtAutoPnr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellSleepTime"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary129"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpResDlSelTbs"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailCellLatency"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabFailAddedHoOngoing"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaDeconfigured"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb59"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelNormalEnbAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCEUtra"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb43"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPwrBoostAttLowCovUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary111"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb30"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbExtIat"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfSuccNoMob"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeThpVolUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaContResOnly"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb22"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary9"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCGsm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeThpTimeUlCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActPe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovEvalReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb25"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbWcdmaEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelNormalEnbTuneOut"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlBcch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabAttMta"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolDlSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbSubRatioSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlNack"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpDelayTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMeasRepDiscDlComp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchSrCqiResCongCqi"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCEUtraBestCellRsrq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovOutSearchEvalReportRsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteIntraFTuneOut"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellDowntimeMan"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabSuccEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSC1xRttUlSinr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovOutSearchEvalReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttS1HoPrep"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbHpr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband1Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttInit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRlcPollRetxUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellDowntimeAuto"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActUeLost"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransVolteNoAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmElcOffBadCov"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary87"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary116"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary143"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAnrCandNrelX2Add"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAnrNeighbrelRem"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabAttHpa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary7"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmWifiAccessEvalFailLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtModAttCsfb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary25"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary29"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary33"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacUeThpVolDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary88"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPreventedNotInPlmnWL"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary138"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary172"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary189"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovSearchEvalReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttX2HoPrep"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailMpOverload"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary21"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInCellIntensStat"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary160"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmVoipQualityUeUlNok"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary64"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary20"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccS1HoPrepSrvccGeran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary149"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary13"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccX2HoPrep"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCovSearchZoneSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary140"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttS1HoExeSrvccGeran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasAttCsfb1xRtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary15"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary173"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelNaccCsfbGsmEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary199"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary113"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary92"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary8"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary71"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCovSearchZoneSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnLevSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaMsg2AttCbra"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccS1HoPrepSrvccUtran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary19"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAnrNeighbrelAdd"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccS1HoPrep"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchSrResMediumUtilCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary121"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailCellIntensDLC"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary119"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary144"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary137"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary205"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellDownUnlockMan"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbEvalExpiredUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInCellIntensDLC"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary26"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary141"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary130"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellDownLockMan"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelNaccCsfbGsm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbUlHoPrepTxTO1xRtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1InitialUeMsgSendBack"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary120"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary114"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttS1HoExeSrvccUtran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary126"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary85"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary203"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttNoNeighRel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary23"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary28"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary142"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttIntraEnbHoPrep"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary69"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccIntraEnbHoPrep"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary148"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelNaccSCGsm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary204"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary125"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDrxTotalTime"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary93"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary161"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary110"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCatmMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccIntraEnbHoExe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAnrCandNrelRem"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary84"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttX2HoExe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktPdbUlOkVoip"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaFailCbraMsg2Disc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary145"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalMmeExtIat"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary65"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary22"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary124"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary147"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary27"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary167"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccS1HoExe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDrxSleepTime"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary86"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmOocStateExits"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmOocStateEntries"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary68"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary12"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary171"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchSrResLongUtilCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmOocNewDataUlGrants"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary146"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmVoipQualityUeUlOk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmWifiAccessDecisionByWic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabAttDta"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary70"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacCellThpTimeUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttS1HoPrepSrvccUtran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttS1HoPrepSrvccGeran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary89"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary198"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtEstabAttCsfb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedActivityCellDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary117"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmWifiAccessRej"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchCqiResLongUtilCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary195"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary112"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary193"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabAttMos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagReceived"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary66"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary60"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary201"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary67"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary10"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary170"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary122"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabSuccDta"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary136"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeUlMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary24"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelNaccSCWcdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary90"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary197"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary32"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary196"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelNaccCsfbWcdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary11"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary194"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary115"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary63"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagDiscarded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmOocStateExitsUeRel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabAttEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCovGoodZoneSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttIntraEnbHoExe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1InitialUeMsgReroute"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaSuccCbra"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttS1HoExe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary128"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary127"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary57"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelNaccCsfbWcdmaEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary91"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary118"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary31"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccS1HoExeSrvccUtran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary202"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabAttMod"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary61"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccS1HoExeSrvccGeran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary14"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeMeasAttCsfb1xRttEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInHighLoad"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary62"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdschBlankedSubframe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaDeconfiguredMeasTo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellSleepFailUeCap"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLaaConfiguredDlSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlCatmSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlFirstTransCatm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlReTransCatm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlCatmSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlCatmSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnBrCellLevSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedActivityCellDlBr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedActivityCellUlBr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmClpcUlP0"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmClpcUlSinr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary228"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary229"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary234"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary235"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary236"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary237"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary238"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary239"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary241"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary242"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary240"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary227"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeDlCe0Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeUlCe2Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestFailCellLatency"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCe1CellLevMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeDlCe3Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCe2CellLevMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCe3CellLevMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeDlCe2Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeUlCe0Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeDlCe1Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeUlCe3Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCe0CellLevMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnBrMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnNs05Samp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnNs05Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbAvailUlPuschHighRegion"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnNs05Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlPuschLowRegionDtch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbAvailUlPuschCenterRegion"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlPuschHighRegionDtch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlPuschCenterRegionDtch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlPuschHighRegionSrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabBrSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabBrSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCategoryDowngraded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRopEndBr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMeasConfigB1GUtran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityGUtran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnSubsGroupSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranCompUlAvoidedNack"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPreventedNotInPlmnWLGeran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPreventedNotInPlmnWLUtran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary245"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary246"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary247"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary243"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary244"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaDeconfiguredVolte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedTtiCellUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedTtiCellDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcchCceUsedUlSf"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcchCceUsedUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdcUlCaCapableMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdcUlCaSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmB1NrBestCellEvalReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdcCapableSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdcUlCaCapableSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbSir"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbSir"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcSetupFailNrRa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeExclThpDlShortDrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttReconfErabRel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccInMfbiPrimaryPrio"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbAvailUlPucchSr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeExclThpDlVolteMbb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcRelMnMcgRelocAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestFailBb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbAvailUlPucchCqi"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccInMfbiAdditionalPrio"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailBb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeExclThpDlSmallVol"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcRelMnMcgRelocSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttReconfUeCtxtEstab"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttReconfErabMod"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbSirBb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttReconfErabEstab"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbAvailUlPucchAckNack"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccInMfbiAdditional"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbSirBb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttReconfRrcConnReest"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedActivityUeUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb57"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepAttLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb90"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb82"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithUnknownReceptionPCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolUlSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActUeLostOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolUlDrbPlmn3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnTuneOutLevSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband4Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpLatPktTransDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepOutS1RejInvalidInterFCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInUlThres"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRetainArpHigh"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb66"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNasTransferAttAbortDlSrb2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailOverload"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestFailMISigQCong"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelMmeActUnspecified"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInLicLowCovUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaDeconfiguredLostCoverage"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtEstabAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailCellIntensSwC"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlSuccQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsTransSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband6Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb38"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActCdtAutoPnr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmOocUesLevSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlNackComp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaDeconfiguredSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb91"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActHoOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMimoSleepTime"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbtPdschAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteIntraFHybridCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb9"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlFirstTrans"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveDrbUlSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabSuccMos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband9Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbHprOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalMmeAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfAttNoMobEarfcnCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmInSyncTimePft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlDtxQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInDuIntens"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteInterFMbms"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransNoAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMimoSleepOppTime"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp14"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmTtiBundlingFailTO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpLatPktTransDlDrxNoSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpLatPktTransDlNoDrxSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscDlPelr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlAilgTot"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb54"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp12"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbTransUm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb35"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbGsmEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlDtx64qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAdjustAccessDynLoadCtrl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDsdReqPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacLatTimeQciDlNoDrxSyncSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepSuccLteInterFMbms"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioCalibAttFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb48"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabSuccMta"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolTxDlSCellExt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlNack16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlAck256qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInLicRlcUm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlDtx16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmVoipQualityRbUlOk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb98"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlAilgHighPrio"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb11"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActHoOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb81"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp10"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepAttLteInterFHybridCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmB2BestCellEvalReportRsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsTransVolteNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbTransPlmn4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlDtx"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbCdt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband5Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbSubRatioSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithDetectedHarqAckSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTrans"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmInvalidPftNum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabSuccInitPa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb65"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp9"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbWcdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband8Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb8"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlSrbTrans"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsTransVolte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbPe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb73"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteIntraFHybridCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmServiceTimeUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp10"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpResUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbtPdschSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbMeasTO1xRtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacLatTimeQciDlDrxNoSyncSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbtDrsSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailBearerAdmissionRej"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbHoOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlDtxQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband2Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb39"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktLostUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb47"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlMbms"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttReattMod"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttReattMta"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp0"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeThpTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb29"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb49"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsTrans"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeThpTimeDlCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccNasTransferDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlFail64Qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedRestrictUeCatUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInSl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbCdt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaFailCfraMsg2Disc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithDetectedHarqAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband2Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacLatTimeQciDlDrxSyncSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInLicConnUsers"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPftEstablishedSession"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolDlSCellExt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlAck64qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolUlDrbPlmn0"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmTtiBundlingDisable"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb15"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaCapableDlSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbUeLostOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepAttLteInterFCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb62"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlDtch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmContDlPdcch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmA5BestCellEvalReportUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcchResyncFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabFailGbrDlCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailMISigQCong"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb89"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRohcEstabFailUeCap"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbAvailUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrSf2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb51"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabSuccEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlAck16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp11"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb13"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb42"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeThpTimeUlRs"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband9Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlNack256qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttMod"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteInterFUeMeasRsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp15"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpLatPktTransDlDrxSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepAttLteIntraFCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp13"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttMos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp15"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband0Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacUeThpVolUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp11"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelMmeActUserInactivity"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbHoOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfSuccNoMobEarfcnCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCUtranB2Rsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInCellIntensSwC"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaDeconfiguredSCellChange"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaRejHarqFailAfterContRes"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbCdma1xRttEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabSuccAddedPa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmContUlCapLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCEUtraA2Rsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttReconf"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRateShapeTimeUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepSuccLteIntraFCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveDrbDlSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActUeLostOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbUeLost"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeThpTimeUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbCdtAuto"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepSuccLowCovUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCCdmaB2Rsrq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabSuccAdded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioTbsPwrRestricted"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb58"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpResDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttInitPa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolUlDrbPlmn2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb85"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActCdtAutoPnr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolUlSelTbs"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCGsmUlSinr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband1Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbTransPlmn5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInUlThresCaRedirect"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBestCellEvalReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband10Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpBitrateDlDrbMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmGoodCovSearchEvalReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCWcdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrSf1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCUtranA2Rsrq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailHighLoadLong"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccReconf"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbCdma1xRtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMeasGapFailLicInterFOtdoa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelMme"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCTdScdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb14"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubbandSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacLatTimeQciDlDrxNoSyncSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBbUeMeasAllocAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb74"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbHprOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepSuccLteInterFHybridCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelMmeAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmB2BestCellEvalReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdleModeRelDistrMediumHighLoad"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb61"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransPCellNoAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb40"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcchCceActivity"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb33"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabSuccHpa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchSr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbLimitedDualRadioUeCdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailLowCovUeAdmCtrl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaConfiguredDlSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepAttLteInterFUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbTransPlmn0"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeUlSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb23"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlNack"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbHoPrepFail1xRtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttReattDta"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabLowCovUeSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb72"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttDta"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbLastTTICa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktFwdDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmB2BestCellEvalReportUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPwrBoostSuccLowCovUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabFailGbrUlCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb50"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeDrbSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelMmeActEutra"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttNasTransferDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelMmeActHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb63"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbTransPlmn6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActUeLost"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband11Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabSuccMta"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestFailLicMtReest"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaSuccCfra"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlSrbFirstTrans"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteInterFCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolUlDrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb93"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolTxDlSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb21"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbUeLostOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaFailCbraMsg1DiscSched"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepAttLowCovUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrSf3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepSuccLteIntraFHybridCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCUtraUlSinr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActCdtAuto"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCriticalBorderEvalReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbGsm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaRejHarqFailWithinContRes"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb10"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmOutOfSyncTimePft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRlcArqDlNack"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalMme"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCCdmaA2Rsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteIntraFAfterResync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb37"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnLevSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlFail16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellAdmControlPdcchRej"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolUlDrbPlmn1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCCdmaA2Rsrq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithUnknownReceptionSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband3Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActHpr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalMmeAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpLatTimeDlNoDrxSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolUlDrbPlmn6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepSuccLteInterFUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabFailGbrDlEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlSrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttReattEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelMme"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband7Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttReattMos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb53"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepOutS1RejInvalidIntraFHybridCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDrxTotalTimePft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb44"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcchTxAggressive"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband0Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolDlSelTbs"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteInterFUeMeasRsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlSrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpLatTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrSf7"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelNormalEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbAvailDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmServiceTimeDrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelMmeHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb88"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpResUlSelTbs"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellAdmControlPdcchRejMeas"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrSf6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb46"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp7"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInOverload"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb45"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb96"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktReceivedDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp7"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepOutS1RejInvalidInterFHybridCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteIntraFCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithUnknownReception"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNasTransferSuccDlSrb2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb28"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb70"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaConfiguredSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb26"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb60"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmConfigRejDlComp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmElcPdschBlankedTti"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband11Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLaaCapableDlSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCCdmaUlSinr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlDtx"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagEdrxDiscarded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteIntraFTuneOut"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaAttCfra"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithDetectedHarqAckVolte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepOutS1RejInvalidIntraFCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlNackQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchFailSr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb12"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmContUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBbUeMeasAllocSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband12Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbTransPlmn3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActHoOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUnackedUeRelease"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb80"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsTransNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabFailAddedLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActCdtAuto"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmConfirmedUeRelReqPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlAckQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacCellThpTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransVolteNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlCcch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlDtx16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeDlSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpLatTimeDlDrxNoSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAnrHoSuccLevelMedium"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabSuccMod"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktTransDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb19"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteInterFHybridCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActHoOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCCdmaB2Rsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb32"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRlcDelayPktTransDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlDtch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb83"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb71"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlPcch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPucchSrCqiResAllocAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaFailCbraMsg1DiscOoc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSessionTimeDrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdleModeRelDistrHighLoad"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsDetectedPuschNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteInterFUeMeas"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbUeLostOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb78"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlDtx256qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolUlDrbPlmn4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbTransPlmn1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaConfiguredMeasAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabSuccMod"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActHprOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqiSubband4Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmA3InterFBestCellEvalReport"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlNack64qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmContUlPdcch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFastPucchAssignPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp9"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb97"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalMme"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestAttHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailMmeOvlMos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfSuccNoMobDlComp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp13"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmVoipQualityRbUlLowSampl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp8"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp12"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacDelayTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsDetectedHarqVolteNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellDownLockAuto"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCEUtraBestCellRsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteInterFCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCGsmB2Rsrq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNasTransferAttDlSrb2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRohcEstabFailCid"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCUtranB2Rsrq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttReatt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRlcDelayTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLaaConfigurableDlSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelMmeAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabSuccInit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmGoodCovSearchEvalReportUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAnrHoSuccLevelLow"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfAttNoMobDlComp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInDuSwC"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCriticalBorderEvalReportUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestSuccHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlSucc64Qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmWifiAccessEval"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelCsfbTdScdmaEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlSrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbCdtAuto"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActPe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepAttLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmA5BestCellEvalReportRsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRlcPollRetxDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNonCaPf3ResCollision"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacLatTimeQciDlNoDrxSyncSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsDetectedHarqNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransPCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfAttNoMob"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelMmeHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb27"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCGsmB2Rsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacLatTimeQciDlSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb75"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMeasMissingNeighRel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb52"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb95"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbtDrsAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdleModeRelDistrLowMediumLoad"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband6Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb84"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolUlDrbLastTTI"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbLastTTI"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActCdt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsDetectedPuschVolteNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdleModeRelDistrLowLoad"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb94"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrSf8"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolDlDrbTransPlmn2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailMmeOvlMod"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbCdtAutoPnr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmTtiBundlingEnable"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb76"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmInactiveUeRelInHighLoad"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmContDlCapLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInLicMultiErab"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabFailMmeOvlMos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInMISigQCong"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelMmeCellUnavail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktLostUlLimitations"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb34"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband8Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteInterFHybridCsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp0"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedActivityUeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlCcch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbTnFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnTuneOutLevSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabSuccGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLongDrxCommandPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband12Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbHoOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionSuccArp14"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbHoOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb18"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb79"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioUeRepCqi2Subband5Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActUeLostOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMeasRep"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaAllocCfra"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabAdmissionAttArp8"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb69"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb20"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteInterFUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRaFailCfraMsg1DiscOoc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttMta"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb24"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb77"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabSuccMos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb7"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailLowCovUeLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedActivityUlTTI"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCCdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmA3InterFBestCellEvalReportUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktReceivedUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmContUlHw"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpBitrateDlDrbMin"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActTnFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInDynUeAdmCtrl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb36"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRohcEstabFailLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCEUtraA2Rsrq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttReattHpa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpVolUlDrbPlmn5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActUeLostOosPft"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlAilgTot"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInHighLoadLong"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbUeLost"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb87"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaConfiguredNoMeasAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSrvccA2Critical1xRtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRlcArqUlAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb16"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrPrb64"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityAsrMismatch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlCatmSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlCatmMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagEdrxReceived"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlPresched"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnNs05RepeaterZoneSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsShortSpsDetPusch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbOccupiedUlShortSps"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedUlDtchNs05FullBandSch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedActivityUeUlShortSps"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsShortSps"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeUlPresched"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeThpVolUlInitial"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeThpTimeUlInitial"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeUlPreschedData"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttIntraEnbHoIn"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttX2HoIn"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccIntraEnbHoIn"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccX2HoIn"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMultiUserMimoSchedPrbDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrioFreqBandConfigured"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcSetupUeSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalMmeActCritCov"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbActCritCov"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalMmeCritCov"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalMmeActCritCov"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActCritCov"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbCritCov"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityLoggedMdt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCovCriticalZoneSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovMiMultiFreqTo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityGnss"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovMiMultiFreqSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCriticalBorderEvalReportAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCovCriticalZoneSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovMiMultiFreqSel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttAddedHpa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNonMcPttQualityRbUlOk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttInitHpa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktPdbUlOkNonMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedTtiCellUlResFair"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedTtiCellUlFreqSel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabSuccInitHpa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCgiMeasSuccDrxQci1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellCaLockTimeHighLoad"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCgiMeasSuccAnrPciConflict"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMcPttQualityRbUlOk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNonMcPttQualityRbUlNok"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRlcDelayTimeDl2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNonMcPttQualityRbUlLowSampl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktPdbUlOkMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCgiMeasSuccAgQci1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMcPttQualityRbUlNok"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCgiMeasFailAnrPciConflict"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejOutUlThres"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCgiMeasSuccAg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCgiMeasSuccDrx"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejOutUlThresCaRedirect"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabSuccAddedHpa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbRemainedUsableUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttEndcRel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcSetupScgUeSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttEndcSetup"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccEndcRel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccEndcSetup"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPtmCellReservedSubRatio"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPtmCellReservedMsr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInPtm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccReconfErabEstab"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPtmInhibitImp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPtmHoBlocked"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPtmStopIncomingIflb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchAttReconfUeCtxtEstabReconfFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtFetchSuccReconfRrcConnReest"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCNrB1Rsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCNrB1Rsrq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlFail256Qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelSCNr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlDtx256Qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlSucc256Qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmB1BestCellEvalReportRsrp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlFailIuaQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestFailMpMem"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabSuccMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacSkipUlDtxPresched"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailLicMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlFailIua16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailDynUeAdmCtrlMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailMpMem"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInMpMem"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacSkipUlDtxTxSps"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacSkipUlDtxDynamic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcCapableUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalMmeS1Reset"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalMmeS1Reset"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbDataStall"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabAttMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttReattMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbPsPartFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbPsFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabSuccMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmB1MeasRepEndcConfig"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabRelAbnormalEnbPsFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithUnknownRecMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolTxDlSCellEran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsTransNonMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransMcPttNoAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolDl4ccPCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsWithDetPuschMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolDl5ccPCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsTransMcPttNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsTransNonMcPttNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithDetHarqAckNonMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsTransMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransNonMcPttNoAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolDlScellEran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolTxDl4ccSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransNonMcPttNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsWithDetPuschNonMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsDetHarqMcPttNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolTxDl3ccSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithDetHarqAckMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolTxDl5ccSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRohcUlDataFailedMaxCid"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolDl3ccPCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsDetPuschNonMcPttNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsDetHarqNonMcPttNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsDetPuschMcPttNDO"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolTxDl2ccSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUlGrantsTransMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRohcUlDataDeconfiguredCid"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDlAssigsWithUnknownRecNonMcPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaDeconfiguredLostCoverageNoA1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbCellHighLoaded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcCapableUeInitSetup"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeAttIntraCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteInterFEndcHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccIntraCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepSuccLteInterFEndcHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepAttLteInterFEndcHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteInterFEndcHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcHoB1MeasRepUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttIntraCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoExeSuccIntraCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestSuccOthVend"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRetrReestFailShortMacVer"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcNotAllowedExpiredMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRetrReestAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcNotAllowedMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRetrReestFailRreEval"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRetrReestFailOngUeProc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRetrReestSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRetrReestFailUnknUeCtxt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRetrReestFailEndcUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnRelRlcFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityUlDelay"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeAttLteInterFUlTraffic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoExeSuccLteInterFUlTraffic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepAttLteInterFUlTraffic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepSuccLteInterFUlTraffic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttAddedCsfb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttAddedCsfbPl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttAddedCsfbSinr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacSkipUlDtxDynamicVolte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacSkipUlDtxPreschedVolte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfAttNoMobDacc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfAttNoMobSkipUlDyn"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfAttNoMobSkipUlIua"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfSuccNoMobDacc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDuctIntCharSeq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDynUeAdmCtrlQueueAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDynUeAdmCtrlQueueOverflow"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDynUeAdmCtrlQueueSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmDynUeAdmCtrlQueueTo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlDtchSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlDtchSCellEran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbUsedDlDtchSCellExt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnSuspend"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtSuspendAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtSuspendSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcSetupUeAttNrRestricted"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcSetupUeSuccNrRestricted"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacPdschEmptySubframe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacPdschEmptySubframeForced"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacTimeUlResUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacVolUlResUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacVolUlResUeLastTti"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacVolUlResUeLate"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacVolUlUnresUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacVolUlUnresUeBsrGrant"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacVolUlUnresUePreemptGrant"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacVolUlUnresUePucchSrGrant"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueAllocAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueAllocSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueOverflow"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueTo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailBearerAdmRej"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailCellIntensDLC"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailCellIntensStat"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailCellIntensSwC"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailCellLatency"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailDuIntens"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailDuSwC"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailDynUeAdmCtrl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailLicActiveUsers"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailLowCovUeAdmCtrl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailLowCovUeLic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailMISigQCong"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailMpOverload"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFallbackAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFallbackSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedTtiCellUlResAllocKept"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedTtiCellUlResAllocSwitched"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtConnResumeAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtConnResumeSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmObsLocalEventDiscPmLoad"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInDynUeAdmCtrlPa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInDynUeAdmCtrlPaPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailDynUeAdmCtrlPa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailDynUeAdmCtrlMoVoicePtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailDynUeAdmCtrlPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestFailDynUeAdmCtrlPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepRejInDynUeAdmCtrlPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPrbStartPosChgUlNewTxResFair"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestFailDynUeAdmCtrlPa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestFailDynUeAdmCtrlPaPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailDynUeAdmCtrlPaPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellHoPrepCancelGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfAttNoMobEarfcnEndc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfSuccNoMobEarfcnEndc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedAdpReTxUlRsvdRegion"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSchedNewTxUlRsvdRegion"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtResumeAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtResumeSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReconfNoDrxMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcScgFailureArfcnNil"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmB1MeasRepEndcConfigRestart"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMiMimoSleepTerm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeExclThpVolte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMiMimoSleepOut"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMaxPlmn0"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMaxPlmn4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMaxPlmn3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMaxPlmn2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMaxPlmn1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMaxPlmn6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMaxPlmn5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeExclThpUlRelativeHighVol"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMaxEndc0"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMaxEndc1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMaxEndc2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeExclThpUlShortTimeHighVol"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnMaxEndcUnavail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeExclThpUlSmallVol"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMiMimoSleepOpp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMiMimoSleepIn"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeExclThpUlRelativeLowVol"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeExclThpUlShortTimeLowVol"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueSuccEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueAttMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueAttHpa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnSuspendFailMpMem"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueAttEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolTxDlSCellOffl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailDynUeAdmCtrlPtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabFailAddedOngoingProc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueSuccHpa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnResumeFailMpMem"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnQueueSuccMoVoice"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolTxDlSCellEranOffl"
+        }
+    ]
+}

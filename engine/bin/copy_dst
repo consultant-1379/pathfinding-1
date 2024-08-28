@@ -1,0 +1,85 @@
+#!/bin/bash
+# ------------------------------------------------------------------------
+# A script to copy dst topology files
+#
+# Usage: copy_dst OSS_NAME FILE
+#
+# ------------------------------------------------------------------------
+# Copyright (c) 1999-2007 AB Ericsson Oy  All rights reserved.
+# ------------------------------------------------------------------------
+# Vishnu - Fixed as a part of TR:HM47222
+
+
+OSS=$1
+FILE=$2
+if [ ! -r "${BIN_DIR}/common_variables.lib" ] ; then
+  echo "ERROR: Source file is not readable at ${BIN_DIR}/common_variables.lib"
+  exit 3
+fi
+
+. ${BIN_DIR}/common_variables.lib
+
+if [ $# -ne 2 ] ;  then
+  $ECHO "Usage: copy_dst OSS_NAME FILE"
+  exit 1
+fi
+
+if [ ${LOGNAME} != "dcuser" ] ; then
+  $ECHO "This script must be executed as dcuser"
+  exit 32
+fi
+
+if [ ! -f ${FILE} -o ! -r ${FILE} -o ! -w ${FILE} ] ; then
+  $ECHO "File \"${FILE}\" does not exist or cannot be read."
+  exit 2
+fi
+
+FNA=`$BASENAME ${FILE}`
+
+PREFIX=`$ECHO ${FNA} | $NAWK -F_ '{print $1}'`
+POSTFIX=${FNA#*_}
+
+if [ -d /eniq/data/pmdata/${OSS}/SiteDSTRAN/ ] ; then
+  $CP ${FILE} /eniq/data/pmdata/${OSS}/SiteDSTRAN/${PREFIX}_E_RAN_${POSTFIX}
+else
+  $ECHO "UTRAN Topology Technology Package is not installed or INTF_DIM_E_RAN_SITEDST interface is not activated for select OSS"
+fi
+
+if [ -d /eniq/data/pmdata/${OSS}/SiteDSTTDRAN/ ] ; then
+  $CP ${FILE} /eniq/data/pmdata/${OSS}/SiteDSTTDRAN/${PREFIX}_E_TDRAN_${POSTFIX}
+else
+  $ECHO "TDRAN Topology Technology Package is not installed or INTF_DIM_E_TDRAN_SITEDST interface is not activated for select OSS"
+fi
+
+if [ -d /eniq/data/pmdata/${OSS}/SiteDSTGRAN/ ] ; then
+  $CP ${FILE} /eniq/data/pmdata/${OSS}/SiteDSTGRAN/${PREFIX}_E_GRAN_${POSTFIX}
+else
+  $ECHO "GRAN  Topology Technology Package is not installed or INTF_DIM_E_GRAN_SITEDST interface is not activated for select OSS"
+fi
+
+if [ -d /eniq/data/pmdata/${OSS}/SiteDSTCN/ ] ; then
+  $CP ${FILE} /eniq/data/pmdata/${OSS}/SiteDSTCN/${PREFIX}_E_CN_${POSTFIX}
+else
+  $ECHO "Core Topology Technology Package is not installed or INTF_DIM_E_CN_SITEDST interface is not activated for select OSS"
+fi
+
+if [ -d /eniq/data/pmdata/${OSS}/SiteDSTTSS/ ] ; then
+  $CP ${FILE} /eniq/data/pmdata/${OSS}/SiteDSTTSS/${PREFIX}_E_TSS_${POSTFIX}
+else
+  $ECHO "TSS AXD Topology Technology Package is not installed or INTF_DIM_E_TSS_SITEDST interface is not activated for select OSS"
+fi
+
+if [ -d /eniq/data/pmdata/${OSS}/SiteDSTSNMP/ ] ; then
+  $CP ${FILE} /eniq/data/pmdata/${OSS}/SiteDSTSNMP/${PREFIX}_E_SNMP_${POSTFIX}
+else
+  $ECHO "SNMP Topology Technology Package is not installed or INTF_DIM_E_SNMP_SITEDST interface is not activated for select OSS"
+fi
+
+if [ -d /eniq/data/pmdata/${OSS}/SiteDSTLTE/ ] ; then
+  $CP ${FILE} /eniq/data/pmdata/${OSS}/SiteDSTLTE/${PREFIX}_E_LTE_${POSTFIX}
+else
+  $ECHO "LTE  Topology Technology Package is not installed or INTF_DIM_E_LTE_SITEDST interface is not activated for select OSS"
+fi
+
+
+exit 0

@@ -1,0 +1,1 @@
+alter table UniverseParameters add TYPENAME varchar(255) null

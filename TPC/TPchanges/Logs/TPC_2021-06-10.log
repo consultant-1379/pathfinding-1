@@ -1,0 +1,13 @@
+2021-06-10 10:58:50,026 - INFO - ** LOADING THE MODEL **
+2021-06-10 10:58:51,621 - INFO - Coversheet
+2021-06-10 10:58:51,674 - INFO - Manual Modification details are not provided in the Model-T. So proceeding without Manual Modifications
+2021-06-10 10:58:51,688 - INFO - Universe is being delivered for this Techpack, so Counter and key description will not be added for this Techpack Document
+2021-06-10 10:58:51,709 - INFO - Interfaces
+2021-06-10 10:58:51,737 - INFO - Fact Tables
+2021-06-10 10:58:51,763 - INFO - Fact Tables Keys
+2021-06-10 10:58:51,910 - INFO - Fact Tables Counters
+2021-06-10 10:58:52,273 - INFO - Vectors
+2021-06-10 10:58:52,276 - INFO - Topology Table
+2021-06-10 10:58:52,279 - INFO - Topology Keys
+2021-06-10 10:58:52,283 - INFO - Transformations
+2021-06-10 10:58:52,296 - INFO - DC_E_AFG_AGG_PROXY

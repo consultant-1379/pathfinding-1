@@ -1,0 +1,24 @@
+zapConfig:
+  baseUrl: "https://eric-oss-eniq-feature-installer:8080"
+  scanType: "full"
+  config_dir: "zap/config"
+  globalConfig:
+  endpoints:
+  - name: "chassisapi"
+    url: "/v1/sample"
+    config:
+      - id: "10035"
+        action: "IGNORE"
+        message: "Strict-Transport-Security Header Not Set - Not applicable to ref app"
+      - id: "40025"
+        action: "IGNORE"
+        message: "Proxy Disclosure - Not applicable to ref app"
+  report:
+    dir: "zap/reports"
+    format:
+    - html
+    - json
+    - md
+    - xml
+  properties:
+    zap_container_port: 8090

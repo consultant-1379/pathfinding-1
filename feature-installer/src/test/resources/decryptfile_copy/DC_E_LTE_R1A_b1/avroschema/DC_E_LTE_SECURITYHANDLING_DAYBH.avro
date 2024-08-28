@@ -1,0 +1,55 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_SECURITYHANDLING_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "SecurityHandling"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcSecFailUnexpectedMsg"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcSecFailIntegrity"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary45"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcSecFailMsgContent"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1X2SecFailInUnexpectedMsg"
+        }
+    ]
+}

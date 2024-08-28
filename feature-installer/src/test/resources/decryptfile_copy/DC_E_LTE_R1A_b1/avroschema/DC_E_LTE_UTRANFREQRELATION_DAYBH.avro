@@ -1,0 +1,59 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_UTRANFREQRELATION_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "EUtranCellTDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellFDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "UtranFreqRelation"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbMeasuredUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary107"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary106"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAtoMeasuredUe"
+        }
+    ]
+}

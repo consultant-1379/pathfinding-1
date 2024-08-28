@@ -1,0 +1,19 @@
+#!/bin/bash
+CRONCOMMFILE="/tmp/eniq_cron.txt"
+
+SCRIPT="remove_hidden_files.bsh"
+CRONLINE="14,29,44,59 * * * * /bin/bash /eniq/sw/bin/$SCRIPT > /eniq/log/sw_log/engine/cronjob_hidden_files.log 2>&1"
+if [ -f $CRONCOMMFILE ]; then
+  rm -f $CRONCOMMFILE
+fi
+
+echo "Installing  crontab jobs for dcuser user..."
+crontab -l | /usr/bin/fgrep -v $SCRIPT >>$CRONCOMMFILE
+
+echo "$CRONLINE" >>$CRONCOMMFILE
+
+#set the new crontab
+crontab < $CRONCOMMFILE
+#/usr/bin/rm -f $CRONCOMMFILE
+
+echo "Crontab Entry Inserted Successfully"

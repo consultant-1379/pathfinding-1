@@ -1,0 +1,447 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_PMULINTERFERENCEREP_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "PmUlInterferenceReport"
+        }, 
+        {
+            "type": "string", 
+            "name": "SectorCarrier"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb83"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb9"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb74"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb98"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb52"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb88"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb56"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb76"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb46"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb45"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb50"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb28"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb49"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb64"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb63"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb26"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb89"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb38"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb71"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb15"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb97"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb59"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb33"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb25"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb30"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb24"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb84"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb90"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb51"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb31"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb58"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb70"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb14"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb96"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb39"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb12"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb95"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb94"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary105"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb19"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary104"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb81"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb75"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb13"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb40"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb36"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb32"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb7"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb44"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb69"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb34"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb55"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb85"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb60"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb93"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb21"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb78"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb16"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb37"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb35"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb86"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb18"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb53"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb80"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb91"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb42"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb20"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb43"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb77"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb54"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb57"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb61"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb8"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb27"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb82"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb73"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb29"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb100"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb41"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb22"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb79"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb65"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb68"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb10"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb99"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb11"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb66"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb17"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb48"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb47"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb92"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb62"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb87"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb23"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb67"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioRecInterferencePwrBrPrb72"
+        }
+    ]
+}

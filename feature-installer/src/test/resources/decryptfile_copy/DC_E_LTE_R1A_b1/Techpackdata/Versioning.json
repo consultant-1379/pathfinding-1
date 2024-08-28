@@ -1,0 +1,258 @@
+{
+    "TECHPACK_NAME": "DC_E_LTE", 
+    "DESCRIPTION": "Ericsson DU and Baseband", 
+    "TECHPACK_VERSION": "R1A", 
+    "PRODUCT_NUMBER": "COA 252 159/1", 
+    "LICENSENAME": "CXC4010777", 
+    "TECHPACK_TYPE": "PM", 
+    "VERSIONID": "DC_E_LTE:((1))", 
+    "BASEDEFINITION": "", 
+    "STATUS": 1, 
+    "LOCKEDBY": "TPC-R1A", 
+    "LOCKDATE": "2021-08-31 15:23:58", 
+    "Techpackdependency": [
+        {
+            "TECHPACKNAME": "LTE_BASE", 
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VERSION": "R1A"
+        }, 
+        {
+            "TECHPACKNAME": "DWH_BASE", 
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VERSION": "R2E"
+        }, 
+        {
+            "TECHPACKNAME": "DIM_E_LTE", 
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VERSION": "R4A"
+        }, 
+        {
+            "TECHPACKNAME": "DC_E_LLE", 
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VERSION": "R1A"
+        }, 
+        {
+            "TECHPACKNAME": "DWH_MONITOR", 
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VERSION": "R2D"
+        }
+    ], 
+    "SupportedVendorRelease": [
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L12B"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L12A"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L13A"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L16B"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L16A"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L13B"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L10B"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L17A"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L14B"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L10A"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L11B"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L11A"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L14A"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L15B"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L17B"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L17.Q2"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L17.Q3"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L17.Q4"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L18.Q1"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L18.Q2"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L18.Q3"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L18.Q4"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L19.Q1"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L19.Q2"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "17B"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "16B"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "16A"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "15B"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "17A"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "17.Q2"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "17.Q1"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "17.Q3"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "17.Q4"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "18.Q1"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "18.Q2"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "18.Q3"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "18.Q4"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "19.Q1"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "19.Q2"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L19.Q3"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "19.Q3"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L19.Q4"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "19.Q4"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L20.Q1"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "20.Q1"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "20.Q2"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "20.Q3"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L20.Q1(DU-MT-1)"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L20.Q1(DU-MT-2)"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L20.Q1(DU-MT-3)"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "20.Q4"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "L20.Q1(DU-MT-4)"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "21.Q1"
+        }, 
+        {
+            "VERSIONID": "DC_E_LTE:((1))", 
+            "VENDORRELEASE": "21.Q2"
+        }
+    ]
+}

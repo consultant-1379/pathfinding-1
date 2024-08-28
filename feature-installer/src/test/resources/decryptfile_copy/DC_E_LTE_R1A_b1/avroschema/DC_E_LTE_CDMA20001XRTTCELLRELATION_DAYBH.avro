@@ -1,0 +1,83 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_CDMA20001XRTTCELLRELATION_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "EUtranCellFDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellTDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "Cdma20001xRttBandRelation"
+        }, 
+        {
+            "type": "string", 
+            "name": "Cdma20001xRttFreqRelation"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "Cdma20001xRTTCellRelation"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttCsfb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccCsfb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAttCsfbEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepAtt1xRttSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSuccCsfbEm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHoPrepSucc1xRttSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary96"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary97"
+        }
+    ]
+}

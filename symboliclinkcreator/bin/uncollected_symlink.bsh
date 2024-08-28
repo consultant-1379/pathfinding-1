@@ -1,0 +1,173 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Ericsson Network IQ ETLC engine control script for SMF to use
+#
+# Usage: uncollected_symlink  restore
+#		(or)
+#	  uncollected_symlink  backup oss_id
+#
+# ----------------------------------------------------------------------
+# Copyright (c) 1999 - 2007 AB Ericsson By  All rights reserved.
+# ----------------------------------------------------------------------
+
+# ********************************************************************
+#
+#       Configuration Section
+#
+# ********************************************************************
+
+if [ ! -r "/eniq/sw/bin/common_variables.lib" ] ; then
+  echo "ERROR: Source file is not readable at /eniq/sw/bin/common_variables.lib"
+  exit 3
+fi
+
+. /eniq/sw/bin/common_variables.lib
+
+CONF_DIR=/eniq/sw/conf
+#*********************************************************************
+##
+# 	functions
+#
+# ********************************************************************
+### Function: usage ###
+# ********************************************************************
+usage() {
+echo "The script should called as follows:"
+echo "uncollected_symlink backup <eniq_oss_id> |uncollected_symlink restore"
+}
+
+
+#*********************************************************************
+#
+# 	functions
+#
+# ********************************************************************
+### Function: backup(oss_id) ###
+#
+# take backup of symlink before unmounting
+#
+# Arguments:
+#       oss_id
+# Return Values:
+#       None
+# ********************************************************************
+
+backup(){
+
+if [ ! -e ${CONF_DIR}/date_fls_$1.txt ]
+then
+touch ${CONF_DIR}/date_fls_$1.txt
+fi
+date -d '1 hour ago' +"%Y-%m-%d'T'%H:%M:%S" >${CONF_DIR}/date_fls_$1.txt
+
+if [ ! -e ${CONF_DIR}/uncollected ]
+then
+mkdir ${CONF_DIR}/uncollected
+fi
+
+
+if [ -e ${CONF_DIR}/uncollected/dir_list.txt ]
+then
+rm -r ${CONF_DIR}/uncollected/dir_list.txt
+fi
+
+touch ${CONF_DIR}/uncollected/dir_list.txt
+#read oss_name < /eniq/installation/config/fls_conf
+oss_name="$1"
+#echo $oss_name
+
+dir_name="/eniq/data/pmdata/"$oss_name"/"
+#echo "dir_name is $dir_name "
+find $dir_name -type d -print >> ${CONF_DIR}/uncollected/dir_list.txt
+
+if [ -e ${CONF_DIR}/uncollected/file_list.txt ]
+then
+rm -r ${CONF_DIR}/uncollected/file_list.txt
+fi
+touch ${CONF_DIR}/uncollected/file_list.txt
+
+if [ -e ${CONF_DIR}/uncollected/file_dir_list.txtt ]
+then
+rm -r ${CONF_DIR}/uncollected/file_dir_list.txt
+fi
+touch ${CONF_DIR}/uncollected/file_dir_list.txt
+
+line_sp="\n"
+
+
+while IFS= read -r dir
+do
+#echo $dir 
+count=`ls -la  $dir | grep "\->" |${NAWK} '{print "'"$dir"/'"$9,$11"'"$line_sp"'"}'| wc -l`
+if [[ $count -gt 0 ]] 
+then
+	echo "$dir" >> ${CONF_DIR}/uncollected/file_dir_list.txt
+	#echo `ls -la $dir | grep "\->" |awk '{print "'"$dir"/'"$9,$11}'`>> ${CONF_DIR}/uncollected/file_list.txt
+	
+	ls -la $dir | grep "\->" |awk '{print "'"$dir"/'"$9,$11}'|while read -r file;do echo $file>> ${CONF_DIR}/uncollected/file_list.txt;done;
+fi
+done < ${CONF_DIR}/uncollected/dir_list.txt
+
+}
+
+#*********************************************************************
+#
+# 	functions
+#
+# ********************************************************************
+### Function: restore ###
+#
+# take backup of symlink before unmounting
+#
+# Arguments:
+#       None
+# Return Values:
+#       None
+# ********************************************************************
+
+restore(){
+	echo "symlink restore operation"
+
+
+	while IFS= read -r dir
+	do
+	mkdir -p "$dir"
+	done < ${CONF_DIR}/uncollected/file_dir_list.txt
+	
+	while IFS=' ' read -r file
+	do
+		file_target=`echo $file|cut -d' ' -f1`
+		file_source=`echo $file|cut -d' ' -f2`
+		if [[ ! -z $file_source && ! -z $file_target ]];
+		then
+			ln -s $file_source $file_target
+			#chown dcuser:dc5000 "$file_target"
+		fi;
+	done < ${CONF_DIR}/uncollected/file_list.txt
+
+	read -r dir_name < ${CONF_DIR}/uncollected/dir_list.txt
+	chown -hR dcuser:dc5000 "$dir_name"
+}
+
+#*********************************************************************
+#
+# 	main code
+#
+# ********************************************************************
+
+case "$1" in
+backup)
+	echo "symlink backup starting"
+	backup $2
+	echo "symlink backup finished"
+       ;;
+restore)
+	echo "restoring uncollected symlink starting"
+       restore
+	   echo "restoring uncollected symlink finished"
+       ;;
+*)
+      usage
+       exit 10
+       ;;
+esac

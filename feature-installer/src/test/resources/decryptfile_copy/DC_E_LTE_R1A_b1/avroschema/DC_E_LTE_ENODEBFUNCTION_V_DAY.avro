@@ -1,0 +1,63 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_ENODEBFUNCTION_V_DAY", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "int", 
+            "name": "DCVECTOR_INDEX"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranThpVolDlRecDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranThpVolDlTransDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagS1RecDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagS1DiscDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHwUtilDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmHwUtilUl"
+        }
+    ]
+}

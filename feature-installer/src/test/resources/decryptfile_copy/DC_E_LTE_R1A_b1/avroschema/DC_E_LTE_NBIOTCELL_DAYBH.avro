@@ -1,0 +1,379 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_NBIOTCELL_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "NbIotCell"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZTemporary212"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZTemporary208"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagReceived"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioThpVolDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagEdrxDiscarded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelNormalEnbAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellDownLockMan"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabAttInit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalMmeAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelNormalEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZTemporary213"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZTemporary214"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlAckQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellDowntimeMan"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellDowntimeAuto"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagDiscarded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabFailMmeOvlMos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalMme"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZTemporary211"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmErabEstabSuccInit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelMme"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmS1SigConnEstabSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagEdrxReceived"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbUeLost"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbActUeLost"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZTemporary209"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlNackQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlAckBpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAttReatt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnbAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelAbnormalEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCtxtRelMmeAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellDownLockAuto"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZTemporary216"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZTemporary207"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqDlNackBpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailMmeOvlMod"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZTemporary210"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailMmeOvlMos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellDownUnlockMan"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZTemporary215"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlFailBpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlFailQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlSuccBpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMacHarqUlSuccQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnLevSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCe0Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCe1Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCe2Sum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagDiscardedNb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagReceivedNb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabSuccSingleCarr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCe0Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCe1Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCe2Max"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnCeSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNpdcchResyncAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNpdcchResyncFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNpdcchResyncSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNasNonDeliveryIndTrans"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNbUeCapSingleCarrier"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNpdcchTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNpdcchTimeUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilitySingleTone"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityMultiCarrPag"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityInterferRand"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityMixOperMode"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityRai"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityMultiCarrNprach"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityTwoHarq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmNpdcchCceAggregationLevel1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPendingDataCheckCe2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPendingDataCheckCe1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPendingDataCheckCe0"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeReleasePendingDataCe0"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeReleasePendingDataCe1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeReleasePendingDataCe2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailUeAcLargeRmax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestFailUeAcLargeRmax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmUeCapabilityDataInactMon"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnReestFailMpMem"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnEstabFailMpMem"
+        }
+    ]
+}

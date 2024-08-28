@@ -1,0 +1,26 @@
+<project name="repository" default="test_all">
+    <property name="module.name" value="repository"/>
+    <property file="${user.home}/EniqBuild/BH/build.properties"/>
+    <property name="ant.common" value="${cc.base}/tools/ant_common"/>
+    <property file="${ant.common}/common.properties"/>
+    <property name="module.base" value="${module.repository.base}"/>
+    <property name="module.build" value="${module.repository.build}"/>
+    <property name="module.dependants" value="${module.repository.dependants}"/>
+    <import file="${ant.common}/common.xml"/>
+    <property name="tests.to.run" value="**/*Test.class"/>
+	<property name="tests.to.exclude" value="**com/distocraft/dc5000/repository/cache/PhysicalTableCacheTest.class,
+											 **com/ericsson/eniq/common/setWizards/CreateTopologyLoaderSetTest.class"/>
+	<property name="mods.needed" value="common_utilities, engine"/>
+	
+	<path id="repository.lib.classpath">
+        <path refid="plaform.lib.classpath"/>
+        <path location="${module.common_utilities.pkg}"/>
+        <path location="${module.engine.pkg}"/>
+		<path refid="appframework"/>
+    </path>
+    <path id="repository.test.classpath">
+        <path refid="platform.test.classpath"/>
+        <path refid="repository.lib.classpath"/>
+        <path location="${module.test.source}"/>
+    </path>
+</project>

@@ -1,0 +1,183 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_ENODEBFUNCTION_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersLicense"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersTimeCong"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimReportErr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLic5MHzSectorCarrierActual"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersActual"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRimAssocMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlPrbCapLicense"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersLevSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlPrbCapLicense"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlCapLicense"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicConnectedUsersLevSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlCapLicense"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMoFootprintMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLic5Plus5MHzScFddActual"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagS1Discarded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLic5Plus5MHzScTddActual"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagS1EdrxReceived"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagS1Received"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPagS1EdrxDiscarded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCellLoadStateInd"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLic10MHzBwHwacTddAas"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLic5MHzBwHwacNonAas"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLic10MHzBwHwacFddAas"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnBrEnbLevSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnBrEnbMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRrcConnBrEnbLevSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRohcCidDlSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRohcCidUlSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLoadCtrlAdjustPag"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary35"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRohcCidDlSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRohcCidUlSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmPdcpPktDiscDlEth"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLoadCtrlAdjustAccess"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIotConnectedUsersMax"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary34"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmObsLocalEventDiscPmLoad"
+        }
+    ]
+}

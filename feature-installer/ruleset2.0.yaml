@@ -1,0 +1,444 @@
+modelVersion: 2.0
+
+description: "ENIQs eric-oss-eniq-feature-installer"
+
+# See image catalog: https://confluence.lmera.ericsson.se/display/ACD/ADP+CICD+Docker+Image+Catalog
+docker-images: 
+  - adp-release-auto: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/bob-adp-release-auto:latest
+  - adp-helm-dr-check: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/common-library-adp-helm-dr-check:latest
+  - doc-builder: armdocker.rnd.ericsson.se/sandbox/adp-staging/adp-cicd/bob-docbuilder:latest
+  - k8-test: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/bob-py3kubehelmbuilder:latest
+  - zap-image: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/bob-py3kubehelmbuilder:latest
+  - java11-maven-builder: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/bob-java11mvnbuilder:latest
+  - anchore-inline-scan: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/anchore-inline-scan:latest
+  - trivy-inline-scan: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/trivy-inline-scan:latest
+  - image-dr-check: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/adp-image-dr-check:latest
+
+import:
+  common: common-properties.yaml
+
+# List of constants
+properties:
+  - image-registry: armdocker.rnd.ericsson.se
+  - image-secret: armdocker
+  - image-dev-repopath: proj-eniq/proj-eric-oss-eniq-feature-installer-dev
+  - image-release-repopath: proj-eniq/proj-eric-oss-eniq-feature-installer-release
+
+  # Helm Chart name must follow the pattern: eric-[a-z0-9]{1,5}-[a-z0-9-]{1,30}
+  - helm-chart-repo-server: https://arm.seli.gic.ericsson.se/artifactory
+  - helm-chart-release-repopath: proj-eniq-drop-helm
+  - helm-chart-release-repo: ${helm-chart-repo-server}/${helm-chart-release-repopath}
+
+  # Functional ID for your Team or CI group to push to Gerrit repo
+  - git-user: esjkadm100
+  - git-repo-path: OSS/com.ericsson.oss.eniq.techpack/eric-oss-eniq-feature-installer
+  - git-repo-url: ssh://${git-user}@gerrit.ericsson.se:29418/${git-repo-path}
+  - system-test-from-version: 1.0.0-53
+  - docker-network-flags: --network="host"
+  - skipped-design-rules: "-DhelmDesignRule.config.drHc001=skip"
+  - jar-file-name: eric-oss-eniq-feature-installer-1.0.0-SNAPSHOT.jar
+  - sonar-properties: "-Dsonar.login=${env.SONAR_AUTH_TOKEN}
+      -Dsonar.host.url=${env.SONAR_HOST_URL}
+      -Dsonar.java.binaries=target/classes
+      -Dsonar.junit.reportsPath=target/surefire-reports
+      -Dsonar.surefire.reportsPath=target/surefire-reports
+      -Dsonar.java.coveragePlugin=jacoco
+      -Ddockerfile.skip
+      -Dsonarcoverage.jacoco.xmlReportPaths=target"
+  - image-to-scan: ${var.image-full-name}:${var.version}
+  - anchore-image: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/anchore-inline-scan:latest
+  - trivy-image: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/trivy-inline-scan:latest
+  - hadolint-image: armdocker.rnd.ericsson.se/proj-ews/rymden/hadolint
+  - config-file: ci_config/Vulnerability_Report.config
+  - output-file: build/report.md
+
+var:
+  - version
+  - image-full-name
+  - image-repo-path
+  - version_prefix
+  - commithash
+  - cicd_namespace
+  - fem_number
+  - image-dr-vm-args
+  - rstate
+
+# Import environment variables (e.g. Jenkins parameters)
+env:
+  - PWD
+  - HOME
+  - GERRIT_CHANGE_OWNER_NAME (default="user")
+  - GERRIT_CHANGE_OWNER_EMAIL (default="user@ericsson.com")
+  - GERRIT_CHANGE_URL (default="https://gerrit.ericsson.se")
+  - GERRIT_PATCHSET_REVISION (default="commit1234")
+  - GERRIT_BRANCH (default="hotfix")
+  - GERRIT_CHANGE_NUMBER
+  - RSTATE (default="R1A")
+  - HELM_REPO_API_TOKEN (default="AKCp8ih1PGhGBLWV4G8871LqpLvU15DMhtuAYtxhJ5HPsYgDe8YJ7BPZ48KDKayigemsWHrNJ")
+  - KUBECONFIG (default=/tmp/admin.conf)
+  - JENKINS_URL (default="https://fem8s11-eiffel013.eiffel.gic.ericsson.se:8443/jenkins/")
+  - JOB_NAME (default="${common.docker-image-name}-review")
+  - XRAY_USER
+  - XRAY_TOKEN
+
+  # For SonarQube
+  - SONAR_AUTH_TOKEN (default="dae8d1b95856dfcd236c31f59f61e73ed5f3c9a3")
+  - SONAR_HOST_URL (default="https://sonarqube.lmera.ericsson.se")
+  - SONAR_TARGET_BRANCH (default="master")
+
+# Rules to execute
+rules:
+  local-deploy:
+    - rule: clean
+    - rule: init-review
+    - rule: lint
+    - rule: build
+    - rule: image
+    - rule: package
+
+  # Clean workspace
+  clean:
+    - task: rm
+      cmd:
+        - rm -rf .bob/
+        - rm -rf target/
+    - task: mvn-clean
+      docker-image: java11-maven-builder
+      cmd: mvn -Duser.home=. clean 
+        -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+
+  init-review:
+    - task: version
+      docker-image: adp-release-auto
+      cmd: generate-version --is-release false --output version
+    - task: rstate
+      docker-image: adp-release-auto
+      cmd: get_rstate.py ${var.version} > .bob/var.rstate
+    - task: commit
+      docker-image: adp-release-auto
+      cmd: git rev-parse --short HEAD > .bob/var.commithash
+    - task: image-full-name
+      cmd: echo "${image-registry}/${image-dev-repopath}/${common.docker-image-name}" > .bob/var.image-full-name
+    - task: image-repo-path
+      cmd: echo "${image-dev-repopath}" > .bob/var.image-repo-path
+    - task: cbo-version-update
+      cmd: python cbo_version_update.py
+    - task: image-dr-vm-args
+      cmd: echo " -DimageDesignRule.config.DR-D470203-041-A=disable -DimageDesignRule.config.DR-D470203-050-A=disable" > .bob/var.image-dr-vm-args
+
+  init-release:
+    - task: version
+      docker-image: adp-release-auto
+      cmd: generate-version --is-release true --output version
+    - task: image-full-name
+      cmd: echo "${image-registry}/${image-release-repopath}/${common.docker-image-name}" > .bob/var.image-full-name
+    - task: image-repo-path
+      cmd: echo "${image-release-repopath}" > .bob/var.image-repo-path
+    - task: rstate
+      docker-image: adp-release-auto
+      cmd: get_rstate.py ${var.version} > .bob/var.rstate
+    - task: commit
+      docker-image: adp-release-auto
+      cmd: git rev-parse --short HEAD > .bob/var.commithash
+    - task: adp-artifacts-properties
+      docker-image: adp-release-auto
+      cmd: generate-adp-artifacts
+        --chart-name ${common.helm-chart-name}
+        --chart-version ${var.version}
+        --chart-repo ${helm-chart-release-repo}
+        --image-name ${common.docker-image-name}
+        --image-version ${var.version}
+        --image-repo "${image-registry}/${image-release-repopath}"
+    - task: add-change-info
+      cmd:
+        - echo "CHANGE_OWNER_NAME=${env.GERRIT_CHANGE_OWNER_NAME}" >> artifact.properties
+        - echo "CHANGE_OWNER_EMAIL=${env.GERRIT_CHANGE_OWNER_EMAIL}" >> artifact.properties
+        - echo "CHANGE_URL=${env.GERRIT_CHANGE_URL}" >> artifact.properties
+        - echo "COMMIT_ID=${env.GERRIT_PATCHSET_REVISION}" >> artifact.properties
+        - echo "BRANCH_NAME=${env.GERRIT_BRANCH}" >> artifact.properties
+    - task: cbo-version-update
+      cmd: python cbo_version_update.py
+    - task: image-dr-vm-args
+      cmd: echo "" > .bob/var.image-dr-vm-args
+
+  lint:
+    - task: helm
+      docker-image: adp-release-auto
+      cmd: helm lint charts/${common.helm-chart-name}
+    - task: helm-dr-checker
+      docker-image: adp-helm-dr-check
+      cmd: helm-dr-check
+        --helm-chart charts/${common.helm-chart-name}
+        --log-level WARN
+        --output .bob/
+
+  lint-dockerfile:
+    - task: dockerfile-lint
+      cmd: docker run --rm -i ${hadolint-image} < Dockerfile | tee ./dockerfilelint.log
+
+  # Build java source code and package jar file, no need image building
+  build:
+    - task: mvn-package
+      docker-image: java11-maven-builder
+      docker-flags:
+        - "--volume ${env.HOME}:${env.HOME}"
+      cmd:
+        mvn -Duser.home=${env.HOME} clean install -Ddockerfile.skip -DskipTests=true
+        -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+
+  image:
+    - task: docker-build
+      cmd: docker build ${env.PWD}
+        --file Dockerfile
+        --tag ${var.image-full-name}:${var.version}
+        --build-arg CBO_VERSION=${common.image-base-os-version}
+        --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+        --build-arg COMMIT=${var.commithash}
+        --build-arg APP_VERSION=${var.version}
+        --build-arg JAR_FILE=${jar-file-name}
+        --label com.ericsson.product-number="${common.image-product-number}"
+        --label com.ericsson.product-revision=${var.rstate}
+        --label org.opencontainers.image.title="eric-oss-eniq-feature-installer"
+        --label org.opencontainers.image.created=`date -u +%FT%TZ`
+        --label org.opencontainers.image.revision=${var.commithash}
+        --label org.opencontainers.image.vendor="Ericsson"
+        --label org.opencontainers.image.version=${var.version}
+    - task: docker-push
+      cmd: sudo docker push ${var.image-full-name}:${var.version}
+      
+  # Run ADP container image design rule checker
+  image-dr-check:
+    - task: check-image-dr
+      docker-image: image-dr-check
+      docker-in-docker: socket
+      cmd: "image-dr-check
+        --image ${var.image-full-name}:${var.version}
+        --output .bob/check-image/
+        ${var.image-dr-vm-args}"
+
+  package:
+    - task: package-helm-internal
+      docker-image: adp-release-auto
+      cmd: helm-package
+        --folder charts/${common.helm-chart-name}
+        --workdir .bob --output .bob/${common.helm-chart-name}-internal
+        --version ${var.version}
+        --replace VERSION=${var.version}
+        --replace REPOPATH=${var.image-repo-path}
+
+  #Delete previously created name space for CICD
+  delete-namespace:
+    - task: set-var
+      cmd:
+        - echo ${env.JENKINS_URL} | cut -f3 -d'/' |cut -f1 -d'-' > .bob/var.fem_number
+    - task: set-namespace
+      cmd:
+        - echo ${var.fem_number}-${env.JOB_NAME} | sed s/_/-/g > .bob/var.cicd_namespace
+    - task: delete-namespace
+      docker-image: k8-test
+      docker-flags:
+        - "--env KUBECONFIG=/tmp/admin.conf"
+        - "--volume ${env.KUBECONFIG}:/tmp/admin.conf:ro"
+        - "--volume ${env.PWD}:${env.PWD}"
+      cmd:
+        - kubectl delete namespace ${var.cicd_namespace}
+  # Creating namespace dynamically
+  create-namespace:
+    - task: create-namespace
+      docker-image: k8-test
+      docker-flags:
+        - "--env KUBECONFIG=/tmp/admin.conf"
+        - "--volume ${env.KUBECONFIG}:/tmp/admin.conf:ro"
+        - "--volume ${env.PWD}:${env.PWD}"
+      cmd:
+        - kubectl create namespace ${var.cicd_namespace}
+  # Install eric-oss-eniq-test
+  helm-install:
+    - task: helm-install
+      docker-image: k8-test
+      docker-flags:
+        - "--env KUBECONFIG=/tmp/admin.conf"
+        - "--volume ${env.KUBECONFIG}:/tmp/admin.conf:ro"
+        - "--volume ${env.PWD}:${env.PWD}"
+      cmd:
+        - kubectl create -f secret/secret.yaml --namespace ${var.cicd_namespace}
+        - helm install ${common.helm-chart-name} .bob/${common.helm-chart-name}-internal/${common.helm-chart-name}-*.tgz --namespace ${var.cicd_namespace} --set imageCredentials.pullSecret=eric-oss-eniq-secret --set global.registry.url=armdocker.rnd.ericsson.se --debug --wait
+  helm-test:
+    - task: helm-test
+      docker-image: k8-test
+      docker-flags:
+        - "--env KUBECONFIG=/tmp/admin.conf"
+        - "--volume ${env.KUBECONFIG}:/tmp/admin.conf:ro"
+        - "--volume ${env.PWD}:${env.PWD}"
+      cmd:
+        - helm test ${common.helm-chart-name} --namespace ${var.cicd_namespace}
+  zap-test:
+    - task: zap-scan
+      docker-image: zap-image
+      docker-flags:
+        - "--env KUBECONFIG=/tmp/admin.conf"
+        - "--volume ${env.KUBECONFIG}:/tmp/admin.conf:ro"
+        - "--volume ${env.PWD}:${env.PWD}"
+      cmd: test.py --helm-v3 --kubernetes-admin-conf=/tmp/admin.conf
+        --helm-user=eniqfid6
+        --arm-api-token=AKCp8ii97sNhJm6DCW2jrgtBNCXUo924vAdkc2qzE1LLwNnQAAKq8qMBg2t9gFStju69SVenp
+        --kubernetes-namespace=${var.cicd_namespace}
+        --only-zap-test
+        --zap-config-file=zap/zap_config.yaml
+
+  publish:
+    - task: docker-pull
+      cmd: sudo docker pull ${var.image-full-name}:${var.version}
+    - task: image-tag-public
+      cmd: docker tag ${var.image-full-name}:${var.version} ${image-registry}/${image-release-repopath}/${common.docker-image-name}:${var.version}
+    - task: docker-push
+      cmd: sudo docker push ${image-registry}/${image-release-repopath}/${common.docker-image-name}:${var.version}
+    - task: helm-upload
+      docker-image: adp-release-auto
+      cmd: upload_file.sh
+        --filename=.bob/${common.helm-chart-name}-internal/${common.helm-chart-name}-${var.version}.tgz
+        --repository=${helm-chart-release-repo}/${common.helm-chart-name}
+        --api-token=${env.HELM_REPO_API_TOKEN}
+    - task: git-tag
+      cmd:
+        - git tag -af ${var.version} -m "Release ${var.version}"
+        - git remote set-url origin ${git-repo-url}
+        - git push origin ${var.version} || true
+
+  # Run SonarQube Full Analysis
+ 
+  sonar_review: #sonar-branch
+    - task: generate-version-prefix
+      cmd: cat VERSION_PREFIX > .bob/var.version_prefix
+    - task: sonarqube-analysis
+      docker-image: java11-maven-builder
+      docker-flags:
+        - -v /etc/passwd:/etc/passwd:ro
+        - "--volume ${env.HOME}:${env.HOME}"
+      cmd: mvn -T 5 -Duser.home=${env.HOME} sonar:sonar -s settings.xml
+        ${sonar-properties}
+        -Dsonar.branch.name=${var.version_prefix}-${env.GERRIT_CHANGE_NUMBER}
+        -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=debug
+
+
+  sonar_release: #sonar-branch
+    - task: generate-version-prefix
+      cmd: cat VERSION_PREFIX > .bob/var.version_prefix
+    - task: sonarqube-analysis
+      docker-image: java11-maven-builder
+      docker-flags:
+        - -v /etc/passwd:/etc/passwd:ro
+        - "--volume ${env.HOME}:${env.HOME}"
+      cmd: mvn -T 5 -Duser.home=${env.HOME} sonar:sonar -s settings.xml
+        ${sonar-properties}
+        -Dsonar.branch.name=release-${env.GERRIT_BRANCH}
+        -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=debug
+
+  # Run Unit test cases only
+  # passwd is loaded as volume because test cases use flyway DB which uses embedded PostgreSQL and
+  # Embedded pgSQL installation requires non-root user for its installation.
+
+  unit:
+    - task: mvn-package
+      docker-image: java11-maven-builder
+      docker-flags:
+        - -v /etc/passwd:/etc/passwd:ro
+        - "--volume ${env.HOME}:${env.HOME}"
+      cmd: mvn -Duser.home=${env.HOME} test
+        -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+    - task: mvn-testcase-report
+      docker-image: java11-maven-builder
+      docker-flags:
+        - -v /etc/passwd:/etc/passwd:ro
+        - "--volume ${env.HOME}:${env.HOME}"
+      cmd: mvn surefire-report:report-only
+
+  jacoco:
+    - task: mvn-package
+      docker-image: java11-maven-builder
+      docker-flags:
+        - "--volume ${env.HOME}:${env.HOME}"
+      cmd:
+        mvn jacoco:report -s settings.xml
+
+  contract-tests:
+    - task: mvn-contract-tests
+      docker-image: java11-maven-builder
+      docker-flags:
+        - "--volume ${env.HOME}:${env.HOME}"
+      cmd:
+        mvn -Duser.home=${env.HOME} clean install -PrunContractTests  -Ddockerfile.skip -Djacoco.skip=true
+        -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+
+  anchore-inline-scan:
+    - task: fetch-image
+      cmd: "sudo docker pull ${image-to-scan}"
+    - task: anchore-inline-scan
+      docker-image: anchore-inline-scan
+      docker-in-docker: socket
+      cmd: scan ${image-to-scan}
+ 
+  trivy-inline-scan:
+    - task: fetch-image
+      cmd:
+      - "sudo docker pull ${image-to-scan}"
+      - mkdir -p build/trivy-reports
+    # Scan an image and print result to console
+    - task: trivy-inline-scan-console-report
+      docker-image: trivy-inline-scan
+      docker-in-docker: socket
+      cmd: ${image-to-scan}
+    # Scan an image and save result to json
+    - task: trivy-inline-scan-json-report
+      docker-image: trivy-inline-scan
+      docker-in-docker: socket
+      cmd: --format json --output build/trivy-reports/trivy.report.json ${image-to-scan}
+ 
+  cleanup-anchore-trivy-images:
+    - task: clean-images
+      cmd:
+      - "docker image rm -f ${anchore-image}"
+      - "docker image rm -f ${trivy-image}"
+  k8s-nmap-test:
+    - task: test-nmap
+      docker-image: k8-test
+      docker-flags:
+        - "--env KUBECONFIG=/tmp/admin.conf"
+        - "--volume ${env.KUBECONFIG}:/tmp/admin.conf:ro"
+        - "--volume ${env.PWD}:${env.PWD}"
+      cmd:
+        - test.py --helm-v3 --kubernetes-admin-conf=/tmp/admin.conf
+          --helm-user=eniqfid6
+          --arm-api-token=AKCp8ii97sNhJm6DCW2jrgtBNCXUo924vAdkc2qzE1LLwNnQAAKq8qMBg2t9gFStju69SVenp
+          --kubernetes-namespace=${var.cicd_namespace}
+          --chart-archive=.bob/${common.helm-chart-name}-internal/${common.helm-chart-name}-${var.version}.tgz
+          --skip-upgrade-test
+          --skip-cleanup
+        - test.py --helm-v3 --kubernetes-admin-conf=/tmp/admin.conf
+          --helm-user=eniqfid6
+          --arm-api-token=AKCp8ii97sNhJm6DCW2jrgtBNCXUo924vAdkc2qzE1LLwNnQAAKq8qMBg2t9gFStju69SVenp
+          --kubernetes-namespace=${var.cicd_namespace}
+          --nmap-test
+          --nmap-config-file='nmap/nmap_config.yaml'
+  # Run Nmap port scan test using TCP,UDP,SCTP protocol
+  # To demonstrate Nmap parallel scan, eric-ref-catfacts-fact-finder is installed and scanned
+  nmap-port-scan:
+    - task: nmap-port-scan
+      docker-image: k8-test
+      docker-flags:
+        - "--env KUBECONFIG=/tmp/admin.conf"
+        - "--volume ${env.KUBECONFIG}:/tmp/admin.conf:ro"
+        - "--volume ${env.PWD}:${env.PWD}"
+      cmd:        
+        - test.py --helm-v3 --kubernetes-admin-conf=/tmp/admin.conf
+          --helm-user=eniqfid6
+          --arm-api-token=AKCp8ii97sNhJm6DCW2jrgtBNCXUo924vAdkc2qzE1LLwNnQAAKq8qMBg2t9gFStju69SVenp
+          --kubernetes-namespace=${var.cicd_namespace}
+          --nmap-test
+          --nmap-config-file='nmap/nmap_config_all_protocols.yaml'
+
+  fetch-xray-report:
+    - task: fetch-xray-report
+      docker-image: adp-release-auto      
+      cmd: fetch-xray --user ${env.XRAY_USER} --apikey ${env.XRAY_TOKEN} --config ${env.PWD}/${config-file} --set version=1.0.0-154 --output xray_report.json --raw-output raw_xray_output.json
+      cmd: fetch-xray --user ${env.XRAY_USER} --apikey ${env.XRAY_TOKEN} --config ${env.PWD}/${config-file} --set version=${var.version} --output xray_report.json --raw-output raw_xray_output.json

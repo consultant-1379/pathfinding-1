@@ -1,0 +1,43 @@
+#!/bin/bash
+
+ECHO=/usr/bin/echo
+LS=/usr/bin/ls
+
+if [ -z "${CONF_DIR}" ] ; then
+	$ECHO "ERROR: CONF_DIR is not set"
+	exit 1
+fi
+
+if [ ! -r "${CONF_DIR}/niq.rc" ] ; then
+	$ECHO "ERROR: Source file is not readable at ${CONF_DIR}/niq.rc"
+	exit 1
+fi
+
+. ${CONF_DIR}/niq.rc
+
+_platform_dirs_=$($LS ${PLATFORM_DIR})
+
+_classpath_="${INSTALLER_DIR}/lib/installer.jar"
+
+JAVA_HOME=${RT_DIR}/java
+export JAVA_HOME
+
+for _module_ in $_platform_dirs_ ; do
+	_dclib_="${PLATFORM_DIR}/$_module_/dclib"
+	if [ -d $_dclib_ ] ; then
+		_jars_=$($LS $_dclib_/*.jar)
+		for _jar_ in $_jars_ ; do
+			_classpath_="${_classpath_}:${_jar_}"
+		done
+	fi
+done
+
+_args_=$*
+if [ $# == 0 ] ; then
+	_args_="-all"
+fi
+
+${RT_DIR}/jdk/bin/java -d64 -Dpname="AddServiceUsers" \
+	-DCONF_DIR=${CONF_DIR} -classpath ${_classpath_} \
+	com.ericsson.eniq.repository.dbusers.AddServiceUser $_args_
+exit $?

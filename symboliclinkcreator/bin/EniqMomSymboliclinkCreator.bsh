@@ -1,0 +1,71 @@
+#!/bin/bash
+# ********************************************************************
+# Ericsson Radio Systems AB                                     SCRIPT
+# ********************************************************************
+#
+# (c) Ericsson Radio Systems AB 2015 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of Ericsson Radio Systems AB, Sweden. The programs may be used
+# and/or copied only with the written permission from Ericsson Radio
+# Systems AB or in accordance with the terms and conditions stipulated
+# in the agreement/contract under which the program(s) have been
+# supplied.
+#
+# ********************************************************************
+# Name    : EniqMomSymboliclinkCreator.bsh
+# Date    : 09/05/2017
+# Purpose : creating symbolic link for Eniq Mom file
+# Usage   : EniqMomSymboliclinkCreator.bsh
+#
+# ********************************************************************
+#
+# Configuration Section
+#
+# ********************************************************************
+
+
+#*********************************************************************
+#
+# 	main code
+#
+# ********************************************************************
+
+. /eniq/home/dcuser/.profile
+
+ECHO=/usr/bin/echo
+FIND=/usr/bin/find
+LN=/usr/bin/ln
+MKDIR=/usr/bin/mkdir
+fls_conf=/eniq/installation/config/fls_conf
+
+symbolic_link_creator (){
+
+SOURCE_PATH="/eniq/data/importdata/$1/pmic1/ebsm/data/eniqoutput/"
+TARGET_PATH="/eniq/data/pmdata/$1/ebs/ebs_ebss/"
+$ECHO "$SOURCE_PATH"
+$ECHO "$TARGET_PATH"
+
+if [ ! -e "$TARGET_PATH" ]
+then
+	$MKDIR -p "$TARGET_PATH"
+fi
+
+mom_list=`$FIND $SOURCE_PATH -mmin -15 -type f -exec basename {} \;`
+
+for i in $mom_list
+do
+       SOURCE_FILE=$SOURCE_PATH$i
+       TARGET_FILE=$TARGET_PATH$i
+       $LN -s $SOURCE_FILE $TARGET_FILE
+done
+}
+
+if [ -f ${fls_conf} ] && [ -s ${fls_conf} ]; then
+	while read line
+	do
+		symbolic_link_creator $line
+	done < $fls_conf
+else
+	$ECHO "FLS is not enabled!"
+fi

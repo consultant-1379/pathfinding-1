@@ -1,0 +1,23 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_ELEMBH_RANKBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "ELEMENT_TYPE"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ELEMENT_NAME"
+        }
+    ]
+}

@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# ----------------------------------------------------------------------
+# Description:
+#	This script will add twamppoller.bsh script into crontab 
+#
+# author : xtouoos
+#
+# ----------------------------------------------------------------------
+# Copyright (c) 1999 - 2011 AB Ericsson. All rights reserved.
+# ----------------------------------------------------------------------
+
+CRONCOMMFILE="/tmp/eniq_twamp_cron.txt"
+CAT=/usr/bin/cat
+GEGREP=/usr/sfw/bin/gegrep
+SED=/usr/bin/sed
+SCRIPT="twamppoller.bsh"
+CRONLINE="0 * * * * /bin/bash /eniq/admin/bin/twamppoller.bsh > /eniq/home/dcuser/twamp_crontab.log 2>&1"
+
+if [ -f $CRONCOMMFILE ]; then
+  rm -f $CRONCOMMFILE
+fi
+
+#Check for ENIQ Server type
+CURR_SERVER_TYPE=`$CAT $ENIQ_CONF_DIR/installed_server_type | $GEGREP -v '^[[:blank:]]*#' | $SED -e 's/ //g'`
+if [ ! "${CURR_SERVER_TYPE}" ]; then
+	echo "Could not determine which server type this is."
+fi
+
+if [ "${CURR_SERVER_TYPE}" == "stats_engine" -o "${CURR_SERVER_TYPE}" == "eniq_stats" ]; then
+	echo "Installing  TWAMP crontab jobs for dcuser user..."
+	crontab -l | /usr/bin/fgrep -v $SCRIPT >>$CRONCOMMFILE
+
+	echo "$CRONLINE" >>$CRONCOMMFILE
+
+	#set the new crontab
+	crontab < $CRONCOMMFILE
+	#/usr/bin/rm -f $CRONCOMMFILE
+
+	echo "TWAMP Crontab Entry Inserted Successfully."
+else
+	echo "This is not a ENIQ Stats server."
+	echo "Server Type is : ${CURR_SERVER_TYPE}"
+	echo "Exiting...."
+fi

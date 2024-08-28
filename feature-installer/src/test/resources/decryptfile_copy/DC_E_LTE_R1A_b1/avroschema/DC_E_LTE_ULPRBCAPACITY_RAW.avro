@@ -1,0 +1,51 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_ULPRBCAPACITY_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "Licensing"
+        }, 
+        {
+            "type": "string", 
+            "name": "CapacityLicenses"
+        }, 
+        {
+            "type": "string", 
+            "name": "UlPrbCapacity"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "SystemFunctions"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlPrbCapActual"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlPrbCapLicense"
+        }
+    ]
+}

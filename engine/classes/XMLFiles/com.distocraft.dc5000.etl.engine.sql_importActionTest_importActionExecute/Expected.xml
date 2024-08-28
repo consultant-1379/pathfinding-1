@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+	<dataset>
+		<EXAMPLETABLE1 ID="1" VALUE="testvalue" ANOTHERVALUE="anothertestvalue"/>
+		<EXAMPLETABLE2 ID="1" VALUE="testvalue" ANOTHERVALUE="anothertestvalue"/>
+		<EXAMPLETABLE2 ID="1" ANOTHERVALUE="differentTestValue"/>
+        </dataset>

@@ -1,0 +1,10 @@
+nmapConfig:
+  services:
+    - name: "eric-oss-eniq-feature-installer"
+      protocol:
+        - "tcp"
+      additionalParams:
+        - "-v"
+        - "-p 0-65535"
+        - "--stats-every 1"
+  reportDir : "nmap_reports"

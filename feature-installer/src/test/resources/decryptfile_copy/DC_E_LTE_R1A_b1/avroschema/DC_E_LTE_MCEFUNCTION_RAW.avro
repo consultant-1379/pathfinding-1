@@ -1,0 +1,87 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_MCEFUNCTION_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "MceFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionEnd"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionUpdateFailParam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary103"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionUpdateAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionStopMmeNoSession"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionUpdateSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary102"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionEstabAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionUpdateFailNotSupp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionEstabSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionEstabFailUpdate"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionEstabFailNotSupp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionStopMme"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsSessionStopAuditTimer"
+        }
+    ]
+}

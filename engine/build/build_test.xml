@@ -1,0 +1,59 @@
+<project name="engine" default="test_all">
+  <property name="module.name" value="engine"/>
+  <property file="${user.home}/EniqBuild/BH/build.properties"/>
+  <property name="ant.common" value="${cc.base}/eniq_tools/ant_common"/>
+  <property file="${ant.common}/common.properties"/>
+  <property name="module.build" value="${module.engine.build}"/>
+  <property name="module.base" value="${module.engine.base}"/>
+  <property name="module.dependants" value="${module.engine.dependants}"/>
+  <import file="${ant.common}/common.xml"/>
+  <property name="tests.to.run" value="**/*Test.class"/>
+  <property name="tests.to.exclude"
+            value="**/com/distocraft/dc5000/etl/engine/main/engineadmincommands/StartSetCommandTest.class,
+            **/com/distocraft/dc5000/etl/engine/sql/DWHMTableCheckActionTest.class,
+            **/com/distocraft/dc5000/etl/engine/sql/SQLInsertTest.class,
+			**/com/distocraft/dc5000/etl/engine/main/TransferEngineTest.class,
+            **/com/distocraft/dc5000/etl/engine/sql/SQLUpdateTest.class"/>
+  
+  <property name="mods.needed" value="repository, licensing, common_utilities, dwh_manager"/>
+  <property name="common.src" value="${module.common_utilities.base}/src"/>
+  <property name="common.cls" value="${module.build}/common"/>
+
+  <path id="common_cp">
+    <path refid="plaform.lib.classpath"/>
+    <path location="${module.repository.pkg}"/>
+    <path location="${module.licensing.pkg}"/>
+  </path>
+
+  <path id="engine.lib.classpath">
+    <path refid="plaform.lib.classpath"/>
+    <path location="${module.build}/common"/>
+    <path location="${module.repository.pkg}"/>
+    <path location="${module.licensing.pkg}"/>
+    <path location="${module.dwh_manager.pkg}"/>
+    <path location="${module.export.pkg}"/>
+    <!--path location="${module.alarm_module.pkg}"/-->
+
+  </path>
+  <path id="engine.test.classpath">
+    <path refid="platform.test.classpath"/>
+    <path refid="engine.lib.classpath"/>
+    <!-- importActionTest will fail because the working dir is different....-->
+    <path location="${eniq.plat.base}/etl_controller/dev/engine/"/>
+    <path location="${module.engine.base}/test"/>
+    <path location="${module.disk_manager.pkg}"/>
+    <path location="${module.mediation.pkg}"/>
+    <path location="${module.monitoring.pkg}"/>
+    <path location="${module.uncompress.pkg}"/>
+    <path location="${module.ebsmanager.pkg}"/>
+    <path location="${module.eventsupport.pkg}"/>
+  </path>
+
+  <target name="pre_compile">
+    <echo message="Recompiling common_utilities to remove signer info (easymock doesnt like it....)"/>
+    <delete dir="${common.cls}" verbose="false"/>
+    <mkdir dir="${common.cls}"/>
+    <mcompile destdir="${common.cls}" srcpath="${common.src}" classpathref="common_cp" include="**/*.java"/>
+  </target>
+</project>
+

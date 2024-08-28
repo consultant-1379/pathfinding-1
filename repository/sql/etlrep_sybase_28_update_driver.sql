@@ -1,0 +1,1 @@
+UPDATE META_DATABASES set DRIVER_NAME = '@sybase.driver@' where DRIVER_NAME like '%SybDriver%'

@@ -1,0 +1,139 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_BBPROCESSINGRESOURCE_V_DAY", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "Subrack"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "BbProcessingResource"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "Equipment"
+        }, 
+        {
+            "type": "int", 
+            "name": "DCVECTOR_INDEX"
+        }, 
+        {
+            "type": "string", 
+            "name": "AuxPlugInUnit"
+        }, 
+        {
+            "type": "string", 
+            "name": "PlugInUnit"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "DeviceGroup"
+        }, 
+        {
+            "type": "string", 
+            "name": "Slot"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "FieldReplaceableUnit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBbmDlBbCapacityUtilization"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBbmDlPrbUtilization"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlPrbCapDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlPrbUsedDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBbmUlPrbUtilization"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBbmDlSeUtilization"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlPrbUsedDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicDlCapDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBbmUlBbCapacityUtilization"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBbmUlSeUtilization"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlPrbCapDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary54"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary53"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary151"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLicUlCapDistr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary152"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBbmDlPrbPttReservation"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBbmDlBbCapacityPttReservation"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBbmDlSePttReservation"
+        }
+    ]
+}

@@ -1,0 +1,99 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_EUTRANFREQRELATION_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranFreqRelation"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellFDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellTDD"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovMiFreqSel"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovMiFreqSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBadCovMiFreqTo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSpifhoMeasuredUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsInterestIndicationPCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsInterestIndication"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsInterestIndicationNonServ"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAtoMeasuredUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLbMeasuredUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmCaRedirectMeasuredUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMbmsInterestIndicationSCell"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmTm9PrioritizedUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEndcPrioritizedUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmIdleModeRelDistrPrioFreq"
+        }
+    ]
+}

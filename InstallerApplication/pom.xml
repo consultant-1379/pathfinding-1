@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.4.1</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.ericsson.eniq</groupId>
+	<artifactId>InstallerApplication</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>InstallerApplication</name>
+	<description>Installer spring boot application</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<lib.path>\\seliisfile\home\xramear\ENIQ_Work\EniqNG\</lib.path>
+        <lib.version>0.0.2</lib.version>
+        <lib.groupId>com.ericsson</lib.groupId>
+        <lib.scope>system</lib.scope>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jersey</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>  
+            <groupId>org.springframework.boot</groupId>  
+            <artifactId>spring-boot-starter-cache</artifactId>  
+        </dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	
+		 <dependency>
+                 <groupId>${lib.groupId}</groupId>
+                           <artifactId>repository</artifactId>
+                           <version>${version}</version>
+                           <scope>${lib.scope}</scope>
+                           <systemPath>${lib.path}\repository.jar</systemPath>
+                   </dependency>
+                   
+                    <dependency>
+                           <groupId>org.postgresql</groupId>
+                           <artifactId>postgresql</artifactId>
+                           <version>${version}</version>
+                           <scope>${lib.scope}</scope>
+                           <systemPath>${lib.path}\postgresql-42.2.18.jar</systemPath>
+                   </dependency>
+                    <dependency>
+                           <groupId>${lib.groupId}</groupId>
+                           <artifactId>velocity</artifactId>
+                           <version>${version}</version>
+                           <scope>${lib.scope}</scope>
+                           <systemPath>${lib.path}\velocity-1.7-dep.jar</systemPath>
+                   </dependency>
+                   <dependency>
+                           <groupId>${lib.groupId}</groupId>
+                           <artifactId>Jconnect</artifactId>
+                           <version>${version}</version>
+                           <scope>${lib.scope}</scope>
+                           <systemPath>${lib.path}\jconn4.jar</systemPath>
+                   </dependency>
+                   <dependency>
+                           <groupId>${lib.groupId}</groupId>
+                           <artifactId>Jsch</artifactId>
+                           <version>${version}</version>
+                           <scope>${lib.scope}</scope>
+                           <systemPath>${lib.path}\jsch-0.1.54.jar</systemPath>
+                   </dependency>
+  			<dependency>
+                           <groupId>${lib.groupId}</groupId>
+                           <artifactId>xerces-2.6.2</artifactId>
+                          <version>${version}</version>
+                           <scope>${lib.scope}</scope>
+                           <systemPath>${lib.path}\xerces-2.6.2.jar</systemPath>
+                   </dependency>
+                   <dependency>
+                           <groupId>${lib.groupId}</groupId>
+                           <artifactId>xercesImpl-2.0.2</artifactId>
+                           <version>${version}</version>
+                          <scope>${lib.scope}</scope>
+                           <systemPath>${lib.path}\xercesImpl-2.0.2.jar</systemPath>
+                   </dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				 <configuration>
+                                           <includeSystemScope>true</includeSystemScope>
+                 </configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

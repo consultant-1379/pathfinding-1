@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_design_plat_common_utilities/build/common_utilities/common.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_design_plat_common_utilities/build/common_utilities/test_enablers.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_design_plat_admin_ui/build/admin_ui/AdminUI.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/apache/jakarta_velocity/v1_7/prod/velocity-1.7-dep.jar"/>
+	<classpathentry kind="lib" path="M:/xramear_view/eniq_3pp/appframework/prod/appframework.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

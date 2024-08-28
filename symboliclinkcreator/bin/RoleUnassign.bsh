@@ -1,0 +1,73 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Ericsson Network IQ Role Unassign script (Multi ES)
+#
+# Usage: RoleUnassign
+#
+# Author: XARJSIN
+# ----------------------------------------------------------------------
+# Copyright (c) 2017 AB Ericsson   All rights reserved. 
+# ----------------------------------------------------------------------
+
+GREP=/usr/bin/grep
+AWK=/usr/bin/awk
+ECHO=/usr/bin/echo
+DATE=/usr/bin/date
+TEE=/usr/bin/tee
+
+STARTTIMESTAMP=`$DATE '+%y%m%d_%H%M%S'`
+LOG_FILE=/eniq/log/sw_log/symboliclinkcreator/RoleUnassign_${STARTTIMESTAMP}.log
+
+touch ${LOG_FILE}
+
+if [ ${LOGNAME} != "dcuser"  ] ; then
+    echo "This script must be executed as dcuser! Exiting....."
+	echo "`$DATE '+%d.%m %H:%M:%S'` This script must be executed as dcuser! Exiting....." >> ${LOG_FILE}
+  exit 32
+fi
+if [ -z "$CONF_DIR" ] ; then
+  echo "ERROR: CONF_DIR is not set! Exiting....."
+  echo "`$DATE '+%d.%m %H:%M:%S'` ERROR: CONF_DIR is not set! Exiting....." >> ${LOG_FILE}
+  exit 1
+fi
+. ${CONF_DIR}/niq.rc
+JAVA_HOME="${RT_DIR}/java"
+CPATH="${PLATFORM_DIR}"
+for _jar_ in `find ${PLATFORM_DIR}/*/dclib/ -name \*.jar | grep -v mediator-R*` ; do
+	CPATH=${CPATH}:$_jar_
+done
+
+COMMON_JAR=`ls ${PLATFORM_DIR}/common*/dclib/common.jar`
+LICENSING_JAR=`ls ${PLATFORM_DIR}/licensing*/dclib/licensing.jar`
+ENGINE_JAR=`ls ${PLATFORM_DIR}/engine*/dclib/engine.jar`
+CODEBASE="file://${COMMON_JAR} file://${ENGINE_JAR} file://${LICENSING_JAR}"
+
+# ********************************************************************
+# Triggers process which will unassign current server and 
+# A. if Master - unassign all slaves
+# B. if Slave - only unassign current server
+#
+# ********************************************************************
+triggerUnassigned() 
+{
+  ${JAVA_HOME}/bin/java -Dpname="RoleUnassign" -Xmx64M \
+    -Ddc5000.config.directory=${CONF_DIR} -Ddc.conf.dir=${CONF_DIR} \
+    -DBIN_DIR=${BIN_DIR} -classpath ${CPATH} -Djava.rmi.server.codebase="${CODEBASE}" \
+    com.ericsson.eniq.enminterworking.rat.RoleUnassign
+	
+  ECODE=$?
+  if [ ${ECODE} -ne 0 ] ; then
+		echo "Execute failed"
+    	echo "`$DATE '+%d.%m %H:%M:%S'` Execute failed" >> ${LOG_FILE}
+  fi
+  exit ${ECODE}
+}
+
+# Main Program
+if [[ $# -eq 0 ]]; then
+	triggerUnassigned
+else
+	echo "Usage: bash RoleUnassign"
+	echo "`$DATE '+%d.%m %H:%M:%S'` Usage: bash RoleUnassign" >> ${LOG_FILE}
+    exit 10
+fi

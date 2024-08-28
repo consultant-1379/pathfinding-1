@@ -1,0 +1,52 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Ericsson Network IQ ETLDATA_DIR cleanup script. 
+# Deletes all files within $ETLDATA_DIR/adapter_tmp and files within it's subfolders. 
+# Does not remove any directories.
+#
+# Usage: No parameters are used. Just execute without parameters.
+#
+# ----------------------------------------------------------------------
+# Copyright (c) 1999 - 2007 AB Ericsson Oy  All rights reserved.
+# ----------------------------------------------------------------------
+
+
+unalias stop 2> /dev/null
+
+if [ -z "$CONF_DIR" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 11
+fi
+
+. ${CONF_DIR}/niq.rc
+
+if [ ${LOGNAME} != "dcuser"  ] ; then
+  echo "This script must be executed as dcuser"
+  exit 12
+fi
+
+if [ ! -x "${ETLDATA_DIR}/adapter_tmp" ] ; then
+	echo "Directory ${ETLDATA_DIR}/adapter_tmp not found. No need to execute this script"
+	exit 13
+fi
+
+DIR_CONTENTS=`find ${ETLDATA_DIR}/adapter_tmp -print`
+
+for currFile in ${DIR_CONTENTS}
+do
+  if [ ! -d "$currFile" ] # Test if target directory exists.
+  then
+
+    rm $currFile
+
+    if [ $? -ne 0 ] ; then
+      echo "Removing $currFile failed. Exiting execution..."
+      exit 14
+    else
+      echo "Removed file $currFile successfully."
+   fi
+
+  fi
+done
+
+echo "All files within ${ETLDATA_DIR}/adapter_tmp removed"

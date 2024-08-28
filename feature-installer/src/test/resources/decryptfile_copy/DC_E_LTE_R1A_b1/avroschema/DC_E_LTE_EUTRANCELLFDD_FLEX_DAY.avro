@@ -1,0 +1,907 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_EUTRANCELLFDD_FLEX_DAY", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "int", 
+            "name": "FLEX_FILTERHASHINDEX"
+        }, 
+        {
+            "type": "string", 
+            "name": "FLEX_FILTERNAME"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtranCellFDD"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeThpTimeDlCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpVolDlDrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalEnbAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabAttAddedHoOngoing"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelMme"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabAttInit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalMmeAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabSuccInit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelNormalEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabSuccAdded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpVolDlDrbLastTTI"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabAttAdded"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRrcConnReestAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRrcConnReestSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpVolDlDrbCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRrcConnSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacLatTimeDlDrxSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeThpTimeUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalEnbActGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpLatTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacTimeDlNoDrxSyncSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacLatTimeDlNoDrxSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacLatTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabAttInitGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalMmeActGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalMmeGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacLatTimeDlNoDrxNoSync"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeThpVolUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabSuccAddedGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelNormalEnbGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabSuccInitGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexLcgThpVolUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacTimeDlSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpVolDlDrbLastTTIUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpLatPktTransDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeThpTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalMme"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacTimeDlDrxSyncSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacTimeDlNoDrxNoSyncSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexDrbThpTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabAttAddedGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalEnbGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexLcgThpTimeUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelMmeGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeAttGeran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeAttLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeAttLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeAttNonMobIrat"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeAttNonMobLte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeAttUtran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeAttUtranSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeSuccGeran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeSuccLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeSuccLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeSuccNonMobIrat"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeSuccNonMobLte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeSuccUtran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeSuccUtranSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepAtt1xRttSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepAttGeran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepAttLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepAttLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepAttNonMobIrat"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepAttNonMobLte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepAttUtran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepAttUtranSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepSucc1xRttSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepSuccGeran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepSuccLteInterF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepSuccLteIntraF"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepSuccNonMobIrat"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepSuccNonMobLte"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepSuccUtran"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoPrepSuccUtranSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelMmeAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelMmeActEutra"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpPktDiscDlHo"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpPktDiscDlPelr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpPktDiscDlPelrUu"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpPktFwdDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpPktLostUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpPktReceivedDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpPktReceivedUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpVolUlDrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexServiceTimeDrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexServiceTimeUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexSessionTimeDrb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexSessionTimeUe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeCtxtEstabAtt"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeCtxtEstabSucc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeCtxtRelAbnormalEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeCtxtRelMme"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeCtxtRelMmeAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeCtxtRelNormalEnb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpPktTransDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeCtxtRelSCWcdma"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeCtxtRelSCGsm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexCellHoExeCancelUtranSrvcc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpVolDlDrbTrans"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpPktDiscDlAqm"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeThpTimeUlCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeThpVolUlCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexVoipQualityRbUlNok"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPdcpVolDlDrbLastTTIUeCa"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexVoipQualityRbUlOk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlAckQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlSucc16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlDtx16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlAck16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlAck256qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlFailQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlAck64qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlSuccQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRlcArqDlAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlDtx16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlFail64qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlDtx64qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlDtxQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlFail16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRlcArqDlNack"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlDtx64qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlNack64qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlAckComp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlNack16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlNackComp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlSucc64qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlDtx256qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlNack256qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRlcArqUlNack"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlDtxQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRlcArqUlAck"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlNackQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalEnbPe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalEnbPeGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalEnbActPe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeCtxtRelAbnormalEnbActPe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeCtxtRelAbnormalEnbPe"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabFailResGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabAttAddedHoOngoingGbr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabFailRes"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRlcDelayPktTransDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexHoPrepRejOutUlThres"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMcPttQualityRbUlOk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexNonMcPttQualityRbUlOk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexNonMcPttQualityRbUlNok"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRlcDelayTimeDl2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMcPttQualityRbUlNok"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPrbUsedDlDtch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexPrbUsedUlDtch"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlSucc256qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlDtx256qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexUeCtxtRelSCNr"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlFail256qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlFailIuaQpsk"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlFailIua16qam"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacSkipUlDtxDynamic"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacSkipUlDtxPresched"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacSkipUlDtxTxSps"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlFail"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRadioThpVolumeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRadioThpVolumeUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelAbnormalEnbActOos"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelNormalEnbAct"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabRelNormalEnbUserInactivity"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexHoPrepRejInUlThres"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary10"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary11"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary12"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary13"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary14"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary15"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary16"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary17"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary18"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary19"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary20"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary21"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary22"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary23"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary24"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary25"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary7"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary8"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexZtemporary9"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRadioThpVolDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRadioThpVolUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexRlcDelayTimeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabAttAddedCsfb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDl1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDl2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDl3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDl4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDl5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDl6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDl7"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqDlAllDtx"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUl1"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUl2"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUl3"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUl4"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUl5"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUl6"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUl7"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexMacHarqUlAllDtx"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexSchedActivityUeDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexSchedActivityUeUl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexErabEstabFailAddedOngoingProc"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexSchedActivityCellDl"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmFlexSchedActivityCellUl"
+        }
+    ]
+}

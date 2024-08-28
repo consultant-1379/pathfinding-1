@@ -1,0 +1,1 @@
+alter table META_TRANSFER_BATCHES add SLOT_ID integer null;

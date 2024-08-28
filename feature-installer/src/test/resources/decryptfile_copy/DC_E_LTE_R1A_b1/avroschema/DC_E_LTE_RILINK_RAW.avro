@@ -1,0 +1,51 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_RILINK_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "Equipment"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "RiLink"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLinkDelayLow"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLinkDelayHigh"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLinkStabilityError"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLinkRestart"
+        }
+    ]
+}

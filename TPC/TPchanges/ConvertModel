@@ -1,0 +1,7 @@
+--Convert Model
+ModuleName::TPC.convert
+ModelType::TP
+SourceType::LEGACY_XLSX
+InputFilePath::.\DC_E_AFG_8_R7A.xlsx
+WriteType::XLSX
+OutputPath::H:\Desktop\workspace\TPchanges\TempOutFolder

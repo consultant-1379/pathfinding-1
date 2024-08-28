@@ -1,0 +1,55 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_ERANINTERMELINK_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "ExternalENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "EUtraNetwork"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranCompUlServSendReq"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranCompUlCoopSendRsp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranCompUlServReceiveRsp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEranCompUlCoopReceiveReq"
+        }
+    ]
+}

@@ -1,0 +1,67 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_MPPROCESSINGRESOURCE_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "Equipment"
+        }, 
+        {
+            "type": "string", 
+            "name": "MpProcessingResource"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "AuxPlugInUnit"
+        }, 
+        {
+            "type": "string", 
+            "name": "PlugInUnit"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "DeviceGroup"
+        }, 
+        {
+            "type": "string", 
+            "name": "Subrack"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "Slot"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "FieldReplaceableUnit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary109"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary108"
+        }
+    ]
+}

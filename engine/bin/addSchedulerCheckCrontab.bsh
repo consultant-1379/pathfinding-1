@@ -1,0 +1,32 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Description:
+#       This script will add scheduler_check.bsh script into crontab
+#
+#
+# ----------------------------------------------------------------------
+# Copyright (c) 1999 - 2016 Ericsson. All rights reserved.
+# ----------------------------------------------------------------------
+
+# Commands
+ECHO=/usr/bin/echo
+RM=/usr/bin/rm
+
+CRONCOMMFILE="/tmp/eniq_scheduler.txt"
+_date_=`date '+%Y-%m-%d'`
+
+SCRIPT="/eniq/admin/bin/scheduler_check.bsh"
+CRONLINE="5,20,40 * * * * /bin/bash $SCRIPT > /dev/null 2>&1"
+if [ -f $CRONCOMMFILE ]; then
+   $RM -f  $CRONCOMMFILE
+fi
+
+$ECHO "Installing  crontab jobs for dcuser user..."
+crontab -l | /usr/bin/fgrep -v $SCRIPT >>$CRONCOMMFILE
+
+#$ECHO "$CRONLINE" >>$CRONCOMMFILE
+
+#set the new crontab
+crontab < $CRONCOMMFILE
+
+$ECHO "Crontab Entry Inserted Successfully"

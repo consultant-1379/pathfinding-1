@@ -1,0 +1,159 @@
+#!/bin/bash
+
+# ----------------------------------------------------------------------
+# Description:
+#	This script will modify the SlidingWindowBH view definition. 
+# 	
+#
+# author : zthomur
+#
+# ----------------------------------------------------------------------
+# Copyright (c) 1999 - 2018 Ericsson. All rights reserved.
+# ----------------------------------------------------------------------
+#commands#
+AWK=/usr/bin/awk
+CAT=/usr/bin/cat
+CHMOD=/usr/bin/chmod
+CHOWN=/usr/bin/chown
+CP=/usr/bin/cp
+DATE=/usr/bin/date
+ECHO=/usr/bin/echo
+EGREP=/usr/bin/egrep
+FIND=/usr/bin/find
+GEGREP=/usr/sfw/bin/gegrep
+GREP=/usr/bin/grep
+MKDIR=/usr/bin/mkdir
+NAWK=/usr/bin/nawk
+RM=/usr/bin/rm
+GNUSED=/usr/gnu/bin/sed
+SED=/usr/gnu/bin/
+SU=/usr/bin/su
+TOUCH=/usr/bin/touch
+UNZIP=/usr/bin/unzip
+TEE=/usr/bin/tee
+
+
+#Script Variables#
+_DATE_=`$DATE '+%Y-%m-%d_%H:%M:%S'`
+ALTER_RANKBH_SLIDINGWINDOW_SQL=/eniq/sw/installer/ALTER_RANKBH_SLIDINGWINDOW.sql
+LOGFILE=/eniq/log/sw_log/platform_installer/slidingWindowView-$_DATE_.log
+_sql_part_one_="select 'ALTER VIEW ' || str_replace((select str_replace(viewtext,'\"datetime_id\") = \"tt\".\"S\"','\"datetime_id\") >= \"tt\".\"S\"') || ';' from sysviews as s2 where s1.viewname = s2.viewname),'create view ','') as viewsate from sysviews as s1 where "
+_sql_final_=""
+
+if [ -s /eniq/admin/lib/common_functions.lib ]; then
+    . /eniq/admin/lib/common_functions.lib
+else
+        echo "Could not find /eniq/admin/lib/common_functions.lib"
+        exit 1
+fi
+
+#DB Parameters#
+REP_PORT=`iniget REP -v PortNumber -f ${CONF_DIR}/niq.ini`
+REP_ENG=`iniget REP -v ServerName -f ${CONF_DIR}/niq.ini`
+DWHREPUSER=`inigetpassword REP -v DWHREPUsername -f ${CONF_DIR}/niq.ini`
+DWHREPPASSWORD=`inigetpassword REP -v DWHREPPassword -f ${CONF_DIR}/niq.ini`
+DWHDB_PORT=`inigetpassword DWH -v PortNumber -f ${CONF_DIR}/niq.ini`
+DWH_SERVER_NAME=`inigetpassword DWH -v ServerName -f ${CONF_DIR}/niq.ini`
+DWHDBPASSWORD=`inigetpassword DWH -v DCPassword -f ${CONF_DIR}/niq.ini`
+
+
+DBISQL="$(ls /eniq/sybase_iq/IQ-*/bin64/dbisql)"
+if [ ! -x "$DBISQL" ]; then
+    _err_msg_="$DBISQL commands not found or not executable."
+    abort_script "$_err_msg_"
+fi
+
+EchoDateText() {
+   $ECHO `$DATE '+%Y-%m-%d %H:%M:%S'` $* | $TEE -a ${LOGFILE}
+}
+
+if [ -e ${ALTER_RANKBH_SLIDINGWINDOW_SQL} ]; then
+	EchoDateText " SlidingWindow Script Already executed. Skipping script execution." | $TEE -a ${LOGFILE}
+	exit 0
+fi
+
+EchoDateText "Execution started at $STARTTIMESTAMP" 
+### Function: abort_script ###
+#
+#   This is called if the script is aborted thru an error
+#   error signal sent by the kernel such as CTRL-C or if a serious
+#   error is encountered during runtime
+#
+# Arguments:
+#       $1 - Error message from part of program (Not always used)
+# Return Values:
+#       none
+abort_script()
+{
+if [ "$1" ]; then
+    _err_msg_=$1
+else
+    _err_msg_="Script aborted.......\n"
+fi
+if [ "${LOGFILE}" ]; then
+    EchoDateText "\n$_err_msg_\n"
+else
+    EchoDateText "\n$_err_msg_\n"
+fi
+}
+
+
+
+_diagnose_repair_views_() {
+if [[ ! -z $data_extract ]]; then
+  i=0
+  for view in $data_extract; do 
+    if [[ $i -eq 0 ]]; then
+	  _sql_final_="$_sql_part_one_ s1.viewname like '$view' "
+	  let "i=i+1"
+	else
+	  _sql_final_="$_sql_final_ or s1.viewname like '$view' "
+	fi
+  done
+  #$EchoDateText "Final SQL: $_sql_final_" 
+  EchoDateText "Execuing the sql..." 
+  $DBISQL  -nogui -onerror exit -c "eng=${DWH_SERVER_NAME};links=tcpip{host=localhost;port=${DWHDB_PORT}};uid=dc;pwd=${DWHDBPASSWORD}" "$_sql_final_;output to $ALTER_RANKBH_SLIDINGWINDOW_SQL QUOTE '' HEXADECIMAL ASIS;" > /dev/null
+
+  if [[ $? -eq 0 ]]; then
+    EchoDateText "Successfully generated the alter definition" 
+
+    $GNUSED -i 's/\"//g' $ALTER_RANKBH_SLIDINGWINDOW_SQL
+
+    EchoDateText "Executing the sql.." 
+    $DBISQL -nogui -onerror exit -c "eng=${DWH_SERVER_NAME};links=tcpip{host=localhost;port=${DWHDB_PORT}};uid=dc;pwd=${DWHDBPASSWORD}" $ALTER_RANKBH_SLIDINGWINDOW_SQL
+    if [[ $? -eq 0 ]]; then
+      EchoDateText "Successfully re-created the slidingWindowBH views!" 
+    else
+      EchoDateText "Error while executing the alter statements. Please re-run the below command after the successful upgrade/II!!" 
+      EchoDateText "bash /eniq/sw/bin/slidingWindowBH.bsh" 
+    fi
+  else
+    EchoDateText "Error encountered while generating the alter definition." 
+  fi
+else
+  EchoDateText "No views defined to be diagnosed and repaired!" 
+fi
+}
+
+#main program
+EchoDateText "Fetching Sliding Window BH from repdb at " 
+sql_out=`${DBISQL} -nogui -onerror exit -c "eng=${REP_ENG};links=tcpip{host=localhost;port=${REP_PORT}};uid=${DWHREPUSER};pwd=${DWHREPPASSWORD}" "select distinct BHLEVEL+'%'+BHTYPE from dwhrep.busyhour  where aggregationtype = 'RANKBH_SLIDINGWINDOW'"`
+if [[ $? -eq 0 ]]; then
+data_extract=`$ECHO "$sql_out" | $SED -e '1,/\-\-/d' -e '/ rows/,$d' | $SED '/^$/d' | tr -d ' '`
+rows_extract=`$ECHO "$sql_out" | grep "rows)" | $SED 's/ rows)//g;s/(//g'`
+if [[ ! -z $data_extract ]]; then
+EchoDateText "$rows_extract views need to be re-created!." 
+_diagnose_repair_views_
+else
+EchoDateText "Sliding window is not enabled for any BusyHour views." 
+$TOUCH $ALTER_RANKBH_SLIDINGWINDOW_SQL
+fi
+else
+EchoDateText "Error while executing the repdb sql!." 
+EchoDateText "$sql_out" 
+EchoDateText "Please re-run the below command after the successful upgrade/II!!"
+EchoDateText "bash /eniq/sw/bin/slidingWindowBH.bsh"
+fi
+
+ENDTIMESTAMP=`$DATE '+%y%m%d_%H%M%S'`
+EchoDateText "Execution ended at $ENDTIMESTAMP"

@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# ----------------------------------------------------------------------
+# Description:
+#	This script will add DiskManager_AllInterface.bsh script into crontab 
+#
+# author : etousah
+#
+# ----------------------------------------------------------------------
+# Copyright (c) 1999 - 2015 Ericsson. All rights reserved.
+# ----------------------------------------------------------------------
+
+# Commands
+ECHO=/usr/bin/echo
+RM=/usr/bin/rm
+
+# Config Variables
+CRONCOMMFILE="/tmp/eniq_load_cron.txt"
+CRONLINE="0 4 * * * /bin/bash /eniq/sw/bin/DiskManager_AllInterface.bsh > /dev/null 2>&1"
+SCRIPT="/eniq/sw/bin/DiskManager_AllInterface.bsh"
+
+if [ -f $CRONCOMMFILE ]; then
+  $RM -f $CRONCOMMFILE
+fi
+
+$ECHO "Installing DiskManager crontab jobs for dcuser user..."
+crontab -l | /usr/bin/fgrep -v $SCRIPT >>$CRONCOMMFILE
+
+$ECHO "$CRONLINE" >>$CRONCOMMFILE
+
+#set the new crontab
+crontab < $CRONCOMMFILE
+
+$ECHO "Crontab entry for DiskManager is inserted successfully"

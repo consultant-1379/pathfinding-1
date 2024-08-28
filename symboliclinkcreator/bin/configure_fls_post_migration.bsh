@@ -1,0 +1,301 @@
+#!/bin/bash
+# ******************************************************************************************
+# LMI Ericsson                                      SCRIPT
+# ******************************************************************************************
+#
+# (c) LMI Ericsson  2018 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of LMI Ericsson , Ireland. The programs may be used 
+# and/or copied only with the written permission from LMI Ericsson  
+# or in accordance with the terms and conditions stipulated 
+# in the agreement/contract under which the program(s) have been 
+# supplied.
+#
+# ******************************************************************************************
+# Name    : configure_fls_post_migration.bsh
+# Author  : XNAGDAS
+# Purpose : This script is to update the existing ENIQ server IP address and 
+#			host name with the new ENIQ server IP address and host name in RoleTable,
+#			ENIQS_Policy_Criteria and ENIQS_Node_Assignment tables  
+#
+# Usage   : bash configure_fls_post_migration.bsh -a update <OLD_HOST_NAME> <OLD_IP_ADDRESS> <NEW_HOST_NAME> <NEW_IP_ADDRESS>
+#
+# ******************************************************************************************
+# ******************************************************************************************
+#
+# 	Execution
+#
+# ******************************************************************************************
+#-------------------------------------------------------------------------------------------
+#Global variable
+#-------------------------------------------------------------------------------------------
+
+ECHO=/usr/bin/echo
+CLEAR=/usr/bin/clear
+SED=/usr/bin/sed
+CAT=/usr/bin/cat
+LS=/usr/bin/ls
+GREP=/usr/bin/grep
+EGREP=/usr/bin/egrep
+CONF_DIR=/eniq/sw/conf
+DBISQL="$($LS /eniq/sybase_iq/IQ-*/bin64/dbisql)"
+SERVICENAMES=/eniq/sw/conf/service_names
+
+. ${CONF_DIR}/niq.rc
+
+if [ -s /eniq/admin/lib/common_functions.lib ]; then
+    . /eniq/admin/lib/common_functions.lib
+else
+        $ECHO "Could not find /eniq/admin/lib/common_functions.lib"
+        exit 1
+fi
+
+if [ ! -x "$DBISQL" ]; then
+    _err_msg_="$DBISQL commands not found or not executable."
+    abort_script "$_err_msg_"
+fi
+
+JAVA_HOME="${RT_DIR}/java"
+CPATH="${PLATFORM_DIR}"
+for _jar_ in `find ${PLATFORM_DIR}/*/dclib/ -name \*.jar` ; do
+                CPATH="${CPATH}:$_jar_"
+done
+
+DWHREPUSER=`inigetpassword REP -v DWHREPUsername -f ${CONF_DIR}/niq.ini`
+DWHREPPASSWORD=`inigetpassword REP -v DWHREPPassword -f ${CONF_DIR}/niq.ini`
+REP_PORT=`inigetpassword REP -v PortNumber -f ${CONF_DIR}/niq.ini`
+REP_SERVER_NAME=`inigetpassword REP -v ServerName -f ${CONF_DIR}/niq.ini`
+DBAPASSWORD=`inigetpassword DB -v UtilDBAPASSWORD -f ${CONF_DIR}/niq.ini`
+
+usage() {
+	$ECHO ""
+	$ECHO "usage: bash $0 -a update <OLD_HOST_NAME> <OLD_IP_ADDRESS> <NEW_HOST_NAME> <NEW_IP_ADDRESS>" 1>&2;
+	$ECHO "	-a update	updates the new host name and IP ADDRESS in RoleTable, ENIQS_Policy_Criteria and ENIQS_Node_Assignment tables"
+	$ECHO ""
+	$ECHO""
+
+	exit 2;
+}
+
+### Function: validate_ipaddress ###
+#
+#   Validate the IP ADDRESS
+#
+# Arguments:
+#      $1- old IP ADDRESS
+#      $2- new IP ADDRESS
+#
+# Return Values:
+#       true  - if valid IP ADDRESS 
+#		false - if invalid
+validate_ipaddress() {
+	
+	oldIpAddress=$1
+	newIpAddress=$2
+	
+	validate_ip ${oldIpAddress} 
+	if [ $? -ne 0 ]; then
+		$ECHO "Invalid IP ADDRESS: $oldIpAddress"
+		usage
+	fi
+	validate_ip ${newIpAddress} 
+	if [ $? -ne 0 ]; then
+		$ECHO "Invalid IP ADDRESS: $newIpAddress"
+		usage
+	fi
+	
+}
+
+### Function: validate_old_engine_property ###
+#
+#   Validate the old host name and IP ADDRESS
+#
+# Arguments:
+#      $1- old host name
+#      $2- old IP ADDRESS
+#
+# Return Values:
+#       true  - if valid host name and IP ADDRESS 
+#		false - if invalid
+validate_old_engine_property() {
+	oldHostName=$1
+	oldIpAddress=$2
+	
+	engineHostName=`$DBISQL -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "SELECT ENIQ_ID FROM RoleTable WHERE ENIQ_ID='$oldHostName'" | $EGREP -v '(----|ENIQ_ID|rows|Execution|time|seconds)' | $SED -e 's/\ //g'`
+	
+	engineIPAddress=`$DBISQL -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "SELECT IP_ADDRESS FROM RoleTable WHERE ENIQ_ID='$oldHostName'" | $EGREP -v '(----|IP_ADDRESS|rows|Execution|time|seconds)' | $SED -e 's/\ //g'`
+	
+	if [[ ! "$oldHostName" == "$engineHostName" ]]; then
+		$ECHO "Provided old host name: $oldHostName is invalid"
+		usage
+	else
+		if [[ ! "$oldIpAddress" == "$engineIPAddress" ]]; then
+			$ECHO "Provided old IP address: $oldIpAddress is invalid"
+			usage
+		fi
+	fi
+		
+}
+
+### Function: validate_new_engine_property ###
+#
+#   Validate the new host name and IP ADDRESS
+#
+# Arguments:
+#      $1- new host name
+#      $2- new IP ADDRESS
+#
+# Return Values:
+#       true  - if valid host name and IP ADDRESS 
+#		false - if invalid
+validate_new_engine_property() {
+	newHostName=$1
+	newIpAddress=$2
+	
+	engineHostName=`$CAT $SERVICENAMES | $GREP engine | $NAWK -F'::' '{print $2}'`
+	engineIPAddress=`$CAT $SERVICENAMES | $GREP engine | $NAWK -F'::' '{print $1}'`
+		
+	if [[ ! "$newHostName" == "$engineHostName" ]]; then
+		$ECHO "Provided new host name: $newHostName is invalid"
+		usage
+	else
+		if [[ ! "$newIpAddress" == "$engineIPAddress" ]]; then
+			$ECHO "Provided new IP address: $newIpAddress is invalid"
+			usage
+		fi
+	fi
+		
+}
+
+### Function: update_engine_property ###
+#
+#   updates the new host name and IP ADDRESS in Role table, 
+#	Node Assignment and Policy Criteria tables
+#
+# Arguments:
+#      $1- old host name
+#      $2- old IP ADDRESS
+#      $1- new host name
+#      $2- new IP ADDRESS
+#
+# Return Values:
+#		none
+update_engine_property() {
+	
+	oldHostName=$1
+	oldIpAddress=$2
+	newHostName=$3
+	newIpAddress=$4
+
+	noOfServers=`$DBISQL -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "SELECT COUNT(*) FROM RoleTable" | $EGREP -v '(----|COUNT|rows|Execution|time|seconds)' | sed -e 's/\ //g'`
+	
+	role=`$DBISQL -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "UPDATE RoleTable SET ENIQ_ID = '$newHostName' , IP_ADDRESS = '$newIpAddress' WHERE ENIQ_ID = '$oldHostName' AND IP_ADDRESS = '$oldIpAddress'"`
+
+	if [ $? -eq  0 ]; then
+		$ECHO "Successfully updated RoleTable"
+		$ECHO "$role"
+	else
+		$ECHO "ERROR:  Failed to update RoleTable "
+		$ECHO "$role"
+		exit 3
+	fi
+	
+	pc=`$DBISQL -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "UPDATE ENIQS_Policy_Criteria SET ENIQ_IDENTIFIER = '$newHostName' WHERE ENIQ_IDENTIFIER = '$oldHostName'"`
+
+	if [ $? -eq  0 ]; then
+		$ECHO "Successfully updated ENIQS_Policy_Criteria table"
+		$ECHO "$pc"
+	else
+		$ECHO "ERROR:  Failed to update ENIQS_Policy_Criteria table"
+		$ECHO "$pc"
+		exit 4
+	fi
+	
+	nat=`$DBISQL -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "UPDATE ENIQS_Node_Assignment SET ENIQ_IDENTIFIER = '$newHostName' WHERE ENIQ_IDENTIFIER = '$oldHostName'"`
+
+	if [ $? -eq  0 ]; then
+		$ECHO "Successfully updated ENIQS_Node_Assignment table"
+		$ECHO "$nat"
+	else
+		$ECHO "ERROR:  Failed to update ENIQS_Node_Assignment table"
+		$ECHO "$nat"
+		exit 5
+	fi
+
+	if [ ! $noOfServers -eq 0 ]; then
+		${JAVA_HOME}/bin/java -d64 -Dpname="FLSUpdate" -mx64M \
+		-Djava.util.logging.config.file=${CONF_DIR}/symboliclinkcreatorLogging.properties \
+		-Ddc5000.config.directory=${CONF_DIR} -Ddc.conf.dir=${CONF_DIR} -DLOG_DIR=${LOG_DIR} \
+		-classpath ${CPATH} -Djava.rmi.server.codebase="${CODEBASE}" \
+		com.ericsson.eniq.enminterworking.IRMIUpdateFlsTables $oldHostName $oldIpAddress $newHostName $newIpAddress
+		
+		ECODE=$?
+
+		$ECHO ""
+		
+		if [ ${ECODE} -eq 0 ] ; then
+			$ECHO "Successfully updated FLS tables in all the ENIQ-S servers"
+		else
+			$ECHO "Failed to update FLS tables in all the ENIQ-S servers"
+		fi
+		exit ${ECODE}
+	fi
+	
+}
+
+######MAIN PROGRAM###
+#getting codebase
+$CLEAR
+
+COMMON_JAR=`ls ${PLATFORM_DIR}/common*/dclib/common.jar`
+
+LICENSING_JAR=`ls ${PLATFORM_DIR}/licensing*/dclib/licensing.jar`
+
+ENGINE_JAR=`ls ${PLATFORM_DIR}/engine*/dclib/engine.jar`
+
+CODEBASE="file://${COMMON_JAR} file://${ENGINE_JAR} file://${LICENSING_JAR}"
+
+while getopts ":a:" opt; do
+    case "${opt}" in
+        a)
+            ACTION=${OPTARG}
+			ACTION=`$ECHO $ACTION | tr '[:upper:]' '[:lower:]'`
+            if [[ ! $ACTION == "update" ]]; then
+				usage
+			fi
+			;;
+        \?)
+            $ECHO "Invalid arguments passed"
+            usage
+            ;;
+        :)
+            $ECHO "Option -$OPTARG requires an argument" >&2
+            usage
+            ;;
+    esac
+done
+
+if [[ ! -z $ACTION ]]; then
+	case "$ACTION" in
+		"update")
+			if [[ $# -eq 6 ]]; then
+				oldHostName=$3
+				oldIpAddress=$4
+				newHostName=$5
+				newIpAddress=$6
+				
+				validate_ipaddress $oldIpAddress $newIpAddress
+				validate_old_engine_property $oldHostName $oldIpAddress
+				validate_new_engine_property $newHostName $newIpAddress
+				update_engine_property $oldHostName $oldIpAddress $newHostName $newIpAddress
+			else
+				$ECHO "Invalid number of arguments passed with option update"
+				usage
+			fi
+			;;
+
+	esac
+else
+	usage
+fi

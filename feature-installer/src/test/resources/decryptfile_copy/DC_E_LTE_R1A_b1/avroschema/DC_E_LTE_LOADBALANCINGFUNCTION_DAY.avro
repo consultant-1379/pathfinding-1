@@ -1,0 +1,43 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_LOADBALANCINGFUNCTION_DAY", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "LoadBalancingFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAvSubRatioSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmAvSubRatioSamp"
+        }
+    ]
+}

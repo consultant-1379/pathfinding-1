@@ -1,0 +1,90 @@
+#!/bin/bash
+# ********************************************************************
+# LMI Ericsson                                      SCRIPT
+# ********************************************************************
+#
+#
+# (c) LMI Ericsson  2001 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of LMI Ericsson , Ireland. The programs may be used 
+# and/or copied only with the written permission from LMI Ericsson  
+# or in accordance with the terms and conditions stipulated 
+# in the agreement/contract under which the program(s) have been 
+# supplied.
+#
+# ********************************************************************
+# Name    : updateDIM_WEEKDAY.bsh
+# written : ENINKAR
+# Date    : 2010
+# Revision: A
+# Purpose : This script is for updating DIM_WEEKDAY table in databse  
+#
+# Usage   : DIM_WEEKDAY table updates for change start day of the week fix 
+#
+# ********************************************************************
+# ********************************************************************
+#
+# 	Execution
+#
+# ********************************************************************
+if [ ${LOGNAME} != "dcuser"  ] ; then
+  echo "This script must be executed as dcuser"
+  exit 1
+fi
+
+#--------------------------------------------------------------------
+#Global variable
+#--------------------------------------------------------------------
+
+# directory path
+SYBASE_IQ_ISQL_PATH=/eniq/sybase_iq//OCS*/bin/isql
+
+CONF_DIR=/eniq/sw/conf
+
+if [ -s /eniq/admin/lib/common_functions.lib ]; then
+    . /eniq/admin/lib/common_functions.lib
+else
+        echo "Could not find /eniq/admin/lib/common_functions.lib"
+        exit 1
+fi
+
+DCPASSWORD=`inigetpassword DWH -v DCPassword -f ${CONF_DIR}/niq.ini`
+
+COUNT=1
+TMPDAY=1
+${SYBASE_IQ_ISQL_PATH} -Udc -P$DCPASSWORD -Sdwhdb <<EOISQLA
+alter table dc.DIM_WEEKDAY add TMPID integer default 0
+go
+update dc.DIM_WEEKDAY set TMPID=WEEKDAY_ID
+go
+quit
+EOISQLA
+echo "Updating DIM_WEEKDAY table"
+while [ ${COUNT} -le 7 ]; do
+	let TMPDAY=COUNT
+	if [ ${TMPDAY} == $1 ]; then
+		let TMPDAY=1
+	else
+		if [ ${TMPDAY} -gt $1 ]; then
+			let TMPDAY=TMPDAY-$1+1		
+		else
+			if [ ${TMPDAY} -lt $1 ]; then
+				let TMPDAY=TMPDAY+8-$1			
+			fi
+		fi
+	fi
+	echo "Calculated day:"
+	echo ${TMPDAY}
+	${SYBASE_IQ_ISQL_PATH} -Udc -P$DCPASSWORD -Sdwhdb <<-EOISQLB
+	update dc.DIM_WEEKDAY set WEEKDAY_ID=${TMPDAY} where TMPID=${COUNT}
+	go	
+	quit
+	EOISQLB
+	let COUNT=COUNT+1
+done
+${SYBASE_IQ_ISQL_PATH} -Udc -P$DCPASSWORD -Sdwhdb <<EOISQLC
+alter table dc.DIM_WEEKDAY drop TMPID
+go
+quit
+EOISQLC

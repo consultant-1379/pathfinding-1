@@ -1,0 +1,1 @@
+:service_name: eric-oss-eniq-feature-installer

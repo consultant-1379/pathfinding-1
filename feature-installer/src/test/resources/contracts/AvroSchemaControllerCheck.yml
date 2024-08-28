@@ -1,0 +1,11 @@
+description: Avro Schema Contract test
+name: avro schema contract test
+priority: 8
+request:
+  method: GET
+  url: /v1/create-schema
+  headers:
+    Content-Type: application/json
+response:
+  status: 200
+  body: "Sample response"

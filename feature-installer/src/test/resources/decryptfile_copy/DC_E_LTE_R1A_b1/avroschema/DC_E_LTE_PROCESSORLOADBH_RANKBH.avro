@@ -1,0 +1,35 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_PROCESSORLOADBH_RANKBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "Subrack"
+        }, 
+        {
+            "type": "string", 
+            "name": "Slot"
+        }, 
+        {
+            "type": "string", 
+            "name": "Equipment"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "PlugInUnit"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }
+    ]
+}

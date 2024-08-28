@@ -1,0 +1,256 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Ericsson Network IQ FLS control script
+#
+# Usage: /eniq/sw/bin/fls start|stop|restart|status
+#
+# ----------------------------------------------------------------------
+# Copyright (c) 2018 - 2019 AB Ericsson By  All rights reserved.
+# ----------------------------------------------------------------------
+
+# ********************************************************************
+#
+#       Configuration Section
+#
+# ********************************************************************
+
+. /eniq/home/dcuser/.profile
+
+if [ ${LOGNAME} != "dcuser"  ] ; then
+  echo "This script must be executed as dcuser"
+  exit 32
+fi
+
+if [ -z "$CONF_DIR" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 1
+fi
+
+if [ ! "${ENIQ_BASE_DIR}" ]; then
+    # Directory on the root filesystem
+    ENIQ_BASE_DIR=/eniq
+fi
+
+# ENIQ Admin Directory
+ENIQ_ADMIN_DIR=${ENIQ_BASE_DIR}/admin
+# Source the common functions
+if [ -s ${ENIQ_ADMIN_DIR}/lib/common_functions.lib ]; then
+    . ${ENIQ_ADMIN_DIR}/lib/common_functions.lib
+else
+    _err_msg_="File ${ENIQ_ADMIN_DIR}/lib/common_functions.lib not found"
+    abort_script "${_err_msg_}"
+fi
+
+. ${CONF_DIR}/niq.rc
+. ${BIN_DIR}/common_variables.lib
+
+#getting codebase
+
+JAVA_HOME="${RT_DIR}/java"
+CPATH="${PLATFORM_DIR}:/eniq/sw/installer/lib/installer.jar"
+
+for _jar_ in `${FIND} ${PLATFORM_DIR}/*/dclib/ -name \*.jar` ; do
+	CPATH="${CPATH}:$_jar_"
+done
+
+COMMON_JAR=`${LS} ${PLATFORM_DIR}/common*/dclib/common.jar`
+
+LICENSING_JAR=`${LS} ${PLATFORM_DIR}/licensing*/dclib/licensing.jar`
+
+#SCHEDULER_JAR=`${LS} ${PLATFORM_DIR}/scheduler*/dclib/scheduler.jar`
+
+ENGINE_JAR=`${LS} ${PLATFORM_DIR}/engine*/dclib/engine.jar`
+CODEBASE="file://${COMMON_JAR} file://${ENGINE_JAR} file://${LICENSING_JAR}"
+
+
+if [ "$#" -ne 1 ] && [ "$#" -ne 6 ]; then
+	${ECHO} "Usage:"
+	${ECHO} "/eniq/sw/bin/fls start|stop|status|restart"
+    ${ECHO} "/eniq/sw/bin/fls -e changeProfile -o <<valid_enm_host_name_alias>|ALL|all> -p <Normal|OnHold>"
+	${ECHO} ""
+    exit 0
+fi
+if [ "$#" -eq 1 ] && ([ "$1" != "start" ] && [ "$1" != "stop" ] && [ "$1" != "restart" ] && [ "$1" != "status" ]); then
+    ${ECHO} "Usage:"
+	${ECHO} "/eniq/sw/bin/fls start|stop|status|restart"
+    ${ECHO} "/eniq/sw/bin/fls -e changeProfile -o <<valid_enm_host_name_alias>|ALL|all> -p <Normal|OnHold>"
+	${ECHO} ""
+    exit 0
+fi
+
+abort_script()
+{
+_err_time_=`$DATE '+%Y-%b-%d_%H.%M.%S'`
+
+if [ "$1" ]; then
+    _err_msg_="${_err_time_} - $1"
+else
+    _err_msg_="${_err_time_} - ERROR : Script aborted.......\n"
+fi
+
+if [ "${LOGFILE}" ]; then
+    $ECHO -e "\nERROR : ${_err_msg_}\n" | $TEE -a ${LOGFILE}
+else
+    $ECHO -e "\nERROR : ${_err_msg_}\n"
+fi
+}
+
+run_fls_command(){
+SERVICE_COMMAND="${1}"
+ACTION=`${ECHO} ${SERVICE_COMMAND}|${AWK} '{print $NF}'`
+
+HNAME=$(${HOSTNAME})
+HOST_IP=$(${GETENT} ahostsv4 ${HNAME} | ${NAWK} '{print $1}' | ${HEAD} -1)
+_ip_address_=$( ${GREP} fls /eniq/sw/conf/service_names | ${NAWK} -F"::" '{print $1}')
+
+	
+# If the IP found in the order file matches my IP,
+# then I better run the command locally - no need to ssh
+if [ "${_ip_address_}" == "${HOST_IP}" ]; then
+	${SERVICE_COMMAND}
+	if [ $? -ne 0 ]; then
+		_err_msg_="Could not ${ACTION} fls service"
+		abort_script "${_err_msg_}"
+	fi
+else
+
+	run_remote_cmd "${_ip_address_}" " . /eniq/home/dcuser/.profile;${SERVICE_COMMAND}" "$LOGFILE" "dcuser"
+	if [ $? -ne 0 ]; then
+		_err_msg_="Could not ${ACTION} fls service"
+		abort_script "${_err_msg_}"
+	fi
+fi
+
+}
+
+start() {
+  if [ -s ${SMF_BIN_DIR}/eniq_service_start_stop.bsh ]; then
+  	if [ -f /eniq/installation/config/fls_conf ] && [ -s /eniq/installation/config/fls_conf ] ; then
+    	run_fls_command "${SMF_BIN_DIR}/eniq_service_start_stop.bsh -s fls -a start"
+    else
+    	${ECHO} "FLS is not enabled"
+    fi
+  else
+  	run_fls_command "${ADMIN_BIN}/eniq_service_start_stop.bsh -s fls -a start"
+  fi
+}
+
+stop() {
+  if [ -s ${SMF_BIN_DIR}/eniq_service_start_stop.bsh ]; then
+    run_fls_command "${SMF_BIN_DIR}/eniq_service_start_stop.bsh -s fls -a stop"
+  else
+  	run_fls_command "${ADMIN_BIN}/eniq_service_start_stop.bsh -s fls -a stop"
+  fi
+}
+
+status() {
+  if [ -f /eniq/installation/config/fls_conf ] && [ -s /eniq/installation/config/fls_conf ] ; then
+		${JAVA_HOME}/bin/java -d64 -Dpname="FLSAdmin" -mx64M \
+		-Djava.util.logging.config.file=${CONF_DIR}/symboliclinkcreatorLogging.properties \
+		-Ddc5000.config.directory=${CONF_DIR} -Ddc.conf.dir=${CONF_DIR} -DLOG_DIR=${LOG_DIR} \
+		-classpath ${CPATH} -Djava.rmi.server.codebase="${CODEBASE}" \
+		com.ericsson.eniq.flssymlink.fls.FlsProfileHandler status
+		
+		ECODE=$?
+
+		${ECHO} ""
+		if [ ${ECODE} -eq 0 ] ; then
+			${ECHO} "FLS is running"
+		else
+			${ECHO} "FLS is not running"
+		fi
+		exit ${ECODE}
+	else
+	    ${ECHO} "FLS is not enabled"
+	fi
+	exit 0	
+}
+
+#*********************************************************************
+#
+# 	Functions
+#
+# ********************************************************************
+### Function: eexecute ###
+#
+# Arguments:
+#       None
+# Return Values:
+#       None
+#
+eexecute() 
+{
+
+	if [ -f /eniq/installation/config/fls_conf ] && [ -s /eniq/installation/config/fls_conf ] ; then
+		if [[ ${X1} == "start" ]]; then
+			${ECHO} "Starting FLS..."
+			start
+		elif [[ ${X1} == "stop" ]]; then
+			${ECHO} "Stopping FLS..."
+			stop
+		else
+		${JAVA_HOME}/bin/java -d64 -Dpname="FLSAdmin" -mx64M \
+		-Djava.util.logging.config.file=${CONF_DIR}/symboliclinkcreatorLogging.properties \
+		-Ddc5000.config.directory=${CONF_DIR} -Ddc.conf.dir=${CONF_DIR} -DLOG_DIR=${LOG_DIR} \
+		-classpath ${CPATH} -Djava.rmi.server.codebase="${CODEBASE}" \
+		com.ericsson.eniq.flssymlink.fls.FlsProfileHandler ${X1} ${X2} ${X3}
+		fi
+
+		ECODE=$?
+
+		if [ ${ECODE} -ne 0 ] ; then
+			if [ "${X1}" != "" ] ; then
+				${ECHO} "Execute failed"
+			fi
+		fi
+
+		exit ${ECODE}
+  
+	else
+	    ${ECHO} "FLS is not enabled"
+	fi
+	exit 0
+
+}
+
+while [[ $# > 0 ]]
+do
+	i="$1"
+	shift
+    
+    case "$i" in
+	start)
+		 start
+	     ;;
+	stop)
+	     stop
+	     ;;
+	restart)
+     	 stop
+   		 start
+    	 ;;
+	status)
+	     status
+	     ;;
+	-e)
+		 X1=$1
+		 shift
+	     ;;
+	-o)
+		 X2=$1
+		 shift
+		 ;;
+	-p)
+		 X3=$1
+		 shift
+		 eexecute
+		 ;;
+	*)
+	     ${ECHO} "Usage:"
+	     ${ECHO} "/eniq/sw/bin/fls start|stop|status|restart"
+	     ${ECHO} "/eniq/sw/bin/fls -e changeProfile -o <<valid_enm_host_name_alias>|ALL|all> -p <Normal|OnHold>"
+		 ${ECHO} ""
+	     exit 10
+	     ;;
+	esac
+done

@@ -1,0 +1,79 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_RIPORT_DAYBH", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "RiPort"
+        }, 
+        {
+            "type": "string", 
+            "name": "Equipment"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "Subrack"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "AuxPlugInUnit"
+        }, 
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "PlugInUnit"
+        }, 
+        {
+            "type": "string", 
+            "name": "Slot"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSfpTxBias"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLossOfFrame"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmLossOfSignal"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSfpVoltage"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSfpTxPower"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSfpTemperature"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmSfpRxPower"
+        }
+    ]
+}

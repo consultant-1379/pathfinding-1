@@ -1,0 +1,91 @@
+{
+    "type": "record", 
+    "namespace": "com.ericsson.eniq.data", 
+    "name": "DC_E_LTE_SECTORCARRIER_RAW", 
+    "fields": [
+        {
+            "type": "string", 
+            "name": "OSS_ID"
+        }, 
+        {
+            "type": "string", 
+            "name": "NESW"
+        }, 
+        {
+            "type": "string", 
+            "name": "ENodeBFunction"
+        }, 
+        {
+            "type": "string", 
+            "name": "SN"
+        }, 
+        {
+            "type": "string", 
+            "name": "MOID"
+        }, 
+        {
+            "type": "string", 
+            "name": "SectorCarrier"
+        }, 
+        {
+            "type": "string", 
+            "name": "ERBS"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmRadioTxPowerMaxConfigured"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmZtemporary56"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmBranchUsersLevSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeUlSumSectorCarrier"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmMicroTxSleepTime"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeDlSumSectorCarrier"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveNbUeDlSumSectorCarrier"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveNbUeUlSumSectorCarrier"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeDlSumSectorCarrierNb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmActiveUeUlSumSectorCarrierNb"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEmfPwrBackoffHardLimit"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEmfPwrBackoffSamp"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEmfPwrBackoffSum"
+        }, 
+        {
+            "type": "int", 
+            "name": "pmEmfPwrBackoffSumOn"
+        }
+    ]
+}

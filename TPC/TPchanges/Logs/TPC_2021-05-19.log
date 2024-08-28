@@ -1,0 +1,58 @@
+2021-05-19 12:51:13,865 - INFO - Verifying parameters
+2021-05-19 12:51:13,878 - INFO - Creating temp directory to collect environment in C:\Users\zvispri/tpce
+2021-05-19 12:51:13,888 - INFO - Starting jar file collection from ieatrcxb4146.athtem.eei.ericsson.se
+2021-05-19 12:51:25,484 - INFO - ** LOADING THE MODEL **
+2021-05-19 12:51:26,688 - INFO - Coversheet
+2021-05-19 12:51:26,726 - INFO - Manual Modification details are not provided in the Model-T. So proceeding without Manual Modifications
+2021-05-19 12:51:26,730 - INFO - Universe is being delivered for this Techpack, so Counter and key description will not be added for this Techpack Document
+2021-05-19 12:53:08,704 - INFO - Verifying parameters
+2021-05-19 12:53:08,714 - INFO - Creating temp directory to collect environment in C:\Users\zvispri/tpce
+2021-05-19 12:53:08,721 - INFO - Starting jar file collection from atvts4105.athtem.eei.ericsson.se
+2021-05-19 12:53:43,637 - INFO - Jar file collection completed successfully.
+2021-05-19 12:53:43,640 - INFO - Adding jar files to the PYTHONPATH
+2021-05-19 12:53:43,644 - INFO - Get the passwords for ENIQ DB
+2021-05-19 12:53:57,108 - INFO - DB passwords have been collected
+2021-05-19 12:53:57,111 - INFO - Reading the schema of dwhrep and etlrep from atvts4105.athtem.eei.ericsson.se
+2021-05-19 12:54:13,999 - INFO - DB schema successfully collected
+2021-05-19 12:54:14,003 - INFO - Collecting base TP's details from atvts4105.athtem.eei.ericsson.se
+2021-05-19 12:54:33,085 - INFO - Base TP's details successfully collected
+2021-05-19 12:54:33,089 - INFO - Archiving Environment details
+2021-05-19 12:54:35,757 - INFO - TPC Env file has been successfully created in H:\Desktop\workspace\TPchanges\EnvDeploy
+2021-05-19 12:55:07,895 - INFO - ** LOADING THE MODEL **
+2021-05-19 12:55:08,953 - INFO - Coversheet
+2021-05-19 12:55:08,984 - INFO - Manual Modification details are not provided in the Model-T. So proceeding without Manual Modifications
+2021-05-19 12:55:08,990 - INFO - Universe is being delivered for this Techpack, so Counter and key description will not be added for this Techpack Document
+2021-05-19 13:03:59,045 - INFO - ** LOADING THE MODEL **
+2021-05-19 13:04:01,647 - INFO - Coversheet
+2021-05-19 13:04:01,700 - INFO - Universe is being delivered for this Techpack, so Counter and key description will not be added for this Techpack Document
+2021-05-19 13:04:01,713 - INFO - Interfaces
+2021-05-19 13:04:01,740 - INFO - Fact Tables
+2021-05-19 13:04:01,864 - INFO - Fact Tables Keys
+2021-05-19 13:04:03,713 - INFO - Fact Tables Counters
+2021-05-19 13:04:08,558 - INFO - Vectors
+2021-05-19 13:04:16,266 - INFO - Topology Table
+2021-05-19 13:04:16,272 - INFO - Topology Keys
+2021-05-19 13:04:16,282 - INFO - Transformations
+2021-05-19 13:13:35,385 - INFO - ** LOADING THE MODEL **
+2021-05-19 13:13:38,622 - INFO - Coversheet
+2021-05-19 13:13:38,684 - INFO - Universe is being delivered for this Techpack, so Counter and key description will not be added for this Techpack Document
+2021-05-19 13:13:38,694 - INFO - Interfaces
+2021-05-19 13:13:38,733 - INFO - Fact Tables
+2021-05-19 13:13:38,900 - INFO - Fact Tables Keys
+2021-05-19 13:13:39,611 - INFO - Fact Tables Counters
+2021-05-19 13:13:46,230 - INFO - Vectors
+2021-05-19 13:13:54,463 - INFO - Topology Table
+2021-05-19 13:13:54,469 - INFO - Topology Keys
+2021-05-19 13:13:54,482 - INFO - Transformations
+2021-05-19 13:30:23,338 - INFO - ** LOADING THE MODEL **
+2021-05-19 13:30:26,930 - INFO - Coversheet
+2021-05-19 13:30:26,990 - INFO - Universe is being delivered for this Techpack, so Counter and key description will not be added for this Techpack Document
+2021-05-19 13:30:27,005 - INFO - Interfaces
+2021-05-19 13:30:27,040 - INFO - Fact Tables
+2021-05-19 13:30:27,186 - INFO - Fact Tables Keys
+2021-05-19 13:30:27,720 - INFO - Fact Tables Counters
+2021-05-19 13:30:32,641 - INFO - Vectors
+2021-05-19 13:30:40,799 - INFO - Topology Table
+2021-05-19 13:30:40,805 - INFO - Topology Keys
+2021-05-19 13:30:40,819 - INFO - Transformations
+2021-05-19 13:30:40,822 - INFO - ALL

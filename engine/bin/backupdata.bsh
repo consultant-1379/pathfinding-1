@@ -1,0 +1,60 @@
+#!/bin/bash
+# ********************************************************************
+# Ericsson Radio Systems AB                                     SCRIPT
+# ********************************************************************
+#
+# (c) Ericsson Radio Systems AB 2015 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of Ericsson Radio Systems AB, Sweden. The programs may be used
+# and/or copied only with the written permission from Ericsson Radio
+# Systems AB or in accordance with the terms and conditions stipulated
+# in the agreement/contract under which the program(s) have been
+# supplied.
+#
+# ********************************************************************
+# Name    : backupdata.bsh
+# Date    : 23/02/2017
+# Purpose : Script to backup the data from tables through unload command  
+#           
+# Usage   : backupdata.bsh
+#
+# ********************************************************************
+#
+# Command Section
+#
+# ********************************************************************
+
+CAT=/usr/bin/cat
+DATE=/usr/bin/date
+ECHO=/usr/bin/echo
+RM=/usr/bin/rm
+
+
+BACKUP_PATH=$2
+VAR_PATH=/var/tmp/
+DATETIME=`$DATE '+%Y%m%d'`
+
+if [ -s /eniq/admin/lib/common_functions.lib ]; then
+    . /eniq/admin/lib/common_functions.lib
+else
+        $ECHO "Could not find /eniq/admin/lib/common_functions.lib"
+        exit 1
+fi
+DBISQL="$(ls /eniq/sybase_iq/IQ-*/bin64/dbisql)"
+DWHDBPASSWORD=`inigetpassword DWH -v DCPassword -f ${CONF_DIR}/niq.ini`
+DWHDB_PORT=`inigetpassword DWH -v PortNumber -f ${CONF_DIR}/niq.ini`
+DWH_SERVER_NAME=`inigetpassword DWH -v ServerName -f ${CONF_DIR}/niq.ini`
+
+while IFS= read line 
+do
+
+columnHeader=`head ${BACKUP_PATH}/${line}/${line}_${DATETIME}.txt`
+
+
+$DBISQL -nogui -c "eng=${DWH_SERVER_NAME};links=tcpip{host=${DWH_SERVER_NAME};port=${DWHDB_PORT}};uid=dc;pwd=$DWHDBPASSWORD" "UNLOAD Select $columnHeader from $line INTO FILE '${BACKUP_PATH}/${line}/${line}_${DATETIME}.txt' APPEND ON"
+
+ if [[ $? -eq 0 ]]; then
+	$ECHO "$line" >> $VAR_PATH/tablebackedup.txt
+	fi
+done < $1

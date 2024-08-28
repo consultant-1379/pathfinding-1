@@ -1,0 +1,19 @@
+#!/bin/bash
+CRONCOMMFILE="/tmp/eniq_cron.txt"
+
+SCRIPT="wifipoller.bsh"
+CRONLINE="0 * * * * /bin/bash /eniq/admin/bin/wifipoller.bsh start > /eniq/home/dcuser/log.txt 2>&1"
+if [ -f $CRONCOMMFILE ]; then
+  rm -f $CRONCOMMFILE
+fi
+
+echo "Installing  Wifi crontab jobs for dcuser user..."
+crontab -l | /usr/bin/fgrep -v $SCRIPT >>$CRONCOMMFILE
+
+echo "$CRONLINE" >>$CRONCOMMFILE
+
+#set the new crontab
+crontab < $CRONCOMMFILE
+#/usr/bin/rm -f $CRONCOMMFILE
+
+echo "Crontab Entry Inserted Successfully"

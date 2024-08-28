@@ -1,0 +1,685 @@
+package $packageName;
+
+import java.sql.SQLException;
+import java.sql.Timestamp; // NOPMD : eeipca : may not be used
+import java.util.Date; // NOPMD : eeipca : may not be used
+import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
+import ssc.rockfactory.FactoryRes;
+import ssc.rockfactory.RockDBObject;
+import ssc.rockfactory.RockException;
+import ssc.rockfactory.RockFactory;
+import ssc.rockfactory.RockResultSet;
+import ssc.rockfactory.DataValidator;
+
+@SuppressWarnings({"PMD.SuspiciousConstantFieldName"}) // eeipca : columns are in UPPERCASE
+public class $className implements Cloneable,RockDBObject  {
+
+  #foreach ($col in $columns)
+  private $col.getUserClassType() $col.getName();
+  #end
+ 
+  private String timeStampName = "LAST_UPDATED"; // NOPMD : Dont set as static or final, unit tests change this via reflection
+
+  private String[] columnsAndSequences = { #foreach ($seqcol in $seqColumns)   #if ($velocityCount > 1) ,"$seqcol.getName()" #else "$seqcol.getName()" #end #end };
+
+  private final String[] primaryKeyNames = { #foreach ($pkcol in $pkColumns)  #if ($velocityCount > 1),"$pkcol.getName()" #else "$pkcol.getName()" #end #end };
+
+  private RockFactory rockFact;
+
+  private boolean newItem;
+  
+  private Set<String> modifiedColumns = new HashSet<String>();
+  
+  private boolean validateData = false;
+  
+  private $className original; 
+
+  public $className(final RockFactory rockFact) {
+  	this(rockFact, false);
+  	original = null; 
+  }
+
+  /**
+   * Constructor to initialize all objects to null
+   */
+  public $className(final RockFactory rockFact, final boolean validate) {
+    this.rockFact = rockFact;
+    this.newItem = true;
+    this.validateData = validate;
+    
+    #foreach ($col in $columns)
+     this.$col.getName() = null;
+    #end
+  	original = null; 
+
+  }
+
+  /**
+   * Constructor for primary selection from database PRIMARY KEY MUST BE DEFINED
+   * 
+   * @params primarykeys
+   * @exception SQLException
+   */
+  public $className(final RockFactory rockFact  #foreach ($pkcol in $pkColumns) ,final $pkcol.getUserClassType() $pkcol.getName()#end ) throws SQLException,
+      RockException {
+    try {
+      this.rockFact = rockFact;
+
+      #foreach ($pkcol in $pkColumns)
+      this.$pkcol.getName() = $pkcol.getName();
+      #end
+
+      final RockResultSet results = rockFact.setSelectSQL(true, this);
+      final Iterator<$className> it = rockFact.getData(this, results);
+      if (it.hasNext()) {
+        final $className o = it.next();
+
+       #foreach ($col in $columns)
+       this.$col.getName() = o.get$col.getCapitalizedName()();
+       #end
+
+        results.close();
+        this.newItem = false;
+  	    this.original = this; 
+      } else {
+        results.close();
+  	    this.original = this; 
+        throw new SQLException(FactoryRes.CANNOT_GET_TABLE_DATA + "$className");
+      }
+    } catch (SQLException sqlE) {
+      throw sqlE;
+    }
+  }
+
+  /**
+   * Constructor to select the object according to whereObject from the db NO PRIMARY KEY DEFINED
+   * 
+   * @param whereObject
+   *          the where part is constructed from this object
+   * @exception SQLException
+   */
+  public $className(final RockFactory rockFact, final $className whereObject) throws SQLException,
+      RockException {
+    try {
+      this.rockFact = rockFact;
+      final RockResultSet results = rockFact.setSelectSQL(false, whereObject);
+      final Iterator<$className> it = rockFact.getData(whereObject, results);
+      if (it.hasNext()) {
+        final $className o = it.next();
+        #foreach ($col in $columns)
+        this.$col.getName() = o.get$col.getCapitalizedName()();
+        #end
+        results.close();
+        this.newItem = false;
+  	    this.original = this; 
+      } else {
+        results.close();
+  	    this.original = this; 
+        throw new SQLException(FactoryRes.CANNOT_GET_TABLE_DATA + "$className");
+      }
+    } catch (SQLException sqlE) {
+      throw sqlE;
+    }
+  }
+
+  public Set<String> gimmeModifiedColumns(){   
+    return modifiedColumns;  
+  }
+
+  public void setModifiedColumns(final Set<String> modifiedColumns){
+    this.modifiedColumns = modifiedColumns;  
+  }
+
+  public void cleanModifiedColumns(){   
+    modifiedColumns.clear();  
+  }
+
+  /**
+   * Method for getting the table name
+   * 
+   * @return String name of the corresponding table
+   */
+  public String getTableName() {
+    return "$className";
+  }
+
+  /**
+   * Update object contents into database PRIMARY KEY MUST BE DEFINED
+   * 
+   * @exception SQLException
+   */
+  public int updateDB() throws SQLException, RockException {
+    this.newItem = false;
+    return rockFact.updateData(this, true, null);
+  }
+
+  /**
+   * Update object contents into database PRIMARY KEY MUST BE DEFINED
+   * 
+   * @param boolean
+   *          useTimestamp if false, the timestamp is not used to compare if the data has been
+   *          changed during the transaction
+   * @exception SQLException
+   */
+  public int updateDB(final boolean useTimestamp) throws SQLException, RockException {
+    this.newItem = false;
+    return rockFact.updateData(this, true, null, useTimestamp);
+  }
+
+  /**
+   * Update object contents into database NO PRIMARY KEY DEFINED
+   * 
+   * @param boolean
+   *          useTimestamp if false, the timestamp is not used to compare if the data has been
+   *          changed during the transaction
+   * @param <this
+   *          object type> whereObject the where part is constructed from this object
+   * @exception SQLException
+   */
+  public int updateDB(final boolean useTimestamp, final $className whereObject) throws SQLException, RockException {
+    this.newItem = false;
+    return rockFact.updateData(this, false, whereObject, useTimestamp);
+  }
+
+  /**
+   * Insert object contents into database
+   * 
+   * @exception SQLException
+   */
+  public int insertDB() throws SQLException, RockException {
+    this.newItem = false;
+    return rockFact.insertData(this);
+  }
+
+  /**
+   * Insert object contents into database
+   * 
+   * @param boolean
+   *          useTimestamp if false, the timestamp is not used to compare if the data has been
+   *          changed during the transaction
+   * @param boolean
+   *          useSequence if false the sequence columns don't get their values from db sequences
+   * @exception SQLException
+   */
+  public int insertDB(final boolean useTimestamp, final boolean useSequence) throws SQLException, RockException {
+    this.newItem = false;
+    return rockFact.insertData(this, useTimestamp, useSequence);
+  }
+
+  /**
+   * Delete object contents from database PRIMARY KEY MUST BE DEFINED
+   * 
+   * @exception SQLException
+   */
+  public int deleteDB() throws SQLException, RockException {
+    this.newItem = true;
+    return rockFact.deleteData(true, this);
+  }
+
+  /**
+   * Delete object contents from database NO PRIMARY KEY DEFINED
+   * 
+   * @param <this
+   *          object type> whereObject the where part is constructed from this object
+   * @exception SQLException
+   */
+  public int deleteDB(final $className whereObject) throws SQLException, RockException {
+    this.newItem = true;
+    return rockFact.deleteData(false, whereObject);
+  }
+
+  /**
+   * Saves the data into the database
+   * 
+   * @exception SQLException
+   */
+  public void saveDB() throws SQLException, RockException {
+
+    if (this.newItem) {
+      insertDB();
+    } else {
+      if (isPrimaryDefined()) {
+        rockFact.updateData(this, true, this, true);
+      } else {
+        throw new RockException("Cannot use rock.${className}.saveDB(), no primary key defined");
+      }
+    }
+    this.newItem = false;
+    this.setOriginal(this);
+  }
+
+  /**
+   * Saves the data into the database (without primary key update)
+   * 
+   * @exception SQLException
+   */
+  public void saveToDB() throws SQLException, RockException {
+
+    if (this.newItem) {
+      insertDB();
+    } else if (this.gimmeModifiedColumns().size() > 0) {
+      rockFact.updateData(this, false, this.getOriginal(), true);
+    }
+    this.newItem = false;
+    this.setOriginal(this);
+  }
+
+
+  /**
+   * Prints the object out as XML
+   * 
+   * @exception SQLException
+   */
+    public String toXML_tag() throws SQLException, RockException {
+    final StringBuffer sbuff = new StringBuffer();
+    sbuff.append("<$className ");
+    #foreach ($col in $columns)
+    sbuff.append("$col.getName()=\""+DataValidator.wrap(DataValidator.escapeXML(""+this.$col.getName()),$col.getSQLType(), true)+"\" ");
+    #end  
+    sbuff.append("DiffStatus=\"\"");
+    sbuff.append(" />\n");  
+    return sbuff.toString();
+  }
+
+  /**
+   * Prints the object out as XML
+   * 
+   * @exception SQLException
+   */
+   
+    public String toXML_startTag() throws SQLException, RockException {
+    final StringBuffer sbuff = new StringBuffer();
+    sbuff.append("<$className ");
+    #foreach ($col in $columns)
+    sbuff.append("$col.getName()=\""+DataValidator.wrap(DataValidator.escapeXML(""+this.$col.getName()),$col.getSQLType(), true)+"\" ");
+    #end  
+    sbuff.append("DiffStatus=\"\"");
+    sbuff.append(" >\n"); 
+    return sbuff.toString();
+  }
+
+  /**
+   * Prints the object out as XML
+   * 
+   * @exception SQLException
+   */
+   
+    public String toXML_endTag() throws SQLException, RockException {
+    final StringBuffer sbuff = new StringBuffer();
+    sbuff.append("</$className>\n");
+    return sbuff.toString();
+  }
+
+  /**
+   * Prints the object out as a sql Insert clause
+   * 
+   * @exception SQLException
+   */
+   
+  public String toSQLInsert(){
+       
+    final StringBuffer sbuff = new StringBuffer();
+    sbuff.append("insert into $className ( ");
+	#set($first = true)
+    #foreach ($col in $columns)
+	#if($first) 
+	sbuff.append("$col.getName()");
+	#set($first = false)
+	#else 
+	sbuff.append(", $col.getName()");
+	#end
+    #end  
+    sbuff.append(" ) values ( ");
+    #set($first = true)
+	#foreach ($col in $columns)
+    #if($first) 
+    sbuff.append(""+DataValidator.wrap(""+this.$col.getName(),$col.getSQLType())+"");
+    #set($first = false)
+    #else 
+    sbuff.append(", "+DataValidator.wrap(""+this.$col.getName(),$col.getSQLType())+"");
+    #end
+	#end
+    sbuff.append(" );\n");   
+    return sbuff.toString();
+  }
+  
+
+## getters
+ #foreach ($col in $columns)
+  public $col.getUserClassType() get$col.getCapitalizedName()() { 
+    return this.$col.getName();
+  }
+ #end
+
+#if($className.equals("Meta_transfer_actions"))
+  public String getWhere_clause() {
+    final java.util.List<String> whereClauseList = new java.util.ArrayList<String>();
+    whereClauseList.add((null == this.WHERE_CLAUSE_01) ? "" : this.WHERE_CLAUSE_01);
+    whereClauseList.add((null == this.WHERE_CLAUSE_02) ? "" : this.WHERE_CLAUSE_02);
+    whereClauseList.add((null == this.WHERE_CLAUSE_03) ? "" : this.WHERE_CLAUSE_03);
+    return joinStringsIntoOne(whereClauseList);
+  }
+
+  public String getAction_contents() {
+    final java.util.List<String> actionContentsList = new java.util.ArrayList<String>();
+    actionContentsList.add((null == this.ACTION_CONTENTS_01) ? "" : this.ACTION_CONTENTS_01);
+    actionContentsList.add((null == this.ACTION_CONTENTS_02) ? "" : this.ACTION_CONTENTS_02);
+    actionContentsList.add((null == this.ACTION_CONTENTS_03) ? "" : this.ACTION_CONTENTS_03);
+    return joinStringsIntoOne(actionContentsList);
+  }
+#end
+
+  public String gettimeStampName() {
+    return timeStampName;
+  }
+
+  public String[] getcolumnsAndSequences() {
+    return columnsAndSequences;
+  }
+
+  public String[] getprimaryKeyNames() {
+    return primaryKeyNames;
+  }
+
+  public RockFactory getRockFactory() {
+    return this.rockFact;
+  }
+
+  public void removeNulls() {
+ #foreach ($col in $columns)
+    if ($col.getName() == null) {
+      $col.getName() = $col.getNewUserClassType();
+    }
+ #end
+  }
+
+## setters
+ #foreach ($col in $columns)
+  public void set$col.getCapitalizedName()(final $col.getUserClassType() $col.getName()) {
+    if (validateData){
+      DataValidator.validateData((Object)$col.getName(),"$col.getName()",$col.getSQLType(),$col.getColumnSize(),$col.getDecimalDigits());
+    }
+    modifiedColumns.add("$col.getName()");
+    this.$col.getName() = $col.getName();
+  }
+ #end
+
+
+  #if($className.equals("Meta_transfer_actions"))
+    public void setWhere_clause(final String WHERE_CLAUSE) {
+    if (stringTooLong(WHERE_CLAUSE.length())) {
+      final java.util.logging.Logger log = java.util.logging.Logger.getLogger("etl.engine.RockFactory");
+      log.severe("On setting META_TRANSFER_ACTION (TRANSFER_ACTION_ID=" + this.TRANSFER_ACTION_ID + ", TRANSFER_ACTION_NAME="
+          + this.TRANSFER_ACTION_NAME + ", COLLECTION_ID=" + this.COLLECTION_ID + ", COLLECTION_SET_ID="
+          + this.COLLECTION_SET_ID + ") the WHERE_CLAUSE is longer than maximum length ("
+          + getTotalSQLClauseMaxLength() + "). Rest of the clause is not stored.");
+    }
+    final String[] splittedWhereClause = splitStringIntoPieces(WHERE_CLAUSE, 32000);
+    setWhere_clause_01(splittedWhereClause[0]);
+    setWhere_clause_02(splittedWhereClause[1]);
+    setWhere_clause_03(splittedWhereClause[2]);
+  }
+
+  public void setAction_contents(final String ACTION_CONTENTS) {
+		if (stringTooLong(ACTION_CONTENTS.length())) {
+      final java.util.logging.Logger log = java.util.logging.Logger.getLogger("etl.engine.RockFactory");
+      log.severe("On setting META_TRANSFER_ACTION (TRANSFER_ACTION_ID=" + this.TRANSFER_ACTION_ID + ", TRANSFER_ACTION_NAME="
+          + this.TRANSFER_ACTION_NAME + ", COLLECTION_ID=" + this.COLLECTION_ID + ", COLLECTION_SET_ID="
+          + this.COLLECTION_SET_ID + ") the ACTION_CONTENTS is longer than maximum length ("
+          + getTotalSQLClauseMaxLength() + "). Rest of the clause is not stored.");
+    }
+    final String[] splittedActionContents = splitStringIntoPieces(ACTION_CONTENTS, 100000);
+    setAction_contents_01(splittedActionContents[0]);
+    setAction_contents_02(splittedActionContents[1]);
+    setAction_contents_03(splittedActionContents[2]);
+
+  }
+  #end
+
+
+  public void setcolumnsAndSequences(final String[] newColsAndSeqs) {
+    this.columnsAndSequences = newColsAndSeqs;
+  }
+
+  /**
+   * dbEquals method test wheather the objects primary key values are equal.
+   */
+  @SuppressWarnings({"PMD.SimplifyBooleanReturns", "PMD.SimplifyBooleanExpressions"})
+  public boolean dbEquals(final $className o) {
+
+   #foreach ($col in $pkColumns)
+   #if ($velocityCount>1)
+   || (((this.$col.getName() == null) || (o.$col.getName() == null)) && (this.$col.getName() != o.$col.getName()))
+   #else
+   if ((((this.$col.getName() == null) || (o.$col.getName() == null)) && (this.$col.getName() != o.$col.getName()))
+   #end	
+   #end
+    ){
+    return false;
+    } else
+   #foreach ($col in $pkColumns)
+   #if ($velocityCount>1)
+   || (((this.$col.getName() != null) && (o.$col.getName() != null)) && (this.${col.getName()}.equals(o.$col.getName()) == false))
+   #else
+   if ((((this.$col.getName() != null) && (o.$col.getName() != null)) && (this.${col.getName()}.equals(o.$col.getName()) == false))
+   #end	  
+   #end
+    ){
+    return false;
+    } else {
+      return true;
+    }
+  }
+
+  /**
+   * equals method test wheather the objects field values and the parametrs objects field values
+   * are equal.
+   */
+
+  @SuppressWarnings({"PMD.SimplifyBooleanExpressions", "PMD.SimplifyBooleanReturns"})
+  public boolean equals(final $className o) {
+
+   #foreach ($col in $columns)
+   #if ($velocityCount>1)
+   || (((this.$col.getName() == null) || (o.$col.getName() == null)) && (this.$col.getName() != o.$col.getName()))
+   #else
+   if ((((this.$col.getName() == null) || (o.$col.getName() == null)) && (this.$col.getName() != o.$col.getName()))
+   #end	
+   #end
+    ){
+    return false;
+    } else
+   #foreach ($col in $columns)
+   #if ($velocityCount>1)
+   || (((this.$col.getName() != null) && (o.$col.getName() != null)) && (this.${col.getName()}.equals(o.$col.getName()) == false))
+   #else
+   if ((((this.$col.getName() != null) && (o.$col.getName() != null)) && (this.${col.getName()}.equals(o.$col.getName()) == false))
+   #end	  
+   #end
+    ){
+    return false;
+    } else {
+      return true;
+    }
+  }
+  
+  /**
+   * to enable a public clone method inherited from Object class (private method)
+   */
+  public Object clone() {
+    Object o = null;
+    try {
+      o = super.clone();
+    } catch (CloneNotSupportedException e) {
+    }
+    return o;
+  }
+
+  /**
+   * Is the primakey defined for this table
+   */
+  public boolean isPrimaryDefined() {
+    return this.primaryKeyNames.length > 0;
+  }
+
+  /**
+   * Sets the member variables to Db default values
+   */
+  public void setDefaults() {
+
+  }
+
+  /**
+   * Does the the object exist in the database
+   * 
+   * @return boolean true if exists else false.
+   */
+  public boolean existsDB() throws SQLException, RockException {
+    final RockResultSet results = rockFact.setSelectSQL(false, this);
+    final Iterator it = rockFact.getData(this, results);
+    if (it.hasNext()) {
+      results.close();
+      return true;
+    }
+    results.close();
+    return false;
+  }
+
+ ## info
+ #foreach ($col in $columns)
+
+  /**
+  * get columnSize
+  * return $col.getColumnSize()
+  */
+  public static int get$col.getCapitalizedName()ColumnSize() {
+    
+     return $col.getColumnSize();   
+  }
+
+ /**
+  * get DecimalDigits
+  * return $col.getDecimalDigits()
+  */
+  public static int get$col.getCapitalizedName()DecimalDigits() {
+    
+     return $col.getDecimalDigits();   
+  }
+  
+ /**
+  * get SQLType
+  * return $col.getSQLType()
+  */
+  public static int get$col.getCapitalizedName()SQLType() {
+    
+    return $col.getSQLType();   
+  }
+    
+ #end
+  public boolean isNewItem() {
+    return newItem;
+  }
+
+  public void setNewItem(final boolean newItem) {
+    this.newItem = newItem;
+  }
+
+  public boolean isValidateData() {
+    return validateData;
+  }
+
+  public void setValidateData(final boolean validateData) {
+    this.validateData = validateData;
+  }
+
+  public $className getOriginal() {
+    return original;
+  }
+   
+  public void setOriginal(final $className original) {
+    this.original = ($className) original.clone();
+  }
+   
+  /**
+   * Return true if rock object is new, modified or changed
+   *
+   */ 
+  public boolean isUpdated() {
+    return isNew() || isModified() || isChanged();
+  }
+   
+  /**
+   * Return true if rock object is new 
+   *
+   */ 
+  public boolean isNew() {
+    return (original == null);
+  }
+   
+  /**
+   * Return true if rock object is modified (values can be same)
+   *
+   */ 
+  public boolean isModified() {
+    return (gimmeModifiedColumns().size() > 0);
+  }
+   
+  /**
+   * Return true if rock object is changed 
+   *
+   */ 
+  public boolean isChanged() {
+    if (original != null) {
+    	return (!this.equals(original));
+    }
+    return false;
+  }
+
+#if($className.equals("Meta_transfer_actions"))
+  private String[] splitStringIntoPieces(final String string, final int howLongPieces) {
+    final int NUMBER_OF_CLAUSE_PARTS = 3;
+    final String[] splitted = new String[NUMBER_OF_CLAUSE_PARTS];
+    for(int i=0; i<splitted.length; i++){
+      splitted[i] = "";
+    }
+
+    if (null != string) {
+      final int stringLength = string.length();
+      final int intoHowMany = (int) Math.ceil((double)stringLength/(double)howLongPieces);
+      for (int i = 0; i < NUMBER_OF_CLAUSE_PARTS; i++) {
+        if(i < intoHowMany){
+          int endIndex = i * howLongPieces + howLongPieces;
+          endIndex = endIndex > stringLength ? stringLength : endIndex;
+          splitted[i] = string.substring(i * howLongPieces, endIndex);
+        }
+      }
+    }
+
+    return splitted;
+  }
+
+  private String joinStringsIntoOne(final java.util.List strings) {
+    final StringBuffer returnString = new StringBuffer();
+    returnString.append("");
+
+    if(null != strings){
+      for (Object string : strings) {
+        if (null != string) {
+          returnString.append(string.toString());
+        }
+      }
+    }
+    return returnString.toString();
+  }
+
+  private boolean stringTooLong(final int length) {
+    return (getTotalSQLClauseMaxLength() < length);
+  }
+
+  private int getTotalSQLClauseMaxLength() {
+    return 32000 * 3;
+  }
+#end
+}

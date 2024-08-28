@@ -1,0 +1,774 @@
+package $packageName;
+
+import static org.junit.Assert.*;
+import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.HashSet;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import ssc.rockfactory.RockFactory;
+
+/**
+ * Test class for $testedClassName. Changes to $testedClassName table are made via
+ * this class.
+ */
+public class $testClassName {
+
+  private static $testedClassName objUnderTest;
+
+  private static RockFactory rockFactory;
+
+  private static Connection con = null;
+
+  private static Statement stmt;
+  
+  private static Field newItem;
+  
+#foreach ($col in $columns)
+  private static Field $col.getName();
+  
+#end
+#if($includeTimestamps)
+    private static Field timeStampName;
+#end
+
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+  
+    /* Reflecting the private fields */
+    newItem = ${testedClassName}.class.getDeclaredField("newItem");
+	#foreach($col in $columns)
+	$col.getName() = ${testedClassName}.class.getDeclaredField("$col.getName()");
+	#end
+	newItem.setAccessible(true);
+	#foreach($col in $columns)
+	${col.getName()}.setAccessible(true);
+	#end
+#if($includeTimestamps)
+  timeStampName = ${testedClassName}.class.getDeclaredField("timeStampName");
+  timeStampName.setAccessible(true);
+#end
+  
+    /* Creating connection for rockfactory */
+    try {
+      Class.forName("org.hsqldb.jdbcDriver").newInstance();
+      con = DriverManager.getConnection("jdbc:hsqldb:mem:testdb", "sa", "");
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    stmt = con.createStatement();
+    stmt.execute("CREATE TABLE ${testedClassName} (#foreach($col in $columns)#if($velocityCount > 1)#if($col.getClassType() == "Long") ,$col.getName() BIGINT #else#if ($col.getClassType() == "Integer") ,$col.getName() INTEGER #else#if ($col.getClassType() == "Timestamp") ,$col.getName() TIMESTAMP #else ,$col.getName() VARCHAR($col.getColumnSize())#end#end#end#else#if ($col.getClassType() == "Long") $col.getName() BIGINT #else#if ($col.getClassType() == "Integer") $col.getName() INTEGER #else#if ($col.getClassType() == "Timestamp") $col.getName() TIMESTAMP #else $col.getName() VARCHAR($col.getColumnSize()) #end#end#end#end#end)");
+
+    /* Initializing rockfactory */
+    rockFactory = new RockFactory("jdbc:hsqldb:mem:testdb", "sa", "", "org.hsqldb.jdbcDriver", "con", true);
+  }
+
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+
+    /* Cleaning up after test */
+    stmt.execute("DROP TABLE ${testedClassName}");
+    con = null;
+    objUnderTest = null;
+  }
+  
+  @Before
+  public void setUp() throws Exception {
+
+    /* Adding example data to table */
+    stmt.executeUpdate("INSERT INTO ${testedClassName} VALUES(#foreach($col in $columns)#if($velocityCount > 1)#if($col.getClassType() == "Long") ,1 #else#if ($col.getClassType() == "Integer") ,1 #else#if ($col.getClassType() == "Timestamp") ,'2000-01-01 00:00:00.0' #else ,#set($data='test'+${col.getName()}) #if($data.length() >= $col.getColumnSize()) '$data.substring(0, $col.getColumnSize())'#else '$data' #end #end#end#end#else#if ($col.getClassType() == "Long") 1 #else#if ($col.getClassType() == "Integer") 1 #else#if ($col.getClassType() == "Timestamp") '2000-01-01 00:00:00.0' #else #set($data='test'+${col.getName()}) #if($data.length() >= $col.getColumnSize()) '$data.substring(0, $col.getColumnSize())'#else '$data' #end #end#end#end#end#end)");
+
+    /* Initializing tested object where primary key is defined */
+    objUnderTest = new ${testedClassName}(rockFactory #foreach ($pkcol in $pkColumns), #if($pkcol.getClassType() == "Long") 1L #else#if ($pkcol.getClassType() == "Integer") 1 #else#if ($pkcol.getClassType() == "Timestamp") " + new Timestamp(946677600000L) + " #else #set($data='test'+${pkcol.getName()}) #if($data.length() >= $pkcol.getColumnSize()) "$data.substring(0, $pkcol.getColumnSize())"#else "$data" #end#end#end#end#end);
+  }
+  
+  @After
+  public void tearDown() throws Exception {
+
+    /* Cleaning up after each test */
+    stmt.executeUpdate("DELETE FROM ${testedClassName}");
+    objUnderTest = null;
+  }
+  
+  /**
+   * Testing $testedClassName constructor variable initialization with null values.
+   */
+  @Test
+  public void test${testedClassName}ConstructorWithNullValues() throws Exception {
+
+    /* Calling the tested constructor */
+    objUnderTest = new ${testedClassName}(rockFactory, true);
+
+    /* Asserting that variables are null initialized */
+    String actual = #foreach($col in $columns)#if($velocityCount > 1) + ", " + ${col.getName()}.get(objUnderTest) #else ${col.getName()}.get(objUnderTest) #end#end;
+    String expected = #foreach($col in $columns)#if($velocityCount > 1) + ", " + null #else null #end#end;
+    assertEquals(expected, actual);
+  }
+  
+  /**
+   * Testing $testedClassName constructor variable initialization with values taken
+   * from database.
+   */
+  @Test
+  public void test${testedClassName}ConstructorWithPrimaryKeyDefined() throws Exception {
+
+    /* Calling the tested constructor */
+    objUnderTest = new ${testedClassName}(rockFactory #foreach ($pkcol in $pkColumns), #if($pkcol.getClassType() == "Long") 1L #else#if ($pkcol.getClassType() == "Integer") 1 #else#if ($pkcol.getClassType() == "Timestamp") 2000-01-01 #else "#set($data='test'+${pkcol.getName()})#if($data.length()>=$pkcol.getColumnSize())$data.substring(0, $pkcol.getColumnSize())#else$data#end"#end#end#end#end);
+
+    /* Asserting that variables are initialized */
+    String actual = #foreach($col in $columns)#if($velocityCount > 1) + ", " + ${col.getName()}.get(objUnderTest) #else ${col.getName()}.get(objUnderTest) #end#end;
+    String expected = #foreach($col in $columns)#if($velocityCount > 1)#if($col.getClassType() == "Long") + ", 1" #else#if ($col.getClassType() == "Integer") + ", 1" #else#if ($col.getClassType() == "Timestamp") + ", 2000-01-01 00:00:00.0" #else + ", #set($data='test'+${col.getName()})#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end" #end#end#end#else#if ($col.getClassType() == "Long") "1" #else#if ($col.getClassType() == "Integer") "1" #else#if ($col.getClassType() == "Timestamp") "2000-01-01 00:00:00.0" #else "#set($data='test'+${col.getName()})#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end" #end#end#end#end#end;
+    assertEquals(expected, actual);
+  }
+  
+  /**
+   * Testing constructor with negative case where rockfactory object is null.
+   */
+  @Test
+  public void test${testedClassName}ConstructorWithPrimaryKeyDefinedNullRockfactory() throws Exception {
+
+    /* Checking that null pointer exception is thrown */
+    try {
+      objUnderTest = new ${testedClassName}(null #foreach ($pkcol in $pkColumns), #if($pkcol.getClassType() == "Long") 1L #else#if ($pkcol.getClassType() == "Integer") 1 #else#if ($pkcol.getClassType() == "Timestamp") new Timestamp(946677600000L) #else "test$pkcol.getName()"#end#end#end#end);
+      fail("Test failed - NullPointerException was expected as rockfactory was initialized as null!");
+    } catch (NullPointerException npe) {
+      // test passed
+    } catch (Exception e) {
+      fail("Test failed - Unexpected exception occurred!\n" + e);
+    }
+  }
+  
+  /**
+   * Testing $testedClassName constructor variable initialization with values taken
+   * from database.
+   */
+  @Test
+  public void test${testedClassName}ConstructorWithPrimaryKeyUndefined() throws Exception {
+
+    /* Creating where object which tells what sort of query is to be done */
+    $testedClassName whereObject = new $testedClassName(rockFactory);
+
+    /* Calling the tested constructor */
+    objUnderTest = new $testedClassName(rockFactory, whereObject);
+
+    /* Asserting that variables are initialized */
+    String actual = #foreach($col in $columns)#if($velocityCount > 1) + ", " + ${col.getName()}.get(objUnderTest) #else ${col.getName()}.get(objUnderTest) #end#end;
+    String expected = #foreach($col in $columns)#if($velocityCount > 1)#if($col.getClassType() == "Long") + ", 1" #else#if ($col.getClassType() == "Integer") + ", 1" #else#if ($col.getClassType() == "Timestamp") + ", 2000-01-01 00:00:00.0" #else + ", #set($data='test'+${col.getName()})#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end" #end#end#end#else#if ($col.getClassType() == "Long") "1" #else#if ($col.getClassType() == "Integer") "1" #else#if ($col.getClassType() == "Timestamp") "2000-01-01 00:00:00.0" #else "#set($data='test'+${col.getName()})#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end" #end#end#end#end#end;
+    assertEquals(expected, actual);
+  }
+  
+  /**
+   * Testing constructor with negative case where rockfactory object is null.
+   */
+  @Test
+  public void test${testedClassName}ConstructorWithPrimaryKeyUndefinedNullRockfactory() throws Exception {
+
+    /* Creating where object which tells what sort of query is to be done */
+    $testedClassName whereObject = new $testedClassName(rockFactory);
+
+    /* Asserting that variables are initialized */
+    try {
+      objUnderTest = new $testedClassName(null, whereObject);
+      fail("Test failed - NullPointerException was expected as rockfactory was initialized as null!");
+    } catch (NullPointerException npe) {
+      // test passed
+    } catch (Exception e) {
+      fail("Test failed - Unexpected exception occurred!\n" + e);
+    }
+  }
+  
+  /**
+   * Testing modified columns set, get and clean methods. A set object is
+   * initialized using set method, which is then retrieved using get method and
+   * finally the set is cleared using clean method.
+   */
+  @Test
+  public void testGetSetAndClearModifiedColumns() throws Exception {
+
+    /* Creating a set for testing */
+    HashSet testSet = new HashSet();
+    testSet.add("testClause");
+
+    /* calling the set, get and clean methods */
+    objUnderTest.setModifiedColumns(testSet);
+    HashSet actualSet = (HashSet) objUnderTest.gimmeModifiedColumns();
+    String actualSetToString = actualSet.toString();
+    objUnderTest.cleanModifiedColumns();
+
+    /* Asserting that the field has been set and cleared */
+    String actual = actualSetToString + ", " + testSet.toString();
+    assertEquals("[testClause], []", actual);
+  }
+  
+  /**
+   * Testing table name retrieving. Returned value is static.
+   */
+  @Test
+  public void testGetTableName() throws Exception {
+
+    /* Invoking tested method and asserting that correct value is returned */
+    assertEquals("$testedClassName", objUnderTest.getTableName());
+  }
+  
+  /**
+   * Testing database updating. Affected row count is returned.
+   */
+  @Test
+  public void testUpdateDB() throws Exception {
+#if($includeTimestamps)
+    /**/
+  	timeStampName.set(objUnderTest, "");
+#end
+
+    /* Invoking tested method and asserting the update has been made */
+    String actual = objUnderTest.updateDB() + ", " + newItem.get(objUnderTest);
+    assertEquals("1, " + false, actual);
+  }
+  
+  /**
+   * Testing database updating. Affected row count is returned.
+   */
+  @Test
+  public void testUpdateDBwithTimestamp() throws Exception {
+#if($includeTimestamps)
+    /**/
+  	timeStampName.set(objUnderTest, "");
+#end 
+
+    /* Invoking tested method and asserting the update has been made */
+    String actual = objUnderTest.updateDB(true) + ", " + newItem.get(objUnderTest);
+    assertEquals("1, " + false, actual);
+  }
+  
+  /**
+   * Testing database updating. Affected row count is returned.
+   */
+  @Test
+  public void testUpdateDBWithConstructedWhereClause() throws Exception {
+#if($includeTimestamps)
+    /**/
+  	timeStampName.set(objUnderTest, "");
+#end 
+
+    /* Creating where object which tells what sort of query is to be done */
+    $testedClassName whereObject = new $testedClassName(rockFactory);
+
+    /* Invoking tested method and asserting the update has been made */
+    String actual = objUnderTest.updateDB(true, whereObject) + ", " + newItem.get(objUnderTest);
+    assertEquals("1, " + false, actual);
+  }
+  
+  /**
+   * Testing inserting into database. Affected row count is returned.
+   */
+  @Test
+  public void testInsertDB() throws Exception {
+
+    /* Invoking tested method and asserting the insert has been made */
+    String actual = objUnderTest.insertDB() + ", " + newItem.get(objUnderTest);
+    assertEquals("1, " + false, actual);
+  }
+  
+  /**
+   * Testing inserting into database. Affected row count is returned.
+   */
+  @Test
+  public void testInsertDBwithTimestamp() throws Exception {
+
+    /* Invoking tested method and asserting the insert has been made */
+    String actual = objUnderTest.insertDB(true, true) + ", " + newItem.get(objUnderTest);
+    assertEquals("1, " + false, actual);
+  }
+  
+  /**
+   * Testing deleting from database. Affected row count is returned.
+   */
+  @Test
+  public void testDeleteDB() throws Exception {
+
+    /* Invoking tested method and asserting the delete has been made */
+    String actual = objUnderTest.deleteDB() + ", " + newItem.get(objUnderTest);
+    assertEquals("1, " + true, actual);
+  }
+  
+  /**
+   * Testing deleting from database. Affected row count is returned.
+   */
+  @Test
+  public void testDeleteDBWithConstructedWhereClause() throws Exception {
+
+    /* Creating where object which tells what sort of query is to be done */
+    $testedClassName whereObject = new $testedClassName(rockFactory);
+
+    /* Invoking tested method and asserting the delete has been made */
+    String actual = objUnderTest.deleteDB(whereObject) + ", " + newItem.get(objUnderTest);
+    assertEquals("1, " + true, actual);
+  }
+  
+  /**
+   * Testing data saving to the database.
+   */
+  @Test
+  public void testSaveDB() throws Exception {
+
+#if($includeTimestamps)
+    /**/
+  	timeStampName.set(objUnderTest, "");
+#end
+
+    /* Calling the tested method twice with different setting */
+    objUnderTest.saveDB();
+    newItem.set(objUnderTest, true);
+    objUnderTest.saveDB();
+
+    /* Getting row count */
+    int rows = 0;
+    ResultSet res = stmt.executeQuery("SELECT COUNT(*) FROM $testedClassName");
+    while (res.next()) {
+      rows = res.getInt(1);
+    }
+
+    /* Invoking tested method and asserting the data has been saved */
+    String actual = rows + ", " + newItem.get(objUnderTest);
+    assertEquals("2, " + false, actual);
+  }
+  
+  /**
+   * Testing data saving to the database.
+   */
+  @Test
+  public void testSaveToDB() throws Exception {
+#if($includeTimestamps)
+    /**/
+  	timeStampName.set(objUnderTest, "");
+#end
+
+    /* Calling the tested method twice, first insert, next update */
+    newItem.set(objUnderTest, true);
+    objUnderTest.saveToDB();
+    #foreach($col in $columns)#if($velocityCount == 1)${col.getName()}.set(objUnderTest, #if($col.getClassType() == "Long")1L#else#if($col.getClassType() == "Integer")1#else#if($col.getClassType() == "Timestamp")new Timestamp(946677600000L)#else"changed"#end#end#end#end#end);
+    HashSet testSet = new HashSet();
+    testSet.add("#foreach($col in $columns)#if($velocityCount == 1)$col.getName()#end#end");
+    objUnderTest.setModifiedColumns(testSet);
+    objUnderTest.saveToDB();
+
+    /* Getting row count */
+    int rows = 0;
+    ResultSet res = stmt.executeQuery("SELECT COUNT(*) FROM $testedClassName");
+    while (res.next()) {
+      rows = res.getInt(1);
+    }
+
+    /* Getting the #foreach($col in $columns)#if($velocityCount == 1)$col.getName()#end#end column and see if it has changed */
+    String queryResult = "";
+    res = stmt.executeQuery("SELECT #foreach($col in $columns)#if($velocityCount == 1)$col.getName()#end#end FROM $testedClassName");
+    while (res.next()) {
+      queryResult = res.getString(1);
+    }
+
+    /* Invoking tested method and asserting the data has been saved */
+    String actual = rows + ", " + queryResult + ", " + newItem.get(objUnderTest);
+    assertEquals("2,#foreach($col in $columns)#if($velocityCount == 1)#if($col.getClassType() == "Long") 1#else#if($col.getClassType() == "Integer") 1#else#if($col.getClassType() == "Timestamp") "+new Timestamp(946677600000L).toString()+"00000000#else changed#end#end#end#end#end, " + false, actual);
+  }
+  
+  /**
+   * Testing column data formatting into xml.
+   */
+  @Test
+  public void testToXML_tag() throws Exception {
+    
+    String expected = "<$testedClassName#foreach($col in $columns)#if($col.getClassType() == "Long") ${col.getName()}=\"1\"#else#if($col.getClassType() == "Integer") ${col.getName()}=\"1\"#else#if($col.getClassType() == "Timestamp") ${col.getName()}=\"'2000-01-01 00:00:00.0'\"#else ${col.getName()}=\"'#set($data='test'+${col.getName()})#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end'\"#end#end#end#end DiffStatus=\"\" />\n";
+    assertEquals(expected, objUnderTest.toXML_tag());
+  }
+  
+  /**
+   * Testing column data formatting into xml.
+   */
+  @Test
+  public void testToXML_startTag() throws Exception {
+    
+    String expected = "<$testedClassName#foreach($col in $columns)#if($col.getClassType() == "Long") ${col.getName()}=\"1\"#else#if($col.getClassType() == "Integer") ${col.getName()}=\"1\"#else#if($col.getClassType() == "Timestamp") ${col.getName()}=\"'2000-01-01 00:00:00.0'\"#else ${col.getName()}=\"'#set($data='test'+${col.getName()})#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end'\"#end#end#end#end DiffStatus=\"\" >\n";
+    assertEquals(expected, objUnderTest.toXML_startTag());
+  }
+  
+  /**
+   * Testing column data formatting into xml.
+   */
+  @Test
+  public void testToXML_endTag() throws Exception {
+    
+    assertEquals("</${testedClassName}>\n", objUnderTest.toXML_endTag());
+  }
+  
+  /**
+   * Testing column data formatting into sql insert clause.
+   */
+  @Test
+  public void testToSQLInsert() throws Exception {
+    
+    String expected = "insert into ${testedClassName} (#foreach($col in $columns)#if($velocityCount > 1), ${col.getName()}#else ${col.getName()}#end#end ) values "
+      + "( #foreach($col in $columns)#if($velocityCount > 1)#if($col.getClassType() == "Long"), 1#else#if($col.getClassType() == "Integer"), 1#else#if ($col.getClassType() == "Timestamp"), '2000-01-01 00:00:00.0'#else, '#set($data='test'+${col.getName()})#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end'#end#end#end#else#if ($col.getClassType() == "Long")1#else#if ($col.getClassType() == "Integer")1#else#if($col.getClassType() == "Timestamp")'2000-01-01 00:00:00.0'#else'#set($data='test'+${col.getName()})#if($data.length()>=$col.getColumnSize())$data.substring(0, $col.getColumnSize())#else$data#end'#end#end#end#end#end );\n";
+    assertEquals(expected, objUnderTest.toSQLInsert());
+  }
+  
+  #foreach ($col in $columns)
+  /**
+   * Testing column data setting and retrieving via get and set methods.
+   */
+  @Test
+  public void testSetAndGet${col}() throws Exception {
+
+    /* Data validating on */
+    objUnderTest.setValidateData(true);
+
+    /* Setting column values and asserting correct value is returned */
+    objUnderTest.set$col(#if($col.getClassType() == "Long")555L#else#if($col.getClassType() == "Integer")555#else#if($col.getClassType() == "Timestamp")new Timestamp(946677600000L)#else${testClassName}.testStringGenerator("another$col.getName()", $col.getColumnSize())#end#end#end);
+    assertEquals(#if($col.getClassType() == "Long")555L#else#if($col.getClassType() == "Integer")555#else#if($col.getClassType() == "Timestamp")new Timestamp(946677600000L)#else${testClassName}.testStringGenerator("another$col.getName()", $col.getColumnSize())#end#end#end, ${col.getName()}.get(objUnderTest));
+  }
+  #end
+  
+  /**
+   * Testing timestamp retrieving.
+   */
+  @Test
+  public void testGetTimestamp() throws Exception {
+
+    /* Data validating on */
+    objUnderTest.setValidateData(true);
+
+    /* Setting column values and asserting correct value is returned */
+    assertEquals("LAST_UPDATED", objUnderTest.gettimeStampName());
+  }
+  
+  /**
+   * Testing column and sequence setting and retrieving via get method.
+   */
+  @Test
+  public void testGetcolumnsAndSequences() throws Exception {
+
+    /* Data validating on */
+    objUnderTest.setValidateData(true);
+
+    /* Setting column and sequences */
+    String[] expectedKeys = { "testColumn", "testSequence" };
+    objUnderTest.setcolumnsAndSequences(expectedKeys);
+
+    /* Asserting that */
+    String[] actualKeys = objUnderTest.getcolumnsAndSequences();
+    try {
+      for (int i = 0; i < actualKeys.length; i++) {
+        assertEquals(expectedKeys[i], actualKeys[i]);
+      }
+    } catch (ArrayIndexOutOfBoundsException aioobe) {
+      fail("Test failed - There were different amount of actual keys than expected! \n" + aioobe);
+    } catch (Exception e) {
+      fail("Test Failed - Unexpected error occurred: \n" + e);
+    }
+  }
+  
+  /**
+   * Testing primary key retrieving via get method.
+   */
+  @Test
+  public void testGetPrimaryKeys() throws Exception {
+
+    String[] actualKeys = objUnderTest.getprimaryKeyNames();
+    String[] expectedKeys = {#foreach($pkcol in $pkColumns)#if ($velocityCount > 1),"$pkcol.getName()"#else "$pkcol.getName()"#end#end};
+
+    try {
+      for (int i = 0; i < actualKeys.length; i++) {
+        assertEquals(expectedKeys[i], actualKeys[i]);
+      }
+    } catch (ArrayIndexOutOfBoundsException aioobe) {
+      fail("Test failed - There were different amount of actual keys than expected! \n" + aioobe);
+    } catch (Exception e) {
+      fail("Test Failed - Unexpected error occurred: \n" + e);
+    }
+  }
+  
+  /**
+   * Testing rockfactory object retrieving via get method.
+   */
+  @Test
+  public void testGetRockFactory() throws Exception {
+
+    RockFactory actualRock = objUnderTest.getRockFactory();
+    String actual = actualRock.getDbURL() + ", " + actualRock.getUserName() + ", " + actualRock.getPassword() + ", "
+        + actualRock.getDriverName();
+    assertEquals("jdbc:hsqldb:mem:testdb, sa, , org.hsqldb.jdbcDriver", actual);
+  }
+  
+  /**
+   * Testing null removing from column values.
+   */
+  @Test
+  public void testRemoveNulls() throws Exception {
+
+    /* Initializing tested object with nulls */
+    objUnderTest = new $testedClassName(rockFactory, true);
+
+    /* Calling the tested method and asserting nulls are removed */
+    objUnderTest.removeNulls();
+    String actual = #foreach($col in $columns)#if($velocityCount > 1) + ", " + ${col.getName()}.get(objUnderTest) #else ${col.getName()}.get(objUnderTest) #end#end;
+    String expected = #foreach($col in $columns)#if($velocityCount > 1)#if($col.getClassType() == "Long") + ", 0" #else#if ($col.getClassType() == "Integer") + ", 0" #else#if ($col.getClassType() == "Timestamp") + ", " + new Timestamp(0) #else + ", " #end#end#end#else#if ($col.getClassType() == "Long") "0" #else#if ($col.getClassType() == "Integer") "0" #else#if ($col.getClassType() == "Timestamp") new Timestamp(0) #else "" #end#end#end#end#end;
+    assertEquals(expected, actual);
+  }
+  
+  /**
+   * Testing if the current primary key(s) equals with the parameter given
+   * $testedClass object. If the primary keys are the same, true is returned,
+   * otherwise false.
+   */
+  @Test
+  public void testDbEquals() throws Exception {
+    
+    /* Creating a $testedClass object to which tested one is compared */
+    ${testedClassName} compareObj = new ${testedClassName}(rockFactory #foreach ($pkcol in $pkColumns), #if($pkcol.getClassType() == "Long") 1L #else#if ($pkcol.getClassType() == "Integer") 1 #else#if ($pkcol.getClassType() == "Timestamp") " + new Timestamp(946677600000L) + " #else "test$pkcol.getName()"#end#end#end#end);
+
+    /* Testing first with null primary key value */
+    #foreach ($pkcol in $pkColumns)
+${pkcol.getName()}.set(objUnderTest, null);
+  	#end
+String actual = objUnderTest.dbEquals(compareObj) + ", ";
+    
+    /* Testing with different key value */
+    #foreach ($pkcol in $pkColumns)
+${pkcol.getName()}.set(objUnderTest, #if($pkcol.getClassType() == "Long") 7L #else#if ($pkcol.getClassType() == "Integer") 7 #else#if ($pkcol.getClassType() == "Timestamp") " + new Timestamp(100000L) + " #else "different"#end#end#end);
+  	#end
+actual += objUnderTest.dbEquals(compareObj) + ", ";
+    
+    /* Finally test with same value and test assertion */
+    #foreach ($pkcol in $pkColumns)
+${pkcol.getName()}.set(objUnderTest, #if($pkcol.getClassType() == "Long") 1L #else#if ($pkcol.getClassType() == "Integer") 1 #else#if ($pkcol.getClassType() == "Timestamp") " + new Timestamp(946677600000L) + " #else "test$pkcol.getName()"#end#end#end);
+  	#end
+actual += objUnderTest.dbEquals(compareObj);
+    assertEquals(false + ", " + false + ", " + true, actual);
+  }
+  
+  /**
+   * Testing comparing another $testedClassName with our current one. If the two
+   * ${testedClassName}s are the same true is returned, otherwise false.
+   */
+  @Test
+  public void testEqualsWithNullColumn${testedClassName}() throws Exception {
+
+    /* Creating another $testedClassName which will be compared to the tested one */
+    $testedClassName comparedObj = new $testedClassName(rockFactory, true);
+
+    /* Asserting that false is returned */
+    assertEquals(false, objUnderTest.equals(comparedObj));
+  }
+  
+  /**
+   * Testing comparing another $testedClassName with our current one. If the two
+   * ${testedClassName}s are the same true is returned, otherwise false.
+   */
+  @Test
+  public void testEqualsWithDifferent${testedClassName}() throws Exception {
+
+    /* Creating another $testedClassName which will be compared to the tested one */
+    $testedClassName comparedObj = new $testedClassName(rockFactory #foreach ($pkcol in $pkColumns), #if($pkcol.getClassType() == "Long") 1L #else#if($pkcol.getClassType() == "Integer") 1 #else#if($pkcol.getClassType() == "Timestamp") 2000-01-01 #else "test$pkcol.getName()"#end#end#end#end);
+    comparedObj.set#foreach($col in $columns)#if($velocityCount == 1)$col#end#end(#foreach($col in $columns)#if($velocityCount == 1)#if($col.getClassType() == "Long") 7L #else#if($col.getClassType() == "Integer") 7 #else#if($col.getClassType() == "Timestamp") new Timestamp(100000L) #else "Different#foreach($col in $columns)#if($velocityCount == 1)$col.getName()#end#end"#end#end#end#end#end);
+
+    /* Asserting that false is returned */
+    assertEquals(false, objUnderTest.equals(comparedObj));
+  }
+  
+  /**
+   * Testing comparing another $testedClassName with our current one. If the two
+   * ${testedClassName}s are the same true is returned, otherwise false.
+   */
+  @Test
+  public void testEqualsWithSame${testedClassName}() throws Exception {
+
+    /* Creating another aggregation which will be compared to the tested one */
+    $testedClassName comparedObj = new $testedClassName(rockFactory #foreach ($pkcol in $pkColumns), #if($pkcol.getClassType() == "Long") 1L #else#if ($pkcol.getClassType() == "Integer") 1 #else#if ($pkcol.getClassType() == "Timestamp") 2000-01-01 #else "test$pkcol.getName()"#end#end#end#end);
+
+    /* Asserting that true is returned */
+    assertEquals(true, objUnderTest.equals(comparedObj));
+  }
+  
+  /**
+   * Testing comparing another $testedClassName with our current one using null value.
+   */
+  @Test
+  public void testEqualsWithNull${testedClassName}() throws Exception {
+
+    /* Creating another aggregation which will be compared to the tested one */
+    $testedClassName comparedObj = null;
+
+    /* Asserting that exception is thrown */
+    try {
+      objUnderTest.equals(comparedObj);
+      fail("Test Failed - Unexpected NullPointerException expected as compared $testedClassName was null \n");
+    } catch (NullPointerException npe) {
+      // Test passed
+    } catch (Exception e) {
+      fail("Test Failed - Unexpected exception thrown! \n" + e);
+    }
+  }
+  
+  /**
+   * Testing cloning of tested class.
+   */
+  @Test
+  public void testClone() throws Exception {
+
+    Object actualObject = objUnderTest.clone();
+    assertEquals(${testedClassName}.class, actualObject.getClass());
+  }
+  
+  /**
+   * Testing checking the primary key definitions. If no primary keys are
+   * defined false is returned, otherwise true.
+   */
+  @Test
+  public void testIsPrimaryDefined() throws Exception {
+
+    String actual = objUnderTest.isPrimaryDefined() + ", ";
+    Field primaryKeyNames = objUnderTest.getClass().getDeclaredField("primaryKeyNames");
+    primaryKeyNames.setAccessible(true);
+    String[] emptyPrimaries = {};
+    primaryKeyNames.set(objUnderTest, emptyPrimaries);
+    actual += objUnderTest.isPrimaryDefined();
+    assertEquals(true + ", " + false, actual);
+  }
+  
+  /**
+   * Not implemented.
+   */
+  @Test
+  public void testSetDefaults() throws Exception {
+  }
+  
+  /**
+   * Testing if tested object exists in the database. If object exists true is
+   * returned, otherwise false.
+   */
+  @Test
+  public void testExistsDB() throws Exception {
+
+    String actual = objUnderTest.existsDB() + ", ";
+    $testedClassName testAgg = new $testedClassName(rockFactory #foreach ($pkcol in $pkColumns), #if($pkcol.getClassType() == "Long") 1L #else#if ($pkcol.getClassType() == "Integer") 1 #else#if ($pkcol.getClassType() == "Timestamp") 2000-01-01 #else "test$pkcol.getName()"#end#end#end#end);
+    #foreach($col in $columns)#if($velocityCount == 1)${col.getName()}.set(objUnderTest, #if($col.getClassType() == "Long")7L#else#if($col.getClassType() == "Integer")7#else#if($col.getClassType() == "Timestamp")new Timestamp(100000L)#else"changed"#end#end#end#end#end);
+
+    actual += objUnderTest.existsDB();
+    assertEquals(true + ", " + false, actual);
+  }
+  
+  #foreach ($col in $columns) 
+  /**
+   * Testing columnsize retrieving for ${col}.
+   */
+  @Test
+  public void testGet${col}ColumnSize() throws Exception {
+    
+     assertEquals($col.getColumnSize(), objUnderTest.get${col}ColumnSize());   
+  }
+
+ /**
+  * Testing decimal digits retrieving for ${col}.
+  */
+  @Test
+  public void testGet${col}DecimalDigits() throws Exception {
+    
+     assertEquals($col.getDecimalDigits(), objUnderTest.get${col}DecimalDigits());     
+  }
+  
+ /**
+  * Testing columnsize retrieving for ${col}.
+  */
+  @Test
+  public void testGet${col}SQLType() throws Exception {
+    
+    assertEquals($col.getSQLType(), objUnderTest.get${col}SQLType());    
+  }
+  
+  #end
+  /**
+   * Testing flag variable setting and retrieving.
+   */
+  @Test
+  public void testSetAndGetflagVariables() throws Exception {
+
+    objUnderTest.setNewItem(true);
+    objUnderTest.setValidateData(true);
+    assertEquals(true + ", " + true, objUnderTest.isNewItem() + ", " + objUnderTest.isValidateData());
+  }
+
+  /**
+   * Testing original $testedClassName object setting and retrieving.
+   */
+  @Test
+  public void testSetAndGetOriginal() throws Exception {
+
+    objUnderTest = new $testedClassName(rockFactory, false);
+    objUnderTest.setOriginal(objUnderTest);
+    assertNotNull(objUnderTest.getOriginal());
+  }
+
+  /**
+   * Testing checking of rock object. If it is new or updated true is returned,
+   * otherwise false.
+   */
+  @Test
+  public void testIsUpdated() throws Exception {
+
+    /* No changes made to tested object */
+    HashSet modifiedColumns = new HashSet();
+    objUnderTest.setModifiedColumns(modifiedColumns);
+    String actual = objUnderTest.isUpdated() + ", ";
+    
+    /* Rock object has been changed */
+    $testedClassName changedOriginal = new $testedClassName(rockFactory, false);
+    objUnderTest.setOriginal(changedOriginal);
+    actual += objUnderTest.isUpdated() + ", ";
+
+    /* Tested object has been updated */
+    modifiedColumns.add("updatedValue");
+    objUnderTest.setModifiedColumns(modifiedColumns);
+    actual += objUnderTest.isUpdated() + ", ";
+
+    /* Tested object is null initialized */
+    objUnderTest = new $testedClassName(rockFactory, false);
+    actual += objUnderTest.isUpdated();
+    assertEquals(false + ", " + true + ", " + true + ", " + true, actual);
+  }
+  
+  /**
+   * Testing checking if rock object is changed.
+   */
+  @Test
+  public void testIsChanged() throws Exception {
+    
+    /* Testing rock object checking with original object */
+    String actual = objUnderTest.isChanged() + ", ";
+    
+    /* Changing the original object */
+    $testedClassName changedOriginal = new $testedClassName(rockFactory, false);
+    objUnderTest.setOriginal(changedOriginal);
+    actual += objUnderTest.isChanged();
+    assertEquals(false + ", " + true, actual);
+  }
+  
+  /**
+   * Method checking the maximum length of a string used to test column setting.
+   * If test string is too long, it will be cut to be within size limit.
+   */
+  private static String testStringGenerator(String testString, int maxSize) throws Exception {
+  
+    /* Checking if the test string is too large */
+    if(testString.length() > maxSize) {
+      testString = testString.substring(0, maxSize);
+    }
+    
+    return testString;
+  }
+}

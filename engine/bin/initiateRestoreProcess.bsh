@@ -1,0 +1,129 @@
+#!/bin/bash
+# ********************************************************************
+# Ericsson Radio Systems AB                                     SCRIPT
+# ********************************************************************
+#
+# (c) Ericsson Radio Systems AB 2015 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of Ericsson Radio Systems AB, Sweden. The programs may be used
+# and/or copied only with the written permission from Ericsson Radio
+# Systems AB or in accordance with the terms and conditions stipulated
+# in the agreement/contract under which the program(s) have been
+# supplied.
+#
+# ********************************************************************
+# Name    : initiateRestoreProcess.bsh
+# Date    : 28/03/2017
+# Purpose : Script to set flags to trigger the data restore process 
+#           
+# Usage   : initiateRestoreProcess.bsh
+#
+# ********************************************************************
+#
+# Command Section
+#
+# ********************************************************************
+
+
+if [ -z "${CONF_DIR}" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 1
+fi
+
+if [ ! -r "${CONF_DIR}/niq.rc" ] ; then
+  echo "ERROR: Source file is not readable at ${CONF_DIR}/niq.rc"
+  exit 2
+fi
+
+. ${CONF_DIR}/niq.rc
+
+if [ -s /eniq/admin/lib/common_functions.lib ]; then
+    . /eniq/admin/lib/common_functions.lib
+else
+        echo "Could not find /eniq/admin/lib/common_functions.lib"
+        exit 1
+fi
+
+if [ -z "${BIN_DIR}" ] ; then
+  echo "ERROR: BIN_DIR is not set"
+  exit 1
+fi
+
+if [ ! -r "${BIN_DIR}/common_variables.lib" ] ; then
+  echo "ERROR: Source file is not readable at ${BIN_DIR}/common_variables.lib"
+  exit 2
+fi
+
+. ${BIN_DIR}/common_variables.lib
+
+DBISQL="$(${LS} /eniq/sybase_iq/IQ-*/bin64/dbisql)"
+
+DWHREPUSER=`inigetpassword REP -v DWHREPUsername -f ${CONF_DIR}/niq.ini`
+DWHREPPASSWORD=`inigetpassword REP -v DWHREPPassword -f ${CONF_DIR}/niq.ini`
+REP_PORT=`inigetpassword REP -v PortNumber -f ${CONF_DIR}/niq.ini`
+REP_SERVER_NAME=`inigetpassword REP -v ServerName -f ${CONF_DIR}/niq.ini`
+
+
+STARTTIMESTAMP=`$DATE '+%y%m%d_%H%M%S'`
+LOGFILE=/eniq/log/sw_log/engine/initiateRestore-${STARTTIMESTAMP}.log
+$ECHO "Execution started at " $STARTTIMESTAMP >> ${LOGFILE}
+
+## 3 flag files to be created under /var/tmp directory
+## flag_topologyrestore_<date>
+## flag_loaderrestore_<timestamp>
+## flag_aggregationrestore_<timeinms>
+
+
+
+## Check if Backup is Enabled for RAW 
+
+raw_count=`$DBISQL -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=${DWHREPUSER};pwd=${DWHREPPASSWORD}" "select count(*) from BackupConfiguration where BACKUPLEVEL IN ( 'BOTH' , 'RAW' )"  | $EGREP -v '(----|count|rows|Execution|time|seconds)'`
+raw_count=${raw_count// /}
+$ECHO "Number of Features enabled for raw data backup is $raw_count" |$TEE -a ${LOGFILE} 
+
+## Check if backup is enabled for AGGREGATION
+aggregation_count=`$DBISQL -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=${DWHREPUSER};pwd=${DWHREPPASSWORD}" "select count(*) from BackupConfiguration where BACKUPLEVEL IN ( 'BOTH' , 'AGGREGATION' )" | $EGREP -v '(----|count|rows|Execution|time|seconds)'`
+aggregation_count=${aggregation_count// /}
+$ECHO "Number of Features enabled for aggregated data backup is $aggregation_count" |$TEE -a ${LOGFILE}
+
+if [ $raw_count -gt 0 ] || [ $aggregation_count -gt 0 ]; then
+
+	if [ ! -e /var/tmp/flag_loaderrestore_* ] && [ $raw_count -gt 0 ]; then	
+		$TOUCH /var/tmp/flag_loaderrestore_`perl -e 'print time()*1000;print "\n";'`
+		$ECHO "Flag file for Loader restore process created " >> ${LOGFILE}
+	else 
+		$ECHO "flag_loaderrestore already present OR backup type is AGGREGATED" |$TEE -a ${LOGFILE} 
+	fi
+
+	if [ ! -e /var/tmp/flag_aggregationrestore_* ] && [ $aggregation_count -gt 0 ]; then
+		${SSH} dcuser@engine $TOUCH /var/tmp/flag_aggregationrestore_`${DATE} '+%Y-%m-%d-%H-%M-%S'`
+		$ECHO "Flag file for Aggregation restore  process created " >> ${LOGFILE}
+	else 
+		$ECHO "flag_aggregationrestore already present OR backup type is RAW" |$TEE -a ${LOGFILE}
+	fi
+
+	if [ ! -e /var/tmp/flag_topologyrestore_* ]; then
+		${SSH} dcuser@engine $TOUCH /var/tmp/flag_topologyrestore_`${DATE} +"%Y-%m-%d"`
+		$ECHO "Flag file for Topology restore process created " >> ${LOGFILE}
+	else 
+		$ECHO "flag_topologyrestore already present" |$TEE -a ${LOGFILE}
+	fi
+
+	if [ ! -e /var/tmp/flag_populateLoadStatus ]; then	
+		$TOUCH /var/tmp/flag_populateLoadStatus
+		$ECHO "Flag file for populating the load status created " >> ${LOGFILE}
+	else 
+		$ECHO "flag_populateLoadStatus already present" |$TEE -a ${LOGFILE}
+	fi
+	
+fi
+
+if [ -f /var/tmp/.flex_restore_inprogress ]
+then
+	$ECHO "Removing the flex restore flag -- /var/tmp/.flex_restore_inprogress" |$TEE -a ${LOGFILE}
+	$RM -rf /var/tmp/.flex_restore_inprogress
+fi
+
+$ECHO "Beginning the restore process." |$TEE -a ${LOGFILE}
+engine -e triggerRestoreOfData

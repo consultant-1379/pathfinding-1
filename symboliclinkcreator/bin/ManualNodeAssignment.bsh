@@ -1,0 +1,276 @@
+#!/bin/bash
+# ********************************************************************
+# Ericsson Radio Systems AB                                     SCRIPT
+# ********************************************************************
+#
+# (c) Ericsson Radio Systems AB 2015 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of Ericsson Radio Systems AB, Sweden. The programs may be used
+# and/or copied only with the written permission from Ericsson Radio
+# Systems AB or in accordance with the terms and conditions stipulated
+# in the agreement/contract under which the program(s) have been
+# supplied.
+#
+# ********************************************************************
+# Name    : Manual_Node_Assignment
+# Date    : 21/11/2016
+# Purpose : Manually assign the nodes to the ENIQSs
+# Usage   : Manual_Node_Assignment
+#
+# ********************************************************************
+#
+# Command Section
+#
+# ********************************************************************
+
+
+GREP=/usr/bin/grep
+AWK=/usr/bin/awk
+CD=/usr/bin/cd
+DBISQL="$(ls /eniq/sybase_iq/IQ-*/bin64/dbisql)"
+ECHO=/usr/bin/echo
+GREP=/usr/bin/grep
+MKDIR=/usr/bin/mkdir
+RM=/usr/bin/rm
+TIMESTAMP=`date +%Y.%m.%d`
+INSTALLER_DIR=/eniq/sw/installer
+CONF_DIR=/eniq/sw/conf
+ENIQ_CONFIG_DIR=/eniq/installation/config
+TEMP=${INSTALLER_DIR}/temp_manual_nodes
+FDN_FILE=/eniq/data/etldata/dim_e_lte_erbs/raw
+LOG_FILE=/eniq/log/sw_log/symboliclinkcreator/${TIMESTAMP}_ManualNodeAssigment.log
+
+
+#ETLREPUsername="$(cat $CONF_DIR/niq.ini | grep ETLREPUsername | awk -F'=' '{print $2} ')"
+#ETLREPPassword="$(cat $CONF_DIR/niq.ini | grep ETLREPPassword | awk -F'=' '{print $2} ')"
+
+if [ -s /eniq/admin/lib/common_functions.lib ]; then
+    . /eniq/admin/lib/common_functions.lib
+else
+    $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  Could not find /eniq/admin/lib/common_functions.lib"
+    exit 1
+fi
+
+DWHDBPASSWORD=`inigetpassword DWH -v DCPassword -f ${CONF_DIR}/niq.ini`
+DWHDB_PORT=`inigetpassword DWH -v PortNumber -f ${CONF_DIR}/niq.ini`
+DWH_SERVER_NAME=`inigetpassword DWH -v ServerName -f ${CONF_DIR}/niq.ini`
+
+DWHREPUSER=`inigetpassword REP -v DWHREPUsername -f ${CONF_DIR}/niq.ini`
+DWHREPPASSWORD=`inigetpassword REP -v DWHREPPassword -f ${CONF_DIR}/niq.ini`
+REP_PORT=`inigetpassword REP -v PortNumber -f ${CONF_DIR}/niq.ini`
+REP_SERVER_NAME=`inigetpassword REP -v ServerName -f ${CONF_DIR}/niq.ini`
+DBAPASSWORD=`inigetpassword DB -v UtilDBAPASSWORD -f ${CONF_DIR}/niq.ini`
+
+$MKDIR -p ${TEMP}
+
+. ${CONF_DIR}/niq.rc
+
+if [ ! -x "$DBISQL" ]; then
+    _err_msg_="$DBISQL commands not found or not executable."
+    abort_script "$_err_msg_"
+fi
+
+JAVA_HOME="${RT_DIR}/java"
+CPATH="${PLATFORM_DIR}"
+for _jar_ in `find ${PLATFORM_DIR}/*/dclib/ -name \*.jar` ; do
+                CPATH="${CPATH}:$_jar_"
+done
+
+#********************* Check whether the script is executing in MASTER server ********************
+
+checkMaster(){
+                noOfServers=`$DBISQL -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "select count(*) from RoleTable" | $EGREP -v '(----|count|rows|Execution|time|seconds)' | sed -e 's/\ //g'`
+
+                engineName=`cat /eniq/sw/conf/service_names | grep engine | cut -d':' -f3`
+
+                isMaster=`$DBISQL -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "select ROLE from RoleTable where ENIQ_ID='$engineName'" | $EGREP -v '(----|ROLE|rows|Execution|time|seconds)' | sed -e 's/\ //g'`
+
+                if [[ ! $noOfServers -eq 0 ]] && [[ "${isMaster}" != "MASTER" ]]; then
+                                $ECHO "`date ""+%Y.%m.%d %H.%M.%S""` ERROR:  Please run the Manual_Node_Assignment Script in the Master Server. Aborting the Assignment " | $TEE -a ${LOG_FILE}
+                                return 1
+                else
+                                return 0
+                fi
+}
+
+#********************* Check the Role_Table and update ENIQS_NODE_ASSIGNMENT table accordingly ********************
+
+check_role_table(){
+
+noOfServers=`$DBISQL -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "select count(*) from RoleTable" | $EGREP -v '(----|count|rows|Execution|time|seconds)' | sed -e 's/\ //g'`
+
+isAssigned=`$DBISQL -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "select ENIQ_IDENTIFIER from ENIQS_Node_Assignment where FDN='$1' and ENM_HOSTNAME='$3'" | $EGREP -v '(----|ENIQ_ID|rows|Execution|time|seconds)' | sed -e 's/\ //g'`
+
+isValidFDN=`$DBISQL -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "select FDN from ENIQS_Node_Assignment where FDN='$1' and ENM_HOSTNAME='$3'" | $EGREP -v '(----|FDN|rows|Execution|time|seconds)' | sed -e 's/\ //g'`
+
+                if [[ -z "${isValidFDN// }" ]] || [[ -z "${isValidFDN}" ]] || [[ "$1" != $isValidFDN ]]; then
+                                $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  The Node FDN $1 is not present in the NAT table. Skipping the assignment" | $TEE -a ${LOG_FILE}
+                exit
+else
+                if [ $noOfServers -eq 0 ]; then
+                                thisEniq=`cat /etc/hosts | grep engine | cut -d' ' -f3`
+
+                                if [ "$2" == $thisEniq ]; then
+                                                validId=$thisEniq
+                                else
+                                                                $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  The ENIQ Identifier $2 is wrong. As it is Single-ES configuration, the ENIQ Identifier should be $thisEniq" | $TEE -a ${LOG_FILE}
+                                                exit
+                                fi
+                else 
+                                                isValidEniqId=`$DBISQL -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "select ENIQ_ID from RoleTable where ENIQ_ID='$2'" | $EGREP -v '(----|ENIQ_ID|rows|Execution|time|seconds)' | sed -e 's/\ //g'`
+
+                                                if [[ -z "${isValidEniqId// }" ]] || [[ -z "${isValidEniqId}" ]]; then
+                                                                $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  The given ENIQ Identifier "$2" is either wrong or not present in the RoleTable. Please refer the RoleTable to specify the ENIQ Identifier and try again." | $TEE -a ${LOG_FILE}
+                                                                exit
+                                                elif [[ "$2" == $isValidEniqId ]]; then
+                                                                validId=$isValidEniqId
+                                                else
+                                                                $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  The ENIQ Identifier $2 is wrong. Please refer the RoleTable to specify the ENIQ Identifier and try again." | $TEE -a ${LOG_FILE}
+                                                                exit
+                                                fi
+                                fi
+                                
+                                if [[ $isAssigned == $validId ]]; then
+                                                user_confirm "The node FDN $1 is already assigned to $validId ENIQ-S server"
+                                                if [[ $USER_CONF == No ]]; then
+                                                                $ECHO "`date "+%Y.%m.%d %H.%M.%S"` INFO: As the node FDN $1 is already assigned to $validId ENIQ-S server, will not be Re-Assigning " |$TEE -a ${LOG_FILE}
+                                                                exit 
+                                                else
+                                                                $DBISQL -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "update ENIQS_Node_Assignment set ENIQ_IDENTIFIER = '$validId' where FDN = '$1' and ENM_HOSTNAME='$3'" 
+
+                                                                if [ $? -eq  0 ]; then
+                                                                                $ECHO "`date "+%Y.%m.%d %H.%M.%S"` INFO:  Successfully Re-Assigned the node FDN $1 to $validId ENIQ-S server" |$TEE -a ${LOG_FILE}
+                                                                                if [ ! $noOfServers -eq 0 ]; then
+                                                                                                ${JAVA_HOME}/bin/java -d64 -classpath $CPATH com.ericsson.eniq.enminterworking.IRMIManualNodeAssignment $validId $1 $3 &
+                                                                                fi
+                                                                else
+                                                                                $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  Failed to Re-Assigned the node FDN $1 to $validId ENIQ-S server" |$TEE -a ${LOG_FILE}
+                                                                fi
+                                                fi
+                                else
+                                                $DBISQL -nogui -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "update ENIQS_Node_Assignment set ENIQ_IDENTIFIER = '$validId' where FDN = '$1' and ENM_HOSTNAME='$3'" 
+
+                                                                if [ $? -eq  0 ]; then
+                                                                                $ECHO "`date "+%Y.%m.%d %H.%M.%S"` INFO:  Successfully Re-Assigned the node FDN $1 to $validId ENIQ-S server" |$TEE -a ${LOG_FILE}
+                                                                                if [ ! $noOfServers -eq 0 ]; then
+                                                                                                ${JAVA_HOME}/bin/java -d64 -classpath $CPATH com.ericsson.eniq.enminterworking.IRMIManualNodeAssignment $validId $1 $3 &
+                                                                                fi
+                                                                else
+                                                                                $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  Failed to Re-Assigned the node FDN $1 to $validId ENIQ-S server" |$TEE -a ${LOG_FILE}
+                                                                fi
+                                fi
+                                
+                fi
+}
+
+### Function: user_confirm ###
+#
+# Get confirmation from user to proceed with snapshot action
+#
+# Arguments:
+#       none
+# Return Values:
+#       none
+user_confirm()
+{
+while :; do
+    unset USER_CONF
+    $CLEAR
+                #$ECHO "\nNode FDN $1 is already assigned to $2 ENIQ-S Server"
+                $ECHO "${1}"
+    $ECHO "\nAre you sure you wish to Re-Assign to $validId ?"
+    $ECHO "Enter [Yes | No] (case sensitive) : \c"
+    read USER_CONF
+    if [ "$USER_CONF" == "Yes" -o "$USER_CONF" == "No" ]; then
+         break
+    fi
+done
+}
+
+### Function: usage ###
+#
+# Displays the usage message.
+#
+
+usage()
+{
+$ECHO "
+Script is used to change the Node Assignment Manually
+Usage: bash `$BASENAME $0` -n [Node FDN] -s [ENIQ-S Engine Name] -a [ENM Hostname] 
+"
+}
+
+
+#******************************************* Main Body of the Script *****************************************************
+
+if [[ $# -eq 6 ]]; then
+while getopts ":n:s:a:" arg; do
+    case $arg in
+        n)  FDN="$OPTARG"
+            ;;
+        s)  ENIQ_S="$OPTARG"
+            ;;
+                                a)  ENM_HOSTNAME="$OPTARG"
+                                                ;;
+                                                \?) $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  Invalid option: -$OPTARG" |$TEE -a ${LOG_FILE} 
+                                                                usage
+                                                                exit 1
+                                                                ;;
+                                    ::)        $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  Option -$OPTARG requires an argument." |$TEE -a ${LOG_FILE}
+                                                                usage
+                        exit 1
+            ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+if [ ! "${FDN}" -o ! "${ENIQ_S}" -o ! "${ENM_HOSTNAME}" ]; then
+    usage
+    exit 1
+fi
+
+if [ ${#ENIQ_S} -gt ${#FDN} ]; then
+                                $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  Make sure you pass the NODE-FDN with -n and ENIQ-S Identifier with -s" |$TEE -a ${LOG_FILE}
+    usage
+    exit 1
+fi
+
+                if checkMaster ; then
+check_role_table $FDN $ENIQ_S $ENM_HOSTNAME
+                else
+                                exit
+                fi
+else
+                usage
+                exit 1
+fi
+
+
+### Delete all the temporary files created so far
+
+$RM -rf ${TEMP}
+
+### Function: abort_script ###
+#
+#   This will is called if the script is aborted thru an ERROR:
+#   ERROR: signal sent by the kernel such as CTRL-C or if a serious
+#   ERROR: is encountered during runtime
+#
+# Arguments:
+#       $1 - ERROR: message from part of program (Not always used)
+# Return Values:
+#       none
+abort_script()
+{
+if [ "$1" ]; then
+    _err_msg_=$1
+else
+    _err_msg_="Script aborted.......\n"
+fi
+if [ "${LOGFILE}" ]; then
+    $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  \n$_err_msg_\n" |$TEE -a ${LOG_FILE}
+else
+    $ECHO "`date "+%Y.%m.%d %H.%M.%S"` ERROR:  \n$_err_msg_\n"
+fi
+}

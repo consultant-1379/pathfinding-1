@@ -1,0 +1,50 @@
+#
+# COPYRIGHT Ericsson 2020
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+#Metrics related configurations
+management.endpoint.metrics.enabled: "true"
+management.endpoints.web.exposure.include: "*"
+management.endpoint.prometheus.enabled: "true"
+management.metrics.export.prometheus.enabled: "true"
+management.metrics.web.server.auto-time-requests: "true"
+
+#opentracing.jaeger.enabled: "true"
+
+endpoints.health.sensitive: "false"
+info.app.name: '@name@'
+info.app.description: Initial Structure
+info.app.version: '@version@'
+info.app.legal: "COPYRIGHT Ericsson 2019 -
+ The copyright to the computer program(s) herein is the property of
+ Ericsson Inc. The programs may be used and/or copied only with written
+ permission from Ericsson Inc. or in accordance with the terms and
+ conditions stipulated in the agreement/contract under which the
+ program(s) have been supplied."
+
+#See more details about pattern layout: https://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/PatternLayout.html
+#See more details about logging.pattern.level : https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/reference/html/boot-features-logging.html#boot-features-custom-log-configuration
+#logging.pattern.level: "%5p [%X{X-B3-TraceId:-},%X{X-B3-SpanId:-},%X{X-Span-Export:-}][%X{userName}]"
+server:
+  port: 8080
+
+schema.filelocation.url: "H:\\Ericsson\\DC_E_MRS_BGF_BGFBH.avro"
+schema.url: "http://10.63.139.30:30243"
+cmsBaseUrl: "http://eric-oss-eniq-datacatalog-api:8080/"
+
+techpack.decrypt.tpi.filelocation.url: "H:/Ericsson/file/feature/feature_file"
+featurefile:
+  filelocation:
+    url: "src\\test\\resources\\sourcefile\\CXC4010777.zip"

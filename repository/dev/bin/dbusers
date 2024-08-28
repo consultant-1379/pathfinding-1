@@ -1,0 +1,71 @@
+#!/bin/bash
+# ----------------------------------------------------------------------
+# Usage: dbusers username
+#
+
+. /eniq/home/dcuser/.profile
+
+DBUSER=$1
+CONNECTION=$2
+
+if [ -z "${DBUSER}" ] ; then
+   echo "Usage: dbusers username connection"
+   exit 10
+fi
+
+if [ -z "${CONNECTION}" ] ; then
+   echo "Usage: dbusers username connection"
+   exit 10
+fi
+
+if [ -z "${CONF_DIR}" ] ; then
+  echo "ERROR: CONF_DIR is not set"
+  exit 1
+fi
+
+if [ ! -r "${CONF_DIR}/niq.rc" ] ; then
+  echo "ERROR: Source file is not readable at ${CONF_DIR}/niq.rc"
+  exit 2
+fi
+
+. ${CONF_DIR}/niq.rc
+
+. ${BIN_DIR}/common_variables.lib
+
+export ANT_HOME
+
+CPATH="${INSTALLER_DIR}/lib/installer.jar"
+
+DIRS=`${LS} ${PLATFORM_DIR} | ${GREP} -v mediator-R*`
+
+for file in $DIRS
+do
+  if [ -d ${PLATFORM_DIR}/$file/dclib ]
+  then
+    JARS=`${LS} ${PLATFORM_DIR}/$file/dclib/*.jar`
+
+    for jar in $JARS
+    do
+      CPATH="${CPATH}:${jar}"
+    done
+  fi
+done
+
+# Check to see if OS is Linux, if so set a different JAVA_HOME directory
+#_os_=`uname`
+#if [ "${_os_}" = "Linux" ] ; then
+#        JAVA_HOME="/usr/java/latest"
+#else
+#        JAVA_HOME=${RT_DIR}/java
+#fi
+
+JAVA_HOME=${RT_DIR}/java
+
+export JAVA_HOME
+
+PATH=${RT_DIR}/java/bin:${PATH}
+export PATH
+
+${JAVA_HOME}/bin/java -d64 -Dpname="DBUsers" -DCONF_DIR=${CONF_DIR} -classpath ${CPATH} com.ericsson.eniq.repository.dbusers.GetDBPass ${DBUSER} ${CONNECTION}
+E=${?}
+exit ${E}

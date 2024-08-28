@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: data-catalog
+  name: data-catalog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-catalog
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: data-catalog
+    spec:
+      containers:
+      - image: data-catalog-api
+        name: data-catalog-api
+        imagePullPolicy: IfNotPresent 
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: data-catalog
+  name: data-catalog
+spec:
+  ports:
+  - name: 8080-8080
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: data-catalog
+  type: NodePort
+status:
+  loadBalancer: {}
+
+

@@ -1,0 +1,386 @@
+#!/bin/bash
+# ********************************************************************
+# Ericsson Radio Systems AB                                     SCRIPT
+# ********************************************************************
+#
+# (c) Ericsson Radio Systems AB 2018 - All rights reserved.
+#
+# The copyright to the computer program(s) herein is the property
+# of Ericsson Radio Systems AB, Sweden. The programs may be used
+# and/or copied only with the written permission from Ericsson Radio
+# Systems AB or in accordance with the terms and conditions stipulated
+# in the agreement/contract under which the program(s) have been
+# supplied.
+#
+# ********************************************************************
+# Name    : symlinkcreator_rebdb_setup.bsh
+# Date    : 21/03/2018
+# Purpose : This script is used for the following purposes:
+#			1. create all the 3 tables if they are not present i.e. 
+#				RoleTable, ENIQS_Policy_Criteria and ENIQS_Node_Assignment table
+#			2. add the additional column i.e. ENM_HOSTNAME in ENIQS_Policy_Criteria 
+#				and ENIQS_Node_Assignment tables if it is not present and populate the 
+#				column values with /eniq/installation/config/fls_conf entry
+#
+#
+# Usage   : bash symlinkcreator_rebdb_setup.bsh
+#
+# ********************************************************************
+#
+# Command Section
+#
+# ********************************************************************
+
+# ********************************************************************
+#
+#       Configuration Section
+#
+# ********************************************************************
+
+CONF_DIR=/eniq/sw/conf
+DBISQL="$(ls /eniq/sybase_iq/IQ-*/bin64/dbisql)"
+ENM_SERVER_DETAIL=/eniq/sw/conf/enmserverdetail 
+FLS_CONF=/eniq/installation/config/fls_conf
+OSS_REF_NAME_FILE=/eniq/sw/conf/.oss_ref_name_file
+SSH_ENGINE="/usr/bin/ssh -o StrictHostKeyChecking=no -o BatchMode=yes -q dcuser@engine"
+
+# Directory on the root filesystem
+ENIQ_ROOT_DIR=/eniq
+
+
+# ********************************************************************
+#
+#       Pre-execution Operations
+#
+# ********************************************************************
+
+
+# ********************************************************************
+#
+#   	Functions
+#
+# ********************************************************************
+### Function: abort_script ###
+#
+#   This will is called if the script is aborted through an error
+#   error signal sent by the kernel such as CTRL-C or if a serious
+#   error is encountered during runtime
+#
+# Arguments:
+#       $1 - Error message from part of program (Not always used)
+# Return Values:
+#       none
+abort_script()
+{
+	_err_time_=`${DATE} '+%Y-%b-%d_%H.%M.%S'`
+
+	if [ "$1" ]; then
+		_err_msg_="${_err_time_} - $1"
+	else
+		_err_msg_="${_err_time_} - ERROR : Script aborted.......\n"
+	fi
+
+	${ECHO} "\n$_err_msg_\n"
+
+	if [ "$2" ]; then
+		${2}
+	else
+	   exit 1
+	fi
+
+}
+
+
+### Function: timestamp ###
+#
+#   Add time stamp to the log message
+#
+# Arguments:
+#       $1 - Log message
+# Return Values:
+#       none
+timestamp() {
+	${ECHO} `${DATE} '+%Y-%m-%d_%H.%M.%S'` ${1}  
+}
+
+
+### Function: check_role_table ###
+#
+#   This function handles the below scenario for RoleTable
+#		1. check and create RoleTable if it does not exists
+#
+# Arguments:
+#		None
+# Return Values:
+#		None
+
+check_role_table() {
+	
+	crt=`${DBISQL} -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "IF NOT EXISTS (SELECT table_name FROM systable WHERE table_name = 'RoleTable')
+			BEGIN
+				CREATE TABLE RoleTable ( ENIQ_ID VARCHAR(50) NOT NULL, IP_ADDRESS VARCHAR(50)  NOT NULL, ROLE VARCHAR(15)  NOT NULL )
+			END
+		ELSE
+			BEGIN
+				ALTER TABLE RoleTable MODIFY IP_ADDRESS VARCHAR(50)
+			END"`
+	
+	if [ ${?} -eq  0 ]; then
+		timestamp "Successfully altered/created RoleTable table\n${crt}"
+	else
+		_err_msg_="ERROR: Failed to altered/created RoleTable table\n${crt}"
+		abort_script "$_err_msg_"
+	fi
+		
+}
+
+
+### Function: check_pnc_table ###
+#
+#   This function handles the below scenarios for ENIQS_Policy_Criteria table
+#		1. check and create ENIQS_Policy_Criteria table if it does not exists
+#		2. check and add the additional column i.e. ENM_HOSTNAME in 
+#			ENIQS_Policy_Criteria table	if it is not present
+#
+# Arguments: 
+#		None
+# Return Values:
+#		None
+
+check_pnc_table() {
+	
+	cpnc=`${DBISQL} -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "IF EXISTS (SELECT table_name FROM systable WHERE table_name = 'ENIQS_Policy_Criteria')
+			BEGIN
+				IF EXISTS (SELECT column_name FROM syscolumn JOIN systable ON systable.table_id = syscolumn.table_id WHERE table_name = 'ENIQS_Policy_Criteria' AND column_name = 'ENM_HOSTNAME_ALIAS')
+					BEGIN
+						ALTER TABLE ENIQS_Policy_Criteria RENAME ENM_HOSTNAME_ALIAS TO ENM_HOSTNAME
+					END
+				ELSE
+					BEGIN
+						IF NOT EXISTS (SELECT column_name FROM syscolumn JOIN systable ON systable.table_id = syscolumn.table_id WHERE table_name = 'ENIQS_Policy_Criteria' AND column_name = 'ENM_HOSTNAME')
+							BEGIN
+								ALTER TABLE ENIQS_Policy_Criteria ADD ENM_HOSTNAME VARCHAR(100) NOT NULL DEFAULT ''
+							END
+					END
+			END
+	ELSE
+		BEGIN
+			CREATE TABLE ENIQS_Policy_Criteria ( TECHNOLOGY VARCHAR(50), NAMINGCONVENTION VARCHAR(250), ENIQ_IDENTIFIER VARCHAR(50) NOT NULL, ENM_HOSTNAME VARCHAR(100) NOT NULL )
+		END"`
+	
+	if [ ${?} -eq  0 ]; then
+		timestamp "Successfully altered/created ENIQS_Policy_Criteria table\n${cpnc}"
+	else
+		_err_msg_="ERROR: Failed to alter/create ENIQS_Policy_Criteria table\n${cpnc}"
+		abort_script "$_err_msg_"
+	fi
+		
+}
+
+
+### Function: check_nat_table ###
+#
+#   This function handles the below scenarios for ENIQS_Node_Assignment table
+#		1. check and create ENIQS_Node_Assignment table if it does not exists
+#		2. check and if the additional column i.e. ENM_HOSTNAME is not 
+#			present in the ENIQS_Node_Assignment table then:
+#				a. delete the existing primary key constraint
+#				b. add the additional column i.e. ENM_HOSTNAME
+#				c. create the combination of columns FDN and ENM_HOSTNAME as unique key constraint
+#		3. check and if the additional column i.e. ENM_HOSTNAME is present
+#			in the ENIQS_Node_Assignment table then:
+#				a. delete the existing primary key constraint
+#				b. create the combination of columns FDN and ENM_HOSTNAME as unique key constraint
+#
+# Arguments:
+#		None
+# Return Values:
+#		None
+
+check_nat_table() {
+	
+	cnat=`${DBISQL} -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "IF EXISTS (SELECT table_name FROM systable WHERE table_name = 'ENIQS_Node_Assignment')
+			BEGIN
+				IF EXISTS (SELECT column_name FROM syscolumn JOIN systable ON systable.table_id = syscolumn.table_id WHERE table_name = 'ENIQS_Node_Assignment' AND column_name = 'ENM_HOSTNAME_ALIAS')
+					BEGIN
+						IF EXISTS (SELECT index_name FROM sysindex JOIN systable ON systable.table_id = sysindex.table_id  WHERE table_name = 'ENIQS_Node_Assignment' AND index_name = 'ENIQS_Node_Assignment UNIQUE (FDN,ENM_HOSTNAME_ALIAS)')
+							BEGIN
+								ALTER TABLE ENIQS_Node_Assignment DROP UNIQUE (FDN,ENM_HOSTNAME_ALIAS)
+								ALTER TABLE ENIQS_Node_Assignment RENAME ENM_HOSTNAME_ALIAS TO ENM_HOSTNAME
+								ALTER TABLE ENIQS_Node_Assignment ADD UNIQUE (FDN, ENM_HOSTNAME)
+							END
+						ELSE
+							BEGIN
+								ALTER TABLE ENIQS_Node_Assignment DELETE PRIMARY KEY
+								ALTER TABLE ENIQS_Node_Assignment RENAME ENM_HOSTNAME_ALIAS TO ENM_HOSTNAME
+								ALTER TABLE ENIQS_Node_Assignment ADD UNIQUE (FDN, ENM_HOSTNAME)
+							END
+					END
+				ELSE
+					BEGIN
+						IF NOT EXISTS (SELECT column_name FROM syscolumn JOIN systable ON systable.table_id = syscolumn.table_id WHERE table_name = 'ENIQS_Node_Assignment' AND column_name = 'ENM_HOSTNAME')
+							BEGIN
+								ALTER TABLE ENIQS_Node_Assignment DELETE PRIMARY KEY
+								ALTER TABLE ENIQS_Node_Assignment ADD ENM_HOSTNAME VARCHAR(100) NOT NULL default ''
+								ALTER TABLE ENIQS_Node_Assignment ADD UNIQUE (FDN, ENM_HOSTNAME)
+							END
+					END
+			END
+		ELSE
+			BEGIN
+				CREATE TABLE ENIQS_Node_Assignment (ENIQ_IDENTIFIER VARCHAR(50) null, FDN VARCHAR(250), NETYPE VARCHAR(50), ENM_HOSTNAME VARCHAR(100), UNIQUE (FDN, ENM_HOSTNAME) )
+			END"`
+	
+	if [ ${?} -eq  0 ]; then
+		timestamp "Successfully altered/created ENIQS_Node_Assignment table\n${cnat}"
+	else
+		_err_msg_="ERROR: Failed to alter/create ENIQS_Node_Assignment table\n${cnat}"
+		abort_script "$_err_msg_"
+	fi
+		
+}
+
+
+### Function: update_tables ###
+#
+#   This function handles the below scenarios for ENIQS_Policy_Criteria and ENIQS_Node_Assignment table
+#		1. if fls_conf file is having only one entry and ENM_HOSTNAME column in both the tables 
+#			is empty then only update the fls_conf entry in the ENM_HOSTNAME column of both the tables 
+#
+# Arguments:
+#		None
+# Return Values:
+#		None
+
+update_tables() {
+	
+	if ${SSH_ENGINE} "[ -s ${FLS_CONF} ]" ; then
+		total_fls_conf_entry=`${SSH_ENGINE} ${WC} -l ${FLS_CONF} | ${AWK} '{print $1}'`
+		
+		if [ ${total_fls_conf_entry} -eq 1 ]; then
+			fls_conf_entry=`${SSH_ENGINE} ${CAT} ${FLS_CONF}`
+			if [[ ! -z ${fls_conf_entry} ]]; then
+			
+				enm_nas_ip=`${CAT} ${OSS_REF_NAME_FILE} | ${GREP} ${fls_conf_entry} | ${AWK} '{print $2}'`
+				if [[ ! -z ${enm_nas_ip} ]]; then
+				
+					enm_hostname=`${CAT} ${ENM_SERVER_DETAIL} | ${GREP} ${enm_nas_ip} | ${AWK} '{print $2}' | ${AWK} -F'.' '{print $1}'`
+					
+					if [[ ! -z ${enm_hostname} ]]; then
+						upc=`${DBISQL} -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "UPDATE ENIQS_Policy_Criteria SET ENM_HOSTNAME = '${enm_hostname}' WHERE ENM_HOSTNAME = '' OR ENM_HOSTNAME = NULL OR ENM_HOSTNAME = '${fls_conf_entry}'"`
+
+						if [ ${?} -eq  0 ]; then
+							timestamp "Successfully updated ENM host name: ${enm_hostname} in ENIQS_Policy_Criteria table\n${upc}"
+						else
+							_err_msg_="ERROR: Failed to update ENM host name: ${enm_hostname} in ENIQS_Policy_Criteria table\n${upc}"
+							abort_script "$_err_msg_"
+						fi
+						
+						unat=`${DBISQL} -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "UPDATE ENIQS_Node_Assignment SET ENM_HOSTNAME = '${enm_hostname}' WHERE ENM_HOSTNAME = '' OR ENM_HOSTNAME = NULL OR ENM_HOSTNAME = '${fls_conf_entry}'"`
+
+						if [ ${?} -eq  0 ]; then
+							timestamp "Successfully updated ENM host name: ${enm_hostname} in ENIQS_Node_Assignment table\n${unat}"
+						else
+							_err_msg_="ERROR: Failed to update ENM host name: ${enm_hostname} in ENIQS_Node_Assignment table\n${unat}"
+							abort_script "$_err_msg_"
+						fi
+					else
+						timestamp "ERROR: ENM server details are missing in ${ENM_SERVER_DETAIL} file for ${fls_conf_entry}. Please Re-execute the post-integration steps"
+					fi
+				else
+					timestamp "ERROR: NAS IP address entry is missing in ${OSS_REF_NAME_FILE} file for ${fls_conf_entry}"
+				fi
+			else
+				timestamp "No entry found in ${FLS_CONF} file "
+			fi
+		elif [ ${total_fls_conf_entry} -gt 1 ]; then
+			fls_conf_entries=`${SSH_ENGINE} ${CAT} ${FLS_CONF}`
+			fls_conf_entries_array=(${fls_conf_entries})
+			
+			for entry in "${fls_conf_entries_array[@]}"
+				do
+					fls_conf_entry=${entry}
+					if [[ ! -z ${fls_conf_entry} ]]; then
+					
+						enm_nas_ip=`${CAT} ${OSS_REF_NAME_FILE} | ${GREP} ${fls_conf_entry} | ${AWK} '{print $2}'`
+						if [[ ! -z ${enm_nas_ip} ]]; then
+						
+							enm_hostname=`${CAT} ${ENM_SERVER_DETAIL} | ${GREP} ${enm_nas_ip} | ${AWK} '{print $2}' | ${AWK} -F'.' '{print $1}'`
+							if [[ ! -z ${enm_hostname} ]]; then
+							
+								upc=`${DBISQL} -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "UPDATE ENIQS_Policy_Criteria SET ENM_HOSTNAME = '${enm_hostname}' WHERE ENM_HOSTNAME = '${fls_conf_entry}'"`
+
+								if [ ${?} -eq  0 ]; then
+									timestamp "Successfully updated ENM host name: ${enm_hostname} in ENIQS_Policy_Criteria table\n${upc}"
+								else
+									_err_msg_="ERROR: Failed to update ENM host name: ${enm_hostname} in ENIQS_Policy_Criteria table\n${upc}"
+									abort_script "$_err_msg_"
+								fi
+								
+								unat=`${DBISQL} -nogui -onerror exit -c "eng=${REP_SERVER_NAME};links=tcpip{host=${REP_SERVER_NAME};port=${REP_PORT}};uid=$DWHREPUSER;pwd=$DWHREPPASSWORD" "UPDATE ENIQS_Node_Assignment SET ENM_HOSTNAME = '${enm_hostname}' WHERE ENM_HOSTNAME = '${fls_conf_entry}'"`
+
+								if [ ${?} -eq  0 ]; then
+									timestamp "Successfully updated ENM host name: ${enm_hostname} in ENIQS_Node_Assignment table\n${unat}"
+								else
+									_err_msg_="ERROR: Failed to update ENM host name: ${enm_hostname} in ENIQS_Node_Assignment table\n${unat}"
+									abort_script "$_err_msg_"
+								fi
+							else
+								timestamp "ERROR: ENM server details are missing in ${ENM_SERVER_DETAIL} file for ${fls_conf_entry}. Please Re-execute the post-integration steps"
+							fi
+						else
+							timestamp "ERROR: NAS IP address entry is missing in ${OSS_REF_NAME_FILE} file for ${fls_conf_entry}"
+						fi
+					else
+						timestamp "No entry found in ${FLS_CONF} file "
+					fi
+			done
+		fi
+	fi
+}
+
+
+# ********************************************************************
+#
+#   Main body of program
+#
+# ********************************************************************
+
+# Source the common functions
+if [ -s ${ENIQ_ROOT_DIR}/admin/lib/common_functions.lib ]; then
+    . ${ENIQ_ROOT_DIR}/admin/lib/common_functions.lib
+else
+	_err_msg_="File ${ENIQ_ROOT_DIR}/admin/lib/common_functions.lib not found"
+	abort_script "$_err_msg_"
+fi
+
+if [ ! -r "/eniq/sw/bin/common_variables.lib" ] ; then
+  echo "ERROR: Source file is not readable at /eniq/sw/bin/common_variables.lib"
+  exit 3
+fi
+
+. /eniq/sw/bin/common_variables.lib
+
+. ${CONF_DIR}/niq.rc
+
+if [ ! -x "${DBISQL}" ]; then
+    _err_msg_="${DBISQL} commands not found or not executable."
+    abort_script "$_err_msg_"
+fi
+
+DWHREPUSER=`inigetpassword REP -v DWHREPUsername -f ${CONF_DIR}/niq.ini`
+DWHREPPASSWORD=`inigetpassword REP -v DWHREPPassword -f ${CONF_DIR}/niq.ini`
+REP_PORT=`inigetpassword REP -v PortNumber -f ${CONF_DIR}/niq.ini`
+REP_SERVER_NAME=`inigetpassword REP -v ServerName -f ${CONF_DIR}/niq.ini`
+UTILDBAPASSWORD=`inigetpassword DB -v UtilDBAPASSWORD -f ${CONF_DIR}/niq.ini`
+DBAPASSWORD=`inigetpassword DB -v DBAPassword -f ${CONF_DIR}/niq.ini`
+
+
+check_role_table
+
+check_pnc_table
+	
+check_nat_table
+
+update_tables
+

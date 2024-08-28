@@ -1,0 +1,111 @@
+package com.distocraft.dc5000.etl.engine.sql;
+
+import static org.junit.Assert.*;
+
+import com.distocraft.dc5000.etl.engine.connect.ConnectionPool;
+import com.distocraft.dc5000.etl.rock.Meta_collections;
+import com.distocraft.dc5000.etl.rock.Meta_columns;
+import com.distocraft.dc5000.etl.rock.Meta_transfer_actions;
+import com.distocraft.dc5000.etl.rock.Meta_versions;
+import com.ericsson.eniq.common.testutilities.UnitDatabaseTestCase;
+
+import java.sql.Statement;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+import ssc.rockfactory.RockFactory;
+
+public class SQLInsertAndUpdateTest extends UnitDatabaseTestCase {
+	    
+		static Meta_transfer_actions metaTransferActions;
+		static Meta_versions metaVersions;
+		static Meta_collections collection;
+		static Meta_columns objMetaCol;
+		static ConnectionPool  connectionPool;
+		
+	    Long collectionSetId = 1L;
+	    Long transferActionId = 1L;
+	    Long transferBatchId = 1L;
+	    Long connectId = 1L;
+	    
+	    static RockFactory etlrep ;
+	 
+	  @BeforeClass
+	  public static void setUp() throws Exception {
+		
+	    setup(TestType.unit);
+		
+	    loadDefaultTechpack(TechPack.stats, "v1");
+	    loadDefaultTechpack(TechPack.stats, "v2");
+	    
+	    etlrep = getRockFactory(Schema.etlrep);
+	 	    
+	    Statement stmt = etlrep.getConnection().createStatement();
+	    
+	    try {
+	    
+	    stmt.executeUpdate("INSERT INTO Meta_collection_sets VALUES(1, 'set_name', 'description', '1', 'Y', 'type')");
+	    
+		stmt.executeUpdate("INSERT INTO Meta_columns VALUES( 1  ,'testCOLUMN_NAME'  ,'testCOLUMN_ALIAS_NAME'  ,'testCOLUMN_TYPE', "
+				+ "1  ,'Y'  ,'((1))'  ,1  ,1 )");
+		
+		stmt.executeUpdate("INSERT INTO Meta_databases VALUES('sa', '1', 'typenames', 1, 'connectionname', "
+		        + "'jdbc:hsqldb:mem:testdb', '', 'description', 'org.hsqldb.jdbcDriver', 'dblinkname')");
+	    stmt.executeUpdate("INSERT INTO Meta_databases VALUES('sa', '1', 'USER', 2, 'dwhrep', "
+		        + "'jdbc:hsqldb:mem:testdb', '', 'description', 'org.hsqldb.jdbcDriver', 'dblinkname')");
+	    stmt.executeUpdate("INSERT INTO Meta_databases VALUES('sa', '1', 'USER', 3, 'dwh', "
+		        + "'jdbc:hsqldb:mem:testdb', '', 'description', 'org.hsqldb.jdbcDriver', 'dblinkname')");
+	    
+	    stmt.executeUpdate("INSERT INTO Meta_source_tables VALUES( '2000-01-01 00:00:00.0'  ,1  ,1  ,'Y', "
+        		+ "1  ,1  ,1  ,'Y'  ,'testAS_SELECT_OPTIONS'  ,'((1))'  ,'((1))'  ,1 )");
+        
+        stmt.executeUpdate("INSERT INTO Meta_tables VALUES( 1  ,'testTABLE_NAME'  ,'((1))'  ,'Y'  ,'testJOIN_CLAUSE', "
+        		+ "'testTABLES_AND_ALIASES'  ,1 )");
+     
+        stmt.executeUpdate("INSERT INTO Meta_joints VALUES( 1  ,'Y'  ,'Y'  ,'Y', "
+				+ "1  ,1  ,'testPLUGIN_METHOD_NAME1'  ,'((1))'  ,1  ,1  ,1  ,1  ,1  ,1  ,1  ,1  ,1  ,1  ,1, "
+				+ "'testPAR_NAME'  ,1  ,1  ,'testFREE_FORMAT_TRANSFORMAT1'  ,'testMETHOD_PARAMETER1' )");
+        
+        stmt.executeUpdate("INSERT INTO Meta_parameter_tables VALUES( 'testPAR_NAME'  ,'testPAR_VALUE'  ,'((1))' )");
+        
+        stmt.executeUpdate("INSERT INTO Meta_transformation_rules VALUES( 1  ,'testTRASF'  ,'testCODE', "
+        		+ "'testDESCRIPTION'  ,'((1))' )");
+        
+        stmt.executeUpdate("INSERT INTO Meta_versions VALUES( '((1))'  ,'testDESCRIPTION'  ,'Y'  ,'Y'  ,'testENGINE_SERVER', "
+        		+ "'testMAIL_SERVER'  ,'testSCHEDULER_SERVER'  ,1 )");
+        
+        stmt.executeUpdate("INSERT INTO Meta_transformation_tables VALUES( 1  ,'testTABLE_NAME'  ,'testDESCRIPTION', "
+        		+ "'((1))'  ,'Y'  ,1  ,1  ,1  ,1 )");
+        
+        stmt.executeUpdate("INSERT INTO Meta_fk_tables VALUES( 1  ,'((1))'  ,'testWHERE_CLAUSE'  ,'Y', "
+				+ "'Y'  ,'testREPLACE_ERRORS_WITH'  ,1  ,1  ,1  ,1  ,1  ,1 )");
+
+        stmt.executeUpdate("INSERT INTO Meta_fk_table_joints VALUES( '((1))'  ,1  ,1  ,1  ,1  ,1  ,1  ,1  ,1 )");
+        
+        stmt.executeUpdate("INSERT INTO Meta_target_tables VALUES( '((1))'  ,1  ,1  ,1  ,1  ,1 )");
+	
+	    }
+	    catch(Exception e){
+	    	System.out.println(e);
+	    }
+
+	    metaTransferActions = new Meta_transfer_actions(etlrep);
+	    metaVersions = new Meta_versions(etlrep);
+	    collection = new Meta_collections(etlrep);
+	    objMetaCol = new Meta_columns(etlrep ,  1L ,  "((1))",  1L ,  1L );
+	    connectionPool = new ConnectionPool(etlrep);
+	  }
+	  
+	  @Test
+	  public void testConstructor() throws Exception{
+		 try{
+			 SQLInsertAndUpdate sinu = new SQLInsertAndUpdate(metaVersions,collectionSetId, collection, transferActionId, transferBatchId, connectId, 
+		    		  etlrep, connectionPool, metaTransferActions, "xyz");
+			 assertNotNull(sinu);
+			} catch (Exception e) {
+			    e.printStackTrace();
+			    fail("DWHMVersionUpdateActionTest() failed");
+				}
+	  } 
+
+}
